@@ -1,0 +1,88 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+vars:
+  GOLANGCI_LINT_VERSION: v2.12.2
+  DEADCODE_VERSION: v0.38.0
+  GOVULNCHECK_VERSION: v1.1.4
+  GORELEASE_VERSION: latest
+  # Both specs are OpenAPI 3.1 and need at least v2.8.0: the Core document uses
+  # the numeric form of `exclusiveMinimum`, and the Platform document a nullable
+  # union type (`type: [array, null]`), neither of which earlier generators can
+  # read. Two variables rather than one, in case the specs ever need different
+  # generator versions again.
+  OAPI_CODEGEN_VERSION: v2.8.0
+  OAPI_CODEGEN_PLATFORM_VERSION: v2.8.0
+
+tasks:
+  default:
+    desc: List all available tasks
+    silent: true
+    cmds:
+      - task --list
+
+  lint:
+    desc: Lint the SDK
+    cmds:
+      - go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@{{.GOLANGCI_LINT_VERSION}} run ./...
+
+  fix:
+    desc: Lint and fix the SDK
+    cmds:
+      - go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@{{.GOLANGCI_LINT_VERSION}} run --fix ./...
+
+  fmt:
+    desc: Format the SDK (gofumpt + gci, the formatters .golangci.yml declares)
+    cmds:
+      - go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@{{.GOLANGCI_LINT_VERSION}} fmt ./...
+
+  test:
+    desc: Run SDK tests
+    cmds:
+      - go test -race -shuffle=on -cover ./...
+
+  deadcode:
+    desc: Report functions no test or entry point can reach
+    cmds:
+      # -test counts the test binaries as entry points. Without it every exported
+      # symbol in a library looks unreachable, since a library has no main.
+      - go run golang.org/x/tools/cmd/deadcode@{{.DEADCODE_VERSION}} -test ./...
+
+  vuln:
+    desc: Scan dependencies and reachable code for known vulnerabilities
+    cmds:
+      - go run golang.org/x/vuln/cmd/govulncheck@{{.GOVULNCHECK_VERSION}} ./...
+
+  release:check:
+    desc: Report the API diff against the last tag and the version it implies
+    cmds:
+      # This module is published: `go get` on any tag is somebody's build. gorelease
+      # names every exported change and the semver bump it forces, which is the one
+      # check a reviewer cannot do reliably by eye.
+      - go run golang.org/x/exp/cmd/gorelease@{{.GORELEASE_VERSION}}
+
+  coverage:
+    desc: Write a coverage profile to coverage.out
+    cmds:
+      # atomic rather than set: -race requires it, and the same profile feeds both.
+      - go test ./... -coverprofile=coverage.out -covermode=atomic
+
+  generate:
+    desc: Regenerate the Core API client from OPENAPI_SPEC
+    preconditions:
+      - sh: test -n "{{.OPENAPI_SPEC}}"
+        msg: OPENAPI_SPEC is required
+      - sh: test -f "{{.OPENAPI_SPEC}}"
+        msg: OpenAPI spec not found at {{.OPENAPI_SPEC}}
+    cmds:
+      - go run github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@{{.OAPI_CODEGEN_VERSION}} --config oapi-codegen.cfg.yaml "{{.OPENAPI_SPEC}}"
+
+  generate:platform:
+    desc: Regenerate the Platform API client from PLATFORM_OPENAPI_SPEC
+    preconditions:
+      - sh: test -n "{{.PLATFORM_OPENAPI_SPEC}}"
+        msg: PLATFORM_OPENAPI_SPEC is required
+      - sh: test -f "{{.PLATFORM_OPENAPI_SPEC}}"
+        msg: Platform OpenAPI spec not found at {{.PLATFORM_OPENAPI_SPEC}}
+    cmds:
+      - go run github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@{{.OAPI_CODEGEN_PLATFORM_VERSION}} --config oapi-codegen.platform.cfg.yaml "{{.PLATFORM_OPENAPI_SPEC}}"

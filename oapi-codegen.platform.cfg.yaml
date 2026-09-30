@@ -1,0 +1,10 @@
+# The Platform API is a second OpenAPI document, not a section of the first: it is
+# served by its own listener, authenticated by its own credential class (`ksm_...`),
+# and kaiten's Core listener actively refuses a platform credential. So it gets its
+# own generated package and its own facade type rather than more methods on Client --
+# see platform_client.go.
+package: genplatform
+generate:
+  client: true
+  models: true
+output: internal/genplatform/client.gen.go

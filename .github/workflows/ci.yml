@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  lint-build-test:
+    name: Lint, Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      # 1.25.x, not go-version-file: go.mod. setup-go reads the go directive as
+      # an exact patch, which pins every build to the stdlib as it shipped in
+      # that patch -- including CVEs the Vulnerability scan step below then
+      # reports. This tracks the newest patch of the minor version go.mod
+      # declares; go.mod stays the language-version contract.
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.25.x"
+          cache-dependency-path: go.sum
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: v2.12.2
+          args: --timeout=5m ./...
+
+      - name: Verify module metadata
+        run: go mod tidy && git diff --exit-code -- go.mod go.sum
+
+      - name: Build
+        run: go build -v ./...
+
+      - name: Test
+        run: go test -race -shuffle=on -cover ./...
+
+      # This module is published, so a vulnerable dependency ships to every
+      # consumer. govulncheck reports only the advisories whose vulnerable
+      # symbols this code actually reaches, so a finding here is real work
+      # rather than a CVE in a function nothing calls.
+      - name: Vulnerability scan
+        run: go run golang.org/x/vuln/cmd/govulncheck@v1.1.4 ./...

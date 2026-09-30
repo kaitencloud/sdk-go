@@ -1,0 +1,11 @@
+package: gen
+generate:
+  client: true
+  models: true
+output: internal/gen/client.gen.go
+# Required. Without it, schemas reachable only from webhook definitions
+# (Deployment, FeatureFlagEvaluated, SystemTokenIssuance, ...) are pruned as
+# "unused" while the webhook body types that reference them are still emitted,
+# and the generated package does not compile.
+output-options:
+  skip-prune: true
