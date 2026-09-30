@@ -1,14 +1,37 @@
-# sdk-go
+# Kaiten Go SDK
 
-Typed Go clients for the [Kaiten](https://kaiten.sh) API.
+[![CI](https://github.com/kaitencloud/sdk-go/actions/workflows/ci.yml/badge.svg)](https://github.com/kaitencloud/sdk-go/actions/workflows/ci.yml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/kaitencloud/sdk-go.svg)](https://pkg.go.dev/github.com/kaitencloud/sdk-go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/kaitencloud/sdk-go)](https://goreportcard.com/report/github.com/kaitencloud/sdk-go)
+[![Release](https://img.shields.io/github/v/tag/kaitencloud/sdk-go?label=release)](https://github.com/kaitencloud/sdk-go/tags)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+
+Typed Go clients for the [Kaiten](https://kaiten.sh) API: customers, instances,
+licenses, entitlements, usage metering, feature flags, and the Platform API that
+provisions organizations and their credentials.
+
+- [Installation](#installation)
+- [Quick start](#quick-start)
+- [Two APIs, two clients](#two-apis-two-clients)
+- [Configuration](#configuration)
+- [Core API](#core-api)
+- [Platform API](#platform-api)
+- [Pagination](#pagination)
+- [Error handling](#error-handling)
+- [Low-level access](#low-level-access)
+- [Development](#development)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Installation
+
+Requires Go 1.25 or newer.
 
 ```shell
 go get github.com/kaitencloud/sdk-go
 ```
 
-## Usage
+## Quick start
 
 ```go
 package main
@@ -17,6 +40,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 
 	sdk "github.com/kaitencloud/sdk-go"
 )
@@ -24,7 +48,7 @@ import (
 func main() {
 	client, err := sdk.NewClient(
 		"https://kaiten.example.com/api",
-		sdk.WithBearerToken("your-api-token"),
+		sdk.WithBearerToken(os.Getenv("KAITEN_TOKEN")),
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -36,33 +60,155 @@ func main() {
 	}
 
 	for _, instance := range instances {
-		if instance.Slug != nil {
-			fmt.Println(*instance.Slug)
-		}
+		fmt.Println(instance.Name)
 	}
 }
 ```
 
-See the [Kaiten documentation](https://docs.kaiten.sh) for details on available
-resources and fields. Every deployment also serves its own contract at
-`/api/docs`.
+The base URL includes the API's path prefix. Every Kaiten deployment serves its own
+OpenAPI document at `/api/docs`; the [Kaiten documentation](https://docs.kaiten.sh)
+describes the resources and fields.
 
-## The Platform API
+## Two APIs, two clients
 
-Kaiten publishes two contracts on two listeners, and this package mirrors that split
-rather than hiding it:
+Kaiten exposes two contracts on two listeners, and this package mirrors that split.
 
-| | `sdk.NewClient` | `sdk.NewPlatformClient` |
-|---|---|---|
-| Contract | Core API (`app/openapi.yaml`) | Platform API (`app/platform-openapi.yaml`) |
-| Default port | 3000 | 3001 |
-| Credential | organization-scoped token, `ksh_...` | platform credential, `ksm_...` |
-| Covers | customers, instances, entitlements, licenses, feature flags | organizations, users, the organization tokens themselves, and the connector registry |
+|                | `sdk.NewClient`                                                         | `sdk.NewPlatformClient`                                                 |
+| -------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| Contract       | Core API                                                                | Platform API                                                            |
+| Default port   | 3000                                                                    | 3001                                                                    |
+| Credential     | organization-scoped token (`ksh_...`)                                   | platform credential (`ksm_...`)                                         |
+| Resources      | customers, instances, licenses, entitlements, feature flags, components | organizations, users, organization tokens, connector registry           |
 
-The two are not interchangeable in either direction: the Core listener refuses a platform
-credential before it parses the request, and the Platform listener serves none of the Core
-paths. A process that needs both builds both, against different base URLs. `Option` values
-are shared -- one `WithBearerToken` or `WithHTTPClient` works with either constructor.
+Each listener refuses the other's credential, so a process that needs both builds
+both, against different base URLs. `Option` values are shared between the two
+constructors.
+
+## Configuration
+
+```go
+client, err := sdk.NewClient("https://kaiten.example.com/api",
+	// Authorization: Bearer <token> on every request.
+	sdk.WithBearerToken(token),
+
+	// Your own transport, timeouts and retries. Replaces the default client
+	// and its 30s DefaultTimeout.
+	sdk.WithHTTPClient(&http.Client{Timeout: 10 * time.Second}),
+
+	// Edit every outgoing request: tracing headers, per-call credentials, ...
+	sdk.WithRequestEditorFn(func(ctx context.Context, req *http.Request) error {
+		req.Header.Set("X-Request-ID", requestIDFrom(ctx))
+		return nil
+	}),
+)
+```
+
+| Option                     | Purpose                                                          |
+| -------------------------- | ---------------------------------------------------------------- |
+| `WithBearerToken(token)`   | Set the bearer token sent with every request.                    |
+| `WithHTTPClient(client)`   | Use a custom `*http.Client`; replaces `DefaultTimeout` (30s).    |
+| `WithRequestEditorFn(fn)`  | Run a function on each request before it is sent. Repeatable.    |
+| `WithBaseURL(url)`         | Override the base URL given to the constructor.                  |
+
+## Core API
+
+`Client` groups the Core API by resource: `Customers`, `Instances`, `Licenses`,
+`LicenseFamilies`, `Entitlements`, `EntitlementGroups`, `FeatureFlags`,
+`MetadataFields`, `Components`, `DeploymentZones`, `Releases` and `ServiceAccounts`.
+Every namespace exposes the CRUD operations its resource supports, plus the
+operations below.
+
+### Customers and instances
+
+```go
+customer, err := client.Customers.Create(ctx, sdk.CustomerInput{
+	Name: "Acme Corp",
+})
+if err != nil {
+	return err
+}
+
+instance, err := client.Instances.Create(ctx, sdk.InstanceInput{
+	Name:             "acme-production",
+	CustomerID:       *customer.Id,
+	LicenseID:        licenseID,
+	StartLicenseDate: time.Now(),
+	EndLicenseDate:   time.Now().AddDate(1, 0, 0),
+	Metadata:         map[string]any{"region": "eu-west-1"},
+})
+if err != nil {
+	return err
+}
+
+// Instances are addressed by slug from here on.
+err = client.Instances.UpdateStatus(ctx, *instance.Slug, sdk.InstanceStatusHealthy)
+```
+
+`InstanceInput.Slug` is generated when nil on create and renames the instance on
+update; a slug another instance holds is a 409.
+
+### Licenses and entitlements
+
+A license is one version of a family; `LicenseFamilies` reads the family with its
+current version, `Licenses` writes individual versions.
+
+```go
+// Grant 25 seats to the license, then make it available to instances.
+seats, err := sdk.NumberLicenseValue(25)
+if err != nil {
+	return err
+}
+if err := client.Licenses.AssociateEntitlement(ctx, "team-v1", "seats", seats); err != nil {
+	return err
+}
+
+license, err := client.Licenses.Publish(ctx, "team-v1")
+if err != nil {
+	return err
+}
+fmt.Println(*license.LifecycleState) // PUBLISHED
+```
+
+A license is created as `LicenseLifecycleDraft` or `LicenseLifecyclePublished` and
+moves only through `Licenses.Publish`, `Licenses.Archive` and `Licenses.Unarchive`.
+`sdk.BooleanLicenseValue` and `sdk.ConfigLicenseValue` build the other two value
+kinds.
+
+### Usage metering
+
+```go
+// Report a delta against a metered entitlement.
+err := client.Instances.ReportUsage(ctx, "acme-production", "api-calls", 1)
+if errors.Is(err, sdk.ErrThresholdExceeded) {
+	// The instance has reached its limit for this entitlement.
+}
+
+// Or set the absolute value and get the resulting metric back.
+usage, err := client.Instances.ReportEntitlementUsageMetric(ctx, "acme-production", "seats",
+	sdk.UsageReportInput{Value: 18, Behavior: sdk.Set},
+)
+```
+
+`Instances.ListEntitlementUsageMetrics` and `EntitlementGroups.GetUsage` read the
+current position of an instance against its limits.
+
+### Feature flags
+
+```go
+flags, err := client.FeatureFlags.List(ctx)
+for _, flag := range flags {
+	fmt.Println(*flag.Slug, flag.Enabled, flag.Type)
+}
+```
+
+`sdk.BasicDefaultVariant` and `sdk.BasicVariantTargeting` build the default variant
+and the targeting rules a `FeatureFlag` carries on create and update.
+
+## Platform API
+
+`PlatformClient` reaches the Platform API with a platform credential and exposes
+`Organizations`, `Users`, `Tokens` and `Connectors`. `PlatformClient.Me` returns the
+credential the client is using.
 
 ```go
 platform, err := sdk.NewPlatformClient(
@@ -73,179 +219,160 @@ if err != nil {
 	log.Fatal(err)
 }
 
-// Idempotent: the organization id is derived from the external id, so the same call
-// converges on the same organization on every run.
+// Idempotent: the organization id derives from the external id, so every run
+// converges on the same organization.
 org, err := platform.Organizations.Ensure(ctx, sdk.EnsureOrganizationInput{
-	ExternalID: externalOrganizationID,
+	ExternalID: "org_2abcDEF",
 	Name:       &name,
 })
 if err != nil {
 	log.Fatal(err)
 }
 
-// The plaintext is returned once and never again -- the API stores a hash.
+// Mint an organization-scoped token for a machine consumer. The plaintext is
+// returned once; the API stores a hash.
+ttl := 90 * 24 * time.Hour
 minted, err := platform.Tokens.Mint(ctx, org.Id, sdk.MintTokenInput{
-	Name:   "zone-kaiten",
+	Name:   "zone-eu-west-1",
 	Scopes: []string{"write:instances", "read:feature_flags"},
+	TTL:    &ttl,
 })
+if err != nil {
+	log.Fatal(err)
+}
+fmt.Println(*minted.Token)
+
+// Tokens are revoked by slug, not by name.
+err = platform.Tokens.Revoke(ctx, org.Id, *minted.Slug)
 ```
 
-Two things about minted tokens are easy to get wrong:
-
-- **Revocation cascades.** A token minted over the Platform API is bound to the platform
-  credential that minted it; revoking the parent revokes every child. Rotate as
-  mint-new, adopt, revoke-old -- never revoke-then-mint.
-- **`Slug`, not `Name`, is the handle.** `Tokens.Revoke` takes the slug from
-  `MintedToken.Slug`.
+A token minted over the Platform API is bound to the credential that minted it, and
+revoking that credential revokes every token it minted. Rotate as mint-new, adopt,
+revoke-old.
 
 ### Registering a connector
 
-A connector hosted outside the Kaiten API process declares itself over the Platform API:
+A connector hosted outside the Kaiten API process declares itself deployment-wide.
+Registration is an upsert on the name, so a host may call it on every start.
 
 ```go
-schema := map[string]any{
-	"type":                 "object",
-	"additionalProperties": false,
-	"required":             []any{"apiKey"},
-	"properties": map[string]any{
-		// writeOnly marks a secret: the API accepts it and never reads it back out.
-		"apiKey": map[string]any{"type": "string", "writeOnly": true},
-	},
-}
-
 connector, err := platform.Connectors.Register(ctx, sdk.RegisterConnectorInput{
-	Name:            "kaiten.integration.crm.example",
-	Version:         "1.0.0",
-	SettingsSchema:  schema,
-	EntitlementSlug: &slug, // nil leaves the connector ungated
+	Name:    "kaiten.integration.crm.example",
+	Version: "1.0.0",
+	SettingsSchema: map[string]any{
+		"type":                 "object",
+		"additionalProperties": false,
+		"required":             []any{"apiKey"},
+		"properties": map[string]any{
+			// writeOnly marks a secret: accepted, never read back.
+			"apiKey": map[string]any{"type": "string", "writeOnly": true},
+		},
+	},
+	// The BOOLEAN entitlement an organization's license must grant to
+	// activate this connector. Nil leaves it ungated.
+	EntitlementSlug: &entitlementSlug,
 })
 ```
 
-Two halves, and they are deliberately not the same call. `Register` is deployment-wide --
-"this connector exists here, and this is what its settings look like" -- and is an upsert
-on the name, so a process that hosts a connector can call it on every start. Whether a
-given organization may *use* it is the other half: the organization activates the
-connector for itself over the Core API, and `EntitlementSlug` names the BOOLEAN
-entitlement its licence must grant for that to be allowed. Nil means ungated, which is
-the open-source default.
+## Pagination
 
-Kaiten's own built-in connectors never come through here: they are compiled into the API
-binary and register in-process at startup, where there is no wire to be on and no
-credential to present.
+Every list method returns the whole collection: the SDK walks the API's cursor pages
+itself, and a caller never sees a cursor.
 
-## The generated client, and what is hand-written
+The one exception is `Instances.ListAuditTrails`, whose collection grows without
+bound. `AuditTrailsOptions.Limit` caps how many entries are fetched, and
+`EventName`, `After` and `Before` filter them.
 
-`internal/gen` and `internal/genplatform` are oapi-codegen output from Kaiten's two
-OpenAPI documents, and carry a `DO NOT EDIT` header: a defect in either is fixed in the
-spec or by a generator bump, never by editing the file. `task generate` and
-`task generate:platform` regenerate them; both need oapi-codegen v2.8.0 or newer, and
-the Core config must keep `output-options: skip-prune: true`. Without it, schemas
-reachable only from webhook definitions (`Deployment`, `FeatureFlagEvaluated`,
-`SystemTokenIssuance`, ...) are pruned as unused while the webhook body types that
-reference them are still emitted, and the package does not compile.
+```go
+limit := int32(100)
+trails, err := client.Instances.ListAuditTrails(ctx, "acme-production", &sdk.AuditTrailsOptions{
+	EventName: "instance.updated",
+	After:     &since,
+	Limit:     &limit,
+})
+```
 
-`types.go` aliases the generated models under this package's own names. Where a Go name
-and a spec name disagree -- `EntitlementGroupRef` for `EntitlementGroupSummary`,
-`ErrorModel` for `Problem` -- the Go name wins: it is a published identifier, and
-renaming it would break every consumer for a wire name they never see.
+`InstancesListOptions.IncludeDeleted` and `AuditTrailsOptions.Offset` are still sent
+but ignored by current Kaiten versions; their doc comments say why they remain.
 
-Two things are deliberately **not** taken from the generator, and one thing the
-generator no longer offers.
+## Error handling
 
-**Request bodies are rendered by hand.** Every Core request body is
-`additionalProperties: false`, so a key the spec does not declare is a 422 rather than a
-field the API ignores, and a required-but-nullable key the client omits is the same 422
-from the other side. Neither shows up as a type error. So each input type renders its own
-payload, and `TestRequestBodiesMatchTheirSpecBodies` pins the exact key set of every
-write against the spec's own bodies, in both directions.
+Every non-2xx response is returned as an `*sdk.Error`.
 
-A create body and its update body routinely differ -- a slug is assigned once and then
-immutable; a license's lifecycle state is chosen on create (draft or published) and then
-moved only by `Licenses.Publish`, `Archive` and `Unarchive` -- so one input type renders
-two payloads, `createPayload()` and `updatePayload()`. `instancePatchPayload` is
-hand-written for the same reason: the generated `PatchInstanceBody` renders
-`lifecycle_stage` where the spec names the key `lifecycleStage`.
+```go
+instance, err := client.Instances.Get(ctx, "acme-production")
+if err != nil {
+	var apiErr *sdk.Error
+	if errors.As(err, &apiErr) {
+		switch {
+		case apiErr.Code == "Instance.NotFound":
+			// Branch on Code: it is stable and distinguishes, for example,
+			// the two different 404s a family endpoint can answer.
+		case apiErr.StatusCode == http.StatusForbidden:
+			// Wrong credential class or missing scope.
+		default:
+			// apiErr.Problem carries the RFC 9457 body; apiErr.ErrorID
+			// correlates with the server-side log entry.
+			log.Printf("%v", apiErr)
+		}
+		return err
+	}
+	return err // transport error
+}
+```
 
-**The inputs are narrower than the spec, on purpose.** `EntitlementInput` carries the
-presentation fields (`icon`, `unitSingular`, `unitPlural`, `userFacing`, `displayOrder`)
-but not `enforcementMode`, `resetPeriod`, `resetAnchor`, `warningThresholdPercent` or the
-`saleUnit*` trio. Fields are added when a caller needs one, so that the wire behaviour of
-each is pinned by a test rather than assumed.
+| Field        | Contents                                                              |
+| ------------ | --------------------------------------------------------------------- |
+| `StatusCode` | HTTP status code.                                                     |
+| `Code`       | Stable, machine-readable code such as `License.NotFound`, when given. |
+| `Problem`    | The decoded problem-details body (`title`, `detail`, `errors`, ...).  |
+| `ErrorID`    | Correlation id for the server-side log entry, when given.             |
+| `Body`       | The raw response body.                                                |
 
-**Registration is a platform operation.** `internal/gen` declares no
-`RegisterConnector`: the Core document dropped that path, and
-`PlatformConnectors.Register` is the one way in.
+`Instances.ReportUsage` additionally returns `sdk.ErrThresholdExceeded` when a report
+would cross the entitlement's limit.
 
-### Every list is paginated, and this package walks it
+## Low-level access
 
-Core paginates all fourteen of its list endpoints: they answer
-`{"items": [...], "nextCursor": ..., "hasMore": ...}`, not a bare array.
-
-`pagination.go` decodes that envelope by hand and **walks the pages itself**, so the list
-methods keep their signatures and their "returns all X" promise stays true. A caller never
-sees a cursor. Two things are worth knowing:
-
-- **`limit=200` is a hard ceiling, not a hint.** The endpoints declare `maximum: 200`, and
-  huma rejects `201` with a 422 before Core's own clamp would run. `maxPageLimit` cannot be
-  raised without Core raising that maximum first.
-- **`Instances.ListAuditTrails` is the one exception.** That collection grows without bound,
-  so "all of them" is not a useful default and `AuditTrailsOptions.Limit` is honoured as a
-  ceiling: it walks only as many pages as it takes to reach the count asked for.
-
-Walking rather than exposing pages is also what closes the silent-truncation trap. Core's
-default page is 50 rows, so a list method returning one page would keep working right up
-to the 51st row and then quietly omit it.
-
-Two query parameters are now **dead**, and Core ignores rather than rejects an unknown one,
-so both fail silently:
-
-| Field | Sent as | State |
-| --- | --- | --- |
-| `InstancesListOptions.IncludeDeleted` | `include_deleted` | `GET /instances` takes only `cursor` and `limit`. Soft-deleted instances are excluded either way. |
-| `AuditTrailsOptions.Offset` | `offset` | The endpoint moved from offset/limit to cursor pagination. An offset that used to skip entries now returns the newest ones. |
-
-Both are kept and still sent: removing them is a breaking change to every caller, and
-re-adding the parameters to Core would make them work again untouched. `Offset` has no
-replacement -- `Limit` covers what it was reached for in practice, and only resuming from
-where a previous call stopped is no longer expressible.
-
-`pagination_test.go` pins all of this against a fake server that pages the way Core does:
-that the envelope decodes at all, that a 451-row walk makes exactly three requests carrying
-`limit=200` and the right `cursor`, that each page keeps the endpoint's own filters, that the
-`Authorization` editor still runs on a hand-built request, that every request path is the
-one the endpoint expects, and that a non-2xx still arrives as an `*Error` carrying its
-status. That last one matters to any caller that branches on the status -- a
-credential-provisioning loop reading 401 and 403 as "this credential is finished" would
-mint a replacement on every transient failure if the status were lost.
+`Client.Raw()` and `PlatformClient.Raw()` return the generated OpenAPI clients for
+operations the typed namespaces do not cover. They are the oapi-codegen output of
+Kaiten's two OpenAPI documents; their request and response types are the ones the
+typed layer aliases in `types.go`.
 
 ## Development
 
-Install [Task](https://taskfile.dev), then run `task --list` to see every
-available workflow. The ones you will use:
+Install [Task](https://taskfile.dev) and Go 1.25+. Tools run through
+`go run <tool>@<version>` against the versions pinned in `Taskfile.yml`, so local
+runs match CI.
 
-```bash
-task test      # go test -race -shuffle=on -cover ./...
-task lint      # golangci-lint, pinned to the version CI runs
-task fmt       # gofumpt + gci, the formatters .golangci.yml declares
-task fix       # lint with --fix
+```shell
+task test           # go test -race -shuffle=on -cover ./...
+task lint           # golangci-lint, the version CI runs
+task fmt            # gofumpt + gci
+task vuln           # govulncheck over reachable code
+task release:check  # gorelease: exported API diff against the last tag
 ```
 
-Tools are fetched with `go run <tool>@<version>` against versions pinned in
-`Taskfile.yml`, so there is nothing to install beyond Task and Go, and local
-runs match CI exactly.
+`internal/gen` and `internal/genplatform` are generated from Kaiten's Core and
+Platform OpenAPI documents and are never edited by hand:
 
-Before proposing a release:
-
-```bash
-task vuln           # govulncheck: advisories this code actually reaches
-task deadcode       # functions no entry point or test can reach
-task release:check  # gorelease: the exported API diff against the last tag
+```shell
+task generate          OPENAPI_SPEC=path/to/openapi.yaml
+task generate:platform PLATFORM_OPENAPI_SPEC=path/to/platform-openapi.yaml
 ```
 
-`task release:check` is the important one. This module is published, so every
-tag is somebody's build: a changed or removed exported identifier is a breaking
-change for every consumer, and `gorelease` is the only reliable way to spot one.
+Request bodies are rendered by hand in `inputs.go`, because the API rejects unknown
+keys. `TestRequestBodiesMatchTheirSpecBodies` pins each input type's key set against
+the spec, so adding a field to an input means adding it to that test's expectations
+too.
+
+## Contributing
+
+Issues and pull requests are welcome. Before opening one, run `task fmt`, `task lint`
+and `task test`. A change to any exported identifier is a release concern for every
+consumer of this module: run `task release:check` and say in the pull request which
+semver bump it forces.
 
 ## License
 
-This project is licensed under the [Apache License, Version 2.0](LICENSE).
+Licensed under the [Apache License, Version 2.0](LICENSE).
