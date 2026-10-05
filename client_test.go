@@ -113,7 +113,7 @@ func TestClientExposesOnlyTheReviewedPublicSurface(t *testing.T) {
 		},
 		"Instances": {
 			service: client.Instances,
-			methods: []string{"List", "Get", "Create", "Update", "UpdateStatus", "UpdateLifecycleStage", "Delete", "ListAuditTrails", "ListEntitlementUsageMetrics", "GetEntitlementUsageMetric", "ReportEntitlementUsageMetric", "ReportUsage"},
+			methods: []string{"List", "Get", "Create", "Update", "UpdateStatus", "UpdateLifecycleStage", "Delete", "ListAuditTrails", "ListEntitlementUsageMetrics", "GetEntitlementUsageMetric", "ReportEntitlementUsage", "ReportEntitlementUsageMetric", "ReportUsage", "ListUsageReports", "ExportUsageReports", "ExportOrganizationUsageReports"},
 		},
 		"LicenseFamilies": {
 			service: client.LicenseFamilies,
@@ -377,10 +377,17 @@ func TestClientWrappersReportEveryDeclaredProblem(t *testing.T) {
 				return err
 			},
 		},
-		"Instances.ReportEntitlementUsageMetric": {
+		"Instances.ReportEntitlementUsage": {
 			response: gen.ReportEntitlementUsageMetricResponse{},
 			call: func(ctx context.Context, c *Client) error {
-				_, err := c.Instances.ReportEntitlementUsageMetric(ctx, "acme-prod", "seats", UsageReportInput{Value: 1})
+				_, err := c.Instances.ReportEntitlementUsage(ctx, "acme-prod", "seats", UsageReportInput{Value: 1})
+				return err
+			},
+		},
+		"Instances.ListUsageReports": {
+			response: gen.ListUsageReportsResponse{},
+			call: func(ctx context.Context, c *Client) error {
+				_, err := c.Instances.ListUsageReports(ctx, "acme-prod", "seats", nil)
 				return err
 			},
 		},

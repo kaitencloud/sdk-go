@@ -144,40 +144,12 @@ func (s *Instances) GetEntitlementUsageMetric(ctx context.Context, instanceSlug,
 	return expectJSON(newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500), resp.JSON200)
 }
 
-// ReportEntitlementUsageMetric reports usage of the entitlement identified by entitlementSlug for the instance identified by instanceSlug.
+// ReportEntitlementUsageMetric reports usage of the entitlement identified by entitlementSlug for the
+// instance identified by instanceSlug, and returns the resulting usage. It is ReportEntitlementUsage
+// without what Kaiten said about the report: whether it was a replay, and whether its metadata was kept.
 func (s *Instances) ReportEntitlementUsageMetric(ctx context.Context, instanceSlug, entitlementSlug string, input UsageReportInput) (EntitlementUsage, error) {
-	usageValue, err := NumberUsageValue(input.Value)
-	if err != nil {
-		var zero EntitlementUsage
-		return zero, fmt.Errorf("encode usage value: %w", err)
-	}
-
-	behavior := input.Behavior
-	if behavior == "" {
-		behavior = Append
-	}
-
-	body, err := jsonBody(struct {
-		Behavior *EntitlementUsageBehavior `json:"behavior,omitempty"`
-		Metadata *map[string]any           `json:"metadata,omitempty"`
-		Value    EntitlementUsageValue     `json:"value"`
-	}{
-		Behavior: &behavior,
-		Metadata: cloneMapPtr(input.Metadata),
-		Value:    usageValue,
-	})
-	if err != nil {
-		var zero EntitlementUsage
-		return zero, fmt.Errorf("encode usage report request: %w", err)
-	}
-
-	resp, err := s.client.raw.ReportEntitlementUsageMetricWithBodyWithResponse(ctx, instanceSlug, entitlementSlug, contentTypeJSON, body)
-	if err != nil {
-		var zero EntitlementUsage
-		return zero, fmt.Errorf("report entitlement usage metric: %w", err)
-	}
-
-	return expectJSON(newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON409, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500), resp.JSON200)
+	result, err := s.ReportEntitlementUsage(ctx, instanceSlug, entitlementSlug, input)
+	return result.Usage, err
 }
 
 // ReportUsage reports an incremental usage delta for the entitlement identified by entitlementSlug
@@ -191,10 +163,16 @@ func (s *Instances) ReportUsage(ctx context.Context, instanceSlug, entitlementSl
 		return nil
 	}
 
+	if errors.Is(err, ErrThresholdExceeded) || errors.Is(err, ErrTransactionIDReused) {
+		return err
+	}
+
 	var apiErr *Error
 	if errors.As(err, &apiErr) && apiErr.StatusCode == http.StatusConflict {
-		// Wrap both so callers keep the sentinel and the problem details: errors.Is finds
-		// ErrThresholdExceeded and errors.As still reaches the *Error, as everywhere else.
+		// A conflict without the code that names it: the only conflict a report
+		// without a key can meet is the limit. Wrap both so callers keep the
+		// sentinel and the problem details: errors.Is finds ErrThresholdExceeded
+		// and errors.As still reaches the *Error, as everywhere else.
 		return fmt.Errorf("report usage failed: %w: %w", ErrThresholdExceeded, apiErr)
 	}
 

@@ -109,6 +109,7 @@ client, err := sdk.NewClient("https://kaiten.example.com/api",
 | `WithHTTPClient(client)`   | Use a custom `*http.Client`; replaces `DefaultTimeout` (30s).    |
 | `WithRequestEditorFn(fn)`  | Run a function on each request before it is sent. Repeatable.    |
 | `WithBaseURL(url)`         | Override the base URL given to the constructor.                  |
+| `WithLogger(logger)`       | Where to log events an operator should know about; `slog.Default()` otherwise. |
 
 ## Core API
 
@@ -191,6 +192,69 @@ usage, err := client.Instances.ReportEntitlementUsageMetric(ctx, "acme-productio
 
 `Instances.ListEntitlementUsageMetrics` and `EntitlementGroups.GetUsage` read the
 current position of an instance against its limits.
+
+#### Safe retries with a transaction ID
+
+A report without a key is sent once and never retried: if its request fails, it
+may or may not have been counted, and sending it again could count it twice. Give
+it a `TransactionID` and Kaiten applies it at most once (per instance, entitlement
+and key, within 35 days by default), so the SDK retries it on network errors and
+on 500, 502, 503 and 504, up to three attempts, all under the same key.
+
+```go
+result, err := client.Instances.ReportEntitlementUsage(ctx, "acme-production", "tokens",
+	sdk.UsageReportInput{
+		Value:         1200,
+		TransactionID: "llm-call:9f2c:tokens", // a UUID, or the business event ID plus the meter
+		Metadata:      map[string]any{"model": "large"},
+	},
+)
+switch {
+case errors.Is(err, sdk.ErrTransactionIDReused):
+	// The key was already used for a different report: a bug in how keys are
+	// made. Not retryable. Send a correction as a new report under a new key.
+case err != nil:
+	return err
+case result.Replayed:
+	// Kaiten had already counted this report; result.Usage is its original
+	// answer, possibly for a window that has since closed.
+case result.MetadataDropped:
+	// Counted, but the metadata was above 4 KiB and was not stored.
+}
+```
+
+A server older than transaction IDs refuses the field. The client then sends the
+report again without it, and stops sending keys (and retrying) for its lifetime,
+logging that once through `WithLogger`.
+
+#### Usage history
+
+Every accepted report is kept in the usage history for the organization's
+retention: the counter before and after it, and the limit it was gated on.
+
+```go
+from := time.Now().AddDate(0, 0, -7)
+reports, err := client.Instances.ListUsageReports(ctx, "acme-production", "tokens",
+	&sdk.UsageReportsOptions{From: &from},
+)
+
+// Or stream it, as CSV or NDJSON. Close the body.
+export, err := client.Instances.ExportUsageReports(ctx, "acme-production", "tokens",
+	&sdk.UsageExportOptions{From: &from, Format: sdk.UsageExportCSV},
+)
+if err != nil {
+	return err
+}
+defer export.Body.Close()
+_, err = io.Copy(file, export.Body) // export.Filename names the range
+```
+
+`Instances.ExportOrganizationUsageReports` exports the whole organization, 31 days
+at a time, optionally for one instance or entitlement; `InstanceID` and
+`EntitlementID` reach deleted ones. A `From` before the start of the
+organization's history answers a 422 whose `Code` ends in `OutsideRetention`.
+The client's timeout covers reading an export's body: give a large export a client
+with a longer one through `WithHTTPClient`.
 
 ### Feature flags
 
@@ -329,8 +393,14 @@ if err != nil {
 | `ErrorID`    | Correlation id for the server-side log entry, when given.             |
 | `Body`       | The raw response body.                                                |
 
-`Instances.ReportUsage` additionally returns `sdk.ErrThresholdExceeded` when a report
-would cross the entitlement's limit.
+The usage report methods also return sentinels for `errors.Is`, alongside the
+`*sdk.Error`:
+
+| Sentinel                      | Meaning                                                                 |
+| ----------------------------- | ----------------------------------------------------------------------- |
+| `ErrThresholdExceeded`        | The report would cross the entitlement's limit.                         |
+| `ErrTransactionIDReused`      | The key was already used for a different report. Do not retry it.       |
+| `ErrInvalidTransactionID`     | The key is not 1 to 128 characters of `[A-Za-z0-9._:-]`; nothing was sent. |
 
 ## Low-level access
 

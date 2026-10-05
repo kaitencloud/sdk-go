@@ -541,6 +541,24 @@ func (e TargetingContextNodeType) Valid() bool {
 	}
 }
 
+// Defines values for UsageReportBehavior.
+const (
+	UsageReportBehaviorAppend UsageReportBehavior = "append"
+	UsageReportBehaviorSet    UsageReportBehavior = "set"
+)
+
+// Valid indicates whether the value is a known member of the UsageReportBehavior enum.
+func (e UsageReportBehavior) Valid() bool {
+	switch e {
+	case UsageReportBehaviorAppend:
+		return true
+	case UsageReportBehaviorSet:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for GetLicenseFamilyParamsInclude.
 const (
 	Versions GetLicenseFamilyParamsInclude = "versions"
@@ -568,6 +586,57 @@ func (e ListMetadataFieldsParamsResourceType) Valid() bool {
 	case ListMetadataFieldsParamsResourceTypeDEPLOYMENTZONE:
 		return true
 	case ListMetadataFieldsParamsResourceTypeINSTANCE:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ListNotificationsParamsStatus.
+const (
+	All    ListNotificationsParamsStatus = "all"
+	Unread ListNotificationsParamsStatus = "unread"
+)
+
+// Valid indicates whether the value is a known member of the ListNotificationsParamsStatus enum.
+func (e ListNotificationsParamsStatus) Valid() bool {
+	switch e {
+	case All:
+		return true
+	case Unread:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ListNotificationsParamsObjectType.
+const (
+	ListNotificationsParamsObjectTypeComponent      ListNotificationsParamsObjectType = "component"
+	ListNotificationsParamsObjectTypeCustomer       ListNotificationsParamsObjectType = "customer"
+	ListNotificationsParamsObjectTypeDeploymentZone ListNotificationsParamsObjectType = "deployment_zone"
+	ListNotificationsParamsObjectTypeInstance       ListNotificationsParamsObjectType = "instance"
+	ListNotificationsParamsObjectTypeLicense        ListNotificationsParamsObjectType = "license"
+	ListNotificationsParamsObjectTypeRelease        ListNotificationsParamsObjectType = "release"
+	ListNotificationsParamsObjectTypeToken          ListNotificationsParamsObjectType = "token"
+)
+
+// Valid indicates whether the value is a known member of the ListNotificationsParamsObjectType enum.
+func (e ListNotificationsParamsObjectType) Valid() bool {
+	switch e {
+	case ListNotificationsParamsObjectTypeComponent:
+		return true
+	case ListNotificationsParamsObjectTypeCustomer:
+		return true
+	case ListNotificationsParamsObjectTypeDeploymentZone:
+		return true
+	case ListNotificationsParamsObjectTypeInstance:
+		return true
+	case ListNotificationsParamsObjectTypeLicense:
+		return true
+	case ListNotificationsParamsObjectTypeRelease:
+		return true
+	case ListNotificationsParamsObjectTypeToken:
 		return true
 	default:
 		return false
@@ -1918,6 +1987,96 @@ const (
 func (e OnLicenseUpdatedJSONBodyType) Valid() bool {
 	switch e {
 	case ComKaitenLicenseV1Updated:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnLicenseFamilyCreatedJSONBodyName.
+const (
+	LICENSEFAMILYCREATED OnLicenseFamilyCreatedJSONBodyName = "LICENSE_FAMILY_CREATED"
+)
+
+// Valid indicates whether the value is a known member of the OnLicenseFamilyCreatedJSONBodyName enum.
+func (e OnLicenseFamilyCreatedJSONBodyName) Valid() bool {
+	switch e {
+	case LICENSEFAMILYCREATED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnLicenseFamilyCreatedJSONBodyType.
+const (
+	ComKaitenLicenseFamilyV1Created OnLicenseFamilyCreatedJSONBodyType = "com.kaiten.license_family.v1.created"
+)
+
+// Valid indicates whether the value is a known member of the OnLicenseFamilyCreatedJSONBodyType enum.
+func (e OnLicenseFamilyCreatedJSONBodyType) Valid() bool {
+	switch e {
+	case ComKaitenLicenseFamilyV1Created:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnLicenseFamilyDeletedJSONBodyName.
+const (
+	LICENSEFAMILYDELETED OnLicenseFamilyDeletedJSONBodyName = "LICENSE_FAMILY_DELETED"
+)
+
+// Valid indicates whether the value is a known member of the OnLicenseFamilyDeletedJSONBodyName enum.
+func (e OnLicenseFamilyDeletedJSONBodyName) Valid() bool {
+	switch e {
+	case LICENSEFAMILYDELETED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnLicenseFamilyDeletedJSONBodyType.
+const (
+	ComKaitenLicenseFamilyV1Deleted OnLicenseFamilyDeletedJSONBodyType = "com.kaiten.license_family.v1.deleted"
+)
+
+// Valid indicates whether the value is a known member of the OnLicenseFamilyDeletedJSONBodyType enum.
+func (e OnLicenseFamilyDeletedJSONBodyType) Valid() bool {
+	switch e {
+	case ComKaitenLicenseFamilyV1Deleted:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnLicenseFamilyUpdatedJSONBodyName.
+const (
+	LICENSEFAMILYUPDATED OnLicenseFamilyUpdatedJSONBodyName = "LICENSE_FAMILY_UPDATED"
+)
+
+// Valid indicates whether the value is a known member of the OnLicenseFamilyUpdatedJSONBodyName enum.
+func (e OnLicenseFamilyUpdatedJSONBodyName) Valid() bool {
+	switch e {
+	case LICENSEFAMILYUPDATED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnLicenseFamilyUpdatedJSONBodyType.
+const (
+	ComKaitenLicenseFamilyV1Updated OnLicenseFamilyUpdatedJSONBodyType = "com.kaiten.license_family.v1.updated"
+)
+
+// Valid indicates whether the value is a known member of the OnLicenseFamilyUpdatedJSONBodyType enum.
+func (e OnLicenseFamilyUpdatedJSONBodyType) Valid() bool {
+	switch e {
+	case ComKaitenLicenseFamilyV1Updated:
 		return true
 	default:
 		return false
@@ -3500,6 +3659,18 @@ type LicenseFamilyView struct {
 	Versions *[]License `json:"versions,omitempty"`
 }
 
+// List defines model for List.
+type List struct {
+	// Data The page, newest first
+	Data []Notification `json:"data"`
+
+	// NextCursor Opaque cursor for the next page; null on the last page
+	NextCursor *string `json:"nextCursor"`
+
+	// UnreadCount Unread notifications, capped (see MaxUnreadCount)
+	UnreadCount int64 `json:"unreadCount"`
+}
+
 // ManifestEnvelope defines model for ManifestEnvelope.
 type ManifestEnvelope struct {
 	Flags *[]ManifestFlag `json:"flags"`
@@ -3512,6 +3683,15 @@ type ManifestFlag struct {
 	Key          string      `json:"key"`
 	Name         *string     `json:"name,omitempty"`
 	Type         string      `json:"type"`
+}
+
+// MarkReadResult defines model for MarkReadResult.
+type MarkReadResult struct {
+	// UnreadCount Unread notifications after the change
+	UnreadCount int64 `json:"unreadCount"`
+
+	// Updated Notifications newly marked read
+	Updated int64 `json:"updated"`
 }
 
 // MetadataField defines model for MetadataField.
@@ -3575,6 +3755,42 @@ type MetadataFieldReordered struct {
 type MetadataFieldSchemaProposal struct {
 	// JsonSchema Candidate JSON Schema 2020-12 document to evaluate existing values against.
 	JsonSchema map[string]interface{} `json:"jsonSchema"`
+}
+
+// Notification defines model for Notification.
+type Notification struct {
+	// ActionUrl Where clicking the notification goes
+	ActionUrl *string `json:"actionUrl,omitempty"`
+
+	// Body Rendered detail line, when the event has one
+	Body *string `json:"body,omitempty"`
+
+	// CreatedAt When the event occurred
+	CreatedAt time.Time `json:"createdAt"`
+
+	// EventName Event this notification reports
+	//
+	// Examples: INSTANCE_DEPLOYED
+	EventName string `json:"eventName"`
+
+	// EventType CloudEvents type of the same event -- the key it is published under in this document's webhooks section, so a client can line a notification up with the payload schema and the description already published there
+	//
+	// Examples: com.kaiten.instance.v1.deployed
+	EventType string `json:"eventType"`
+
+	// Id Identifier of the underlying audit trail entry
+	Id string `json:"id"`
+
+	// ObjectType What the notification is about -- the kind of page actionUrl opens, and what the list's objectType filter matches
+	//
+	// Examples: instance
+	ObjectType string `json:"objectType"`
+
+	// ReadAt When this user read it; absent means unread
+	ReadAt *time.Time `json:"readAt,omitempty"`
+
+	// Title Rendered headline
+	Title string `json:"title"`
 }
 
 // NumberEntitlementValue defines model for NumberEntitlementValue.
@@ -3785,6 +4001,49 @@ type PlainToken struct {
 	Token *string `json:"token,omitempty"`
 }
 
+// PreferenceChoices defines model for PreferenceChoices.
+type PreferenceChoices struct {
+	// Events Events to set; events left out keep their current value
+	Events *[]PreferenceUpdate `json:"events"`
+}
+
+// PreferenceEvent defines model for PreferenceEvent.
+type PreferenceEvent struct {
+	// Channels Effective value per channel
+	Channels map[string]bool `json:"channels"`
+
+	// EventName Examples: INSTANCE_DEPLOYED
+	EventName string `json:"eventName"`
+
+	// EventType CloudEvents type of the same event; see Notification.eventType
+	//
+	// Examples: com.kaiten.instance.v1.deployed
+	EventType string `json:"eventType"`
+
+	// Group Catalogue group the client renders this under
+	//
+	// Examples: deployments
+	Group string `json:"group"`
+
+	// Label Human-readable event name
+	Label string `json:"label"`
+}
+
+// PreferenceMatrix defines model for PreferenceMatrix.
+type PreferenceMatrix struct {
+	// Channels Channels this deployment serves, in display order
+	Channels []string `json:"channels"`
+
+	// Events Every notifiable event
+	Events []PreferenceEvent `json:"events"`
+}
+
+// PreferenceUpdate defines model for PreferenceUpdate.
+type PreferenceUpdate struct {
+	Channels  map[string]bool `json:"channels"`
+	EventName string          `json:"eventName"`
+}
+
 // Problem defines model for Problem.
 type Problem struct {
 	// Code Stable, machine-readable error code.
@@ -3824,6 +4083,15 @@ type Problem struct {
 	//
 	// Examples: https://tools.ietf.org/html/rfc7231#section-6.5.4
 	Type *string `json:"type,omitempty"`
+}
+
+// ReadSelection defines model for ReadSelection.
+type ReadSelection struct {
+	// All Mark every notification read, up to now
+	All *bool `json:"all,omitempty"`
+
+	// Ids Notifications to mark read
+	Ids *[]string `json:"ids,omitempty"`
 }
 
 // Release defines model for Release.
@@ -3875,8 +4143,13 @@ type ReportEntitlementUsageBody struct {
 	// Behavior Report behavior: append folds the value into the stored total through the aggregation method; set overwrites it
 	Behavior *ReportEntitlementUsageBodyBehavior `json:"behavior,omitempty"`
 
-	// Metadata Optional metadata for the usage report
+	// Metadata Optional metadata for the usage report, a JSON object stored with it in the usage history when its compact encoding is at most 4 KiB. Above that it is not stored, the report is still counted, and the response carries Kaiten-Metadata-Dropped: too_large. It must contain no personal data: anyone who can read the organization's instances can read it, for as long as the usage history is kept. Numbers are read as 64-bit floats, so send large identifiers as strings.
 	Metadata *map[string]interface{} `json:"metadata,omitempty"`
+
+	// TransactionId Optional idempotency key, 1 to 128 characters of [A-Za-z0-9._:-], matched exactly and case-sensitively. A report sent again with the same key and the same behavior and value within KAITEN_USAGE_IDEMPOTENCY_WINDOW (35 days by default) is applied once: the retry answers 200 with the original response and the Idempotent-Replayed header, and changes nothing. The same key with another behavior or value answers 409 ReportEntitlementUsageMetric.TransactionIdReused. A rejected report does not consume its key. Scoped to the instance and entitlement: one business event may feed two meters under one key.
+	//
+	// Examples: llm-call-9f2c:tokens
+	TransactionId *string `json:"transactionId,omitempty"`
 
 	// Value Reported entitlement value, discriminated by the 'type' field. Usage reporting accepts the number variant only.
 	Value ReportEntitlementUsageBody_Value `json:"value"`
@@ -4130,6 +4403,104 @@ type Token struct {
 	Slug *string `json:"slug,omitempty"`
 }
 
+// UsageReport defines model for UsageReport.
+type UsageReport struct {
+	// AggregationMethod The entitlement's aggregation method when the report was accepted
+	//
+	// Examples: SUM
+	AggregationMethod string `json:"aggregationMethod"`
+
+	// Behavior append adds the value through the aggregation method; set overwrites the counter
+	Behavior UsageReportBehavior `json:"behavior"`
+
+	// Delta valueAfter minus valueBefore; negative for a set that lowered the counter
+	//
+	// Examples: 600
+	Delta string `json:"delta"`
+
+	// EntitlementId The entitlement the report was made for. It may since have been deleted.
+	EntitlementId openapi_types.UUID `json:"entitlementId"`
+
+	// EventCountAfter Reports counted in the window after this one
+	//
+	// Examples: 1
+	EventCountAfter int32 `json:"eventCountAfter"`
+
+	// InstanceId The instance the report was made for. It may since have been deleted.
+	InstanceId openapi_types.UUID `json:"instanceId"`
+
+	// LicenseId The instance's licence when the report was accepted
+	LicenseId openapi_types.UUID `json:"licenseId"`
+
+	// LimitValue The limit in force when the report was accepted. Null when unlimited.
+	//
+	// Examples: 1000
+	LimitValue *string `json:"limitValue,omitempty"`
+
+	// OverageDelta How much the usage above limitValue moved: max(0, valueAfter - limitValue) - max(0, valueBefore - limitValue). 0 when unlimited.
+	//
+	// Examples: 0
+	OverageDelta string `json:"overageDelta"`
+
+	// OveragePercent The overage allowed above limitValue, in percent, when the report was accepted. Null when unlimited.
+	//
+	// Examples: 50
+	OveragePercent *int32 `json:"overagePercent,omitempty"`
+
+	// Properties The report's metadata, when it was stored
+	Properties *map[string]interface{} `json:"properties,omitempty"`
+
+	// ReportSeq Position of the report among the pair's accepted reports, from 1, without gaps
+	//
+	// Examples: 42
+	ReportSeq int64 `json:"reportSeq"`
+
+	// ReportedAt When the server accepted the report (UTC, millisecond precision)
+	//
+	// Examples: 2026-10-05T08:00:00.000Z
+	ReportedAt time.Time `json:"reportedAt"`
+
+	// ReportedValue The value as sent: a delta for append, an absolute value for set
+	//
+	// Examples: 600
+	ReportedValue string `json:"reportedValue"`
+
+	// TransactionId The report's idempotency key, when it was sent with one
+	//
+	// Examples: llm-call-9f2c:tokens
+	TransactionId *string `json:"transactionId,omitempty"`
+
+	// ValueAfter The counter after the report
+	//
+	// Examples: 600
+	ValueAfter string `json:"valueAfter"`
+
+	// ValueBefore The counter before the report, after any window reset
+	//
+	// Examples: 0
+	ValueBefore string `json:"valueBefore"`
+
+	// WindowEnd End of the usage window the report counted in (exclusive). Null for a lifetime entitlement.
+	WindowEnd *time.Time `json:"windowEnd,omitempty"`
+
+	// WindowStart Start of the usage window the report counted in (inclusive). Null for a lifetime entitlement.
+	WindowStart *time.Time `json:"windowStart,omitempty"`
+}
+
+// UsageReportBehavior append adds the value through the aggregation method; set overwrites the counter
+type UsageReportBehavior string
+
+// UsageReportPage defines model for UsageReportPage.
+type UsageReportPage struct {
+	// Items The reports, in reportSeq order
+	Items []UsageReport `json:"items"`
+
+	// NextAfterSeq Pass as afterSeq to read the next page. Absent on the last page.
+	//
+	// Examples: 100
+	NextAfterSeq *int64 `json:"nextAfterSeq,omitempty"`
+}
+
 // User defines model for User.
 type User struct {
 	// Id ID of the user
@@ -4237,6 +4608,36 @@ type GetAuditTrailsParams struct {
 	Cursor *string `form:"cursor,omitempty" json:"cursor,omitempty"`
 }
 
+// ListUsageReportsParams defines parameters for ListUsageReports.
+type ListUsageReportsParams struct {
+	// From Start of the range, inclusive (RFC 3339). Defaults to 30 days before to, moved up to the start of the organization's usage history when that is later. An explicit from before it answers 422 ListUsageReports.OutsideRetention.
+	From *time.Time `form:"from,omitempty" json:"from,omitempty"`
+
+	// To End of the range, exclusive (RFC 3339). Defaults to now.
+	To *time.Time `form:"to,omitempty" json:"to,omitempty"`
+
+	// AfterSeq Return the reports after this reportSeq: the nextAfterSeq of the previous page
+	AfterSeq *int64 `form:"afterSeq,omitempty" json:"afterSeq,omitempty"`
+
+	// Limit Maximum number of reports to return (default 100, max 500)
+	Limit *int32 `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// TransactionId Only the report sent with this idempotency key
+	TransactionId *string `form:"transactionId,omitempty" json:"transactionId,omitempty"`
+}
+
+// ExportUsageReportsParams defines parameters for ExportUsageReports.
+type ExportUsageReportsParams struct {
+	// From Start of the range, inclusive (RFC 3339). Defaults to 30 days before to, moved up to the start of the organization's usage history when that is later. An explicit from before it answers 422 ExportUsageReports.OutsideRetention.
+	From *time.Time `form:"from,omitempty" json:"from,omitempty"`
+
+	// To End of the range, exclusive (RFC 3339). Defaults to now. At most 366 days after from.
+	To *time.Time `form:"to,omitempty" json:"to,omitempty"`
+
+	// Format csv (the default): RFC 4180 with a header row. json: NDJSON, one report per line, in the shape listUsageReports returns. Anything else answers 422 ExportUsageReports.InvalidFormat.
+	Format *string `form:"format,omitempty" json:"format,omitempty"`
+}
+
 // ListLicenseFamiliesParams defines parameters for ListLicenseFamilies.
 type ListLicenseFamiliesParams struct {
 	// Cursor Opaque pagination cursor from a previous response's nextCursor
@@ -4338,6 +4739,51 @@ type GetServiceAccountTokensParams struct {
 	// Limit Maximum number of entries to return (default 50, max 200)
 	Limit *int32 `form:"limit,omitempty" json:"limit,omitempty"`
 }
+
+// ExportOrganizationUsageReportsParams defines parameters for ExportOrganizationUsageReports.
+type ExportOrganizationUsageReportsParams struct {
+	// From Start of the range, inclusive (RFC 3339). Defaults to 30 days before to, moved up to the start of the organization's usage history when that is later. An explicit from before it answers 422 ExportUsageReports.OutsideRetention.
+	From *time.Time `form:"from,omitempty" json:"from,omitempty"`
+
+	// To End of the range, exclusive (RFC 3339). Defaults to now. At most 31 days after from.
+	To *time.Time `form:"to,omitempty" json:"to,omitempty"`
+
+	// Format csv (the default): RFC 4180 with a header row. json: NDJSON, one report per line. Anything else answers 422 ExportUsageReports.InvalidFormat.
+	Format *string `form:"format,omitempty" json:"format,omitempty"`
+
+	// InstanceSlug Only this instance's reports
+	InstanceSlug *string `form:"instanceSlug,omitempty" json:"instanceSlug,omitempty"`
+
+	// InstanceId Only this instance's reports. Reaches a deleted instance, whose reports are kept.
+	InstanceId *openapi_types.UUID `form:"instanceId,omitempty" json:"instanceId,omitempty"`
+
+	// EntitlementSlug Only this entitlement's reports
+	EntitlementSlug *string `form:"entitlementSlug,omitempty" json:"entitlementSlug,omitempty"`
+
+	// EntitlementId Only this entitlement's reports. Reaches a deleted entitlement, whose reports are kept.
+	EntitlementId *openapi_types.UUID `form:"entitlementId,omitempty" json:"entitlementId,omitempty"`
+}
+
+// ListNotificationsParams defines parameters for ListNotifications.
+type ListNotificationsParams struct {
+	// Status Which notifications to return (default all)
+	Status *ListNotificationsParamsStatus `form:"status,omitempty" json:"status,omitempty"`
+
+	// ObjectType Only notifications about these kinds of object; repeat the parameter for several (default: all)
+	ObjectType *[]ListNotificationsParamsObjectType `form:"objectType,omitempty" json:"objectType,omitempty"`
+
+	// Cursor Opaque cursor from a previous response's next_cursor
+	Cursor *string `form:"cursor,omitempty" json:"cursor,omitempty"`
+
+	// Limit Page size (default 20, max 50)
+	Limit *int32 `form:"limit,omitempty" json:"limit,omitempty"`
+}
+
+// ListNotificationsParamsStatus defines parameters for ListNotifications.
+type ListNotificationsParamsStatus string
+
+// ListNotificationsParamsObjectType defines parameters for ListNotifications.
+type ListNotificationsParamsObjectType string
 
 // OnComponentCreatedJSONBody defines parameters for OnComponentCreated.
 type OnComponentCreatedJSONBody struct {
@@ -5284,6 +5730,69 @@ type OnLicenseUpdatedJSONBodyName string
 // OnLicenseUpdatedJSONBodyType defines parameters for OnLicenseUpdated.
 type OnLicenseUpdatedJSONBodyType string
 
+// OnLicenseFamilyCreatedJSONBody defines parameters for OnLicenseFamilyCreated.
+type OnLicenseFamilyCreatedJSONBody struct {
+	Data LicenseFamilyView `json:"data"`
+
+	// Name Event name
+	//
+	// Examples: LICENSE_FAMILY_CREATED
+	Name OnLicenseFamilyCreatedJSONBodyName `json:"name"`
+
+	// Type Event type
+	//
+	// Examples: com.kaiten.license_family.v1.created
+	Type OnLicenseFamilyCreatedJSONBodyType `json:"type"`
+}
+
+// OnLicenseFamilyCreatedJSONBodyName defines parameters for OnLicenseFamilyCreated.
+type OnLicenseFamilyCreatedJSONBodyName string
+
+// OnLicenseFamilyCreatedJSONBodyType defines parameters for OnLicenseFamilyCreated.
+type OnLicenseFamilyCreatedJSONBodyType string
+
+// OnLicenseFamilyDeletedJSONBody defines parameters for OnLicenseFamilyDeleted.
+type OnLicenseFamilyDeletedJSONBody struct {
+	Data LicenseFamilyView `json:"data"`
+
+	// Name Event name
+	//
+	// Examples: LICENSE_FAMILY_DELETED
+	Name OnLicenseFamilyDeletedJSONBodyName `json:"name"`
+
+	// Type Event type
+	//
+	// Examples: com.kaiten.license_family.v1.deleted
+	Type OnLicenseFamilyDeletedJSONBodyType `json:"type"`
+}
+
+// OnLicenseFamilyDeletedJSONBodyName defines parameters for OnLicenseFamilyDeleted.
+type OnLicenseFamilyDeletedJSONBodyName string
+
+// OnLicenseFamilyDeletedJSONBodyType defines parameters for OnLicenseFamilyDeleted.
+type OnLicenseFamilyDeletedJSONBodyType string
+
+// OnLicenseFamilyUpdatedJSONBody defines parameters for OnLicenseFamilyUpdated.
+type OnLicenseFamilyUpdatedJSONBody struct {
+	Data LicenseFamilyView `json:"data"`
+
+	// Name Event name
+	//
+	// Examples: LICENSE_FAMILY_UPDATED
+	Name OnLicenseFamilyUpdatedJSONBodyName `json:"name"`
+
+	// Type Event type
+	//
+	// Examples: com.kaiten.license_family.v1.updated
+	Type OnLicenseFamilyUpdatedJSONBodyType `json:"type"`
+}
+
+// OnLicenseFamilyUpdatedJSONBodyName defines parameters for OnLicenseFamilyUpdated.
+type OnLicenseFamilyUpdatedJSONBodyName string
+
+// OnLicenseFamilyUpdatedJSONBodyType defines parameters for OnLicenseFamilyUpdated.
+type OnLicenseFamilyUpdatedJSONBodyType string
+
 // OnMetadataFieldArchivedJSONBody defines parameters for OnMetadataFieldArchived.
 type OnMetadataFieldArchivedJSONBody struct {
 	Data MetadataField `json:"data"`
@@ -5551,6 +6060,12 @@ type UpdateServiceAccountJSONRequestBody = ServiceAccount
 // CreateServiceAccountTokenJSONRequestBody defines body for CreateServiceAccountToken for application/json ContentType.
 type CreateServiceAccountTokenJSONRequestBody = PlainToken
 
+// PutNotificationPreferencesJSONRequestBody defines body for PutNotificationPreferences for application/json ContentType.
+type PutNotificationPreferencesJSONRequestBody = PreferenceChoices
+
+// MarkNotificationsReadJSONRequestBody defines body for MarkNotificationsRead for application/json ContentType.
+type MarkNotificationsReadJSONRequestBody = ReadSelection
+
 // OnComponentCreatedJSONRequestBody defines body for OnComponentCreated for application/json ContentType.
 type OnComponentCreatedJSONRequestBody OnComponentCreatedJSONBody
 
@@ -5685,6 +6200,15 @@ type OnLicenseUnarchivedJSONRequestBody OnLicenseUnarchivedJSONBody
 
 // OnLicenseUpdatedJSONRequestBody defines body for OnLicenseUpdated for application/json ContentType.
 type OnLicenseUpdatedJSONRequestBody OnLicenseUpdatedJSONBody
+
+// OnLicenseFamilyCreatedJSONRequestBody defines body for OnLicenseFamilyCreated for application/json ContentType.
+type OnLicenseFamilyCreatedJSONRequestBody OnLicenseFamilyCreatedJSONBody
+
+// OnLicenseFamilyDeletedJSONRequestBody defines body for OnLicenseFamilyDeleted for application/json ContentType.
+type OnLicenseFamilyDeletedJSONRequestBody OnLicenseFamilyDeletedJSONBody
+
+// OnLicenseFamilyUpdatedJSONRequestBody defines body for OnLicenseFamilyUpdated for application/json ContentType.
+type OnLicenseFamilyUpdatedJSONRequestBody OnLicenseFamilyUpdatedJSONBody
 
 // OnMetadataFieldArchivedJSONRequestBody defines body for OnMetadataFieldArchived for application/json ContentType.
 type OnMetadataFieldArchivedJSONRequestBody OnMetadataFieldArchivedJSONBody
@@ -7728,7 +8252,7 @@ type ClientInterface interface {
 
 	// ReportEntitlementUsageMetricWithBody Report entitlement usage metric for an instance
 	//
-	// Report a usage metric for a specific entitlement in a given instance. This endpoint allows you to report the usage of an entitlement, including optional metadata and a timestamp.
+	// Report a usage metric for a specific entitlement in a given instance, with optional metadata. The server dates every report on receipt; the request carries no timestamp. Send a transactionId to make retries safe: without one, a report sent twice counts twice.
 	//
 	// Takes any type of body and a specified content type.
 	//
@@ -7737,12 +8261,26 @@ type ClientInterface interface {
 
 	// ReportEntitlementUsageMetric Report entitlement usage metric for an instance
 	//
-	// Report a usage metric for a specific entitlement in a given instance. This endpoint allows you to report the usage of an entitlement, including optional metadata and a timestamp.
+	// Report a usage metric for a specific entitlement in a given instance, with optional metadata. The server dates every report on receipt; the request carries no timestamp. Send a transactionId to make retries safe: without one, a report sent twice counts twice.
 	//
 	// Takes a body of the `application/json` content type.
 	//
 	// Corresponds with POST /instances/{instanceSlug}/entitlements/{entitlementSlug}/usage (the `ReportEntitlementUsageMetric` operationId).
 	ReportEntitlementUsageMetric(ctx context.Context, instanceSlug string, entitlementSlug string, body ReportEntitlementUsageMetricJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListUsageReports List an entitlement's usage reports for an instance
+	//
+	// The usage history of one instance and entitlement: every accepted report in the range, with the counter before and after it and the limit in force, in reportSeq order, paged with afterSeq. Decimals are strings. Reports are kept for the organization's usage history retention.
+	//
+	// Corresponds with GET /instances/{instanceSlug}/entitlements/{entitlementSlug}/usage/reports (the `ListUsageReports` operationId).
+	ListUsageReports(ctx context.Context, instanceSlug string, entitlementSlug string, params *ListUsageReportsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ExportUsageReports Export an entitlement's usage reports for an instance
+	//
+	// Streams every report of one instance and entitlement in the range as CSV or NDJSON, in reportSeq order. Decimals are written exactly as the journal stores them.
+	//
+	// Corresponds with GET /instances/{instanceSlug}/entitlements/{entitlementSlug}/usage/reports/export (the `ExportUsageReports` operationId).
+	ExportUsageReports(ctx context.Context, instanceSlug string, entitlementSlug string, params *ExportUsageReportsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteInstanceIntegration Delete an instance integration
 	//
@@ -8259,6 +8797,63 @@ type ClientInterface interface {
 	//
 	// Corresponds with DELETE /service-accounts/{serviceAccountSlug}/tokens/{tokenSlug} (the `DeleteServiceAccountToken` operationId).
 	DeleteServiceAccountToken(ctx context.Context, serviceAccountSlug string, tokenSlug string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ExportOrganizationUsageReports Export the organization's usage reports
+	//
+	// Streams every usage report of the organization in the range, across instances and entitlements, as CSV or NDJSON, ordered by reportedAt. Filters narrow it to one instance or one entitlement, including deleted ones by ID. Use it to keep the usage history before deleting the organization.
+	//
+	// Corresponds with GET /usage/reports/export (the `ExportOrganizationUsageReports` operationId).
+	ExportOrganizationUsageReports(ctx context.Context, params *ExportOrganizationUsageReportsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetNotificationPreferences Read the caller's notification preferences
+	//
+	// Every notifiable event, with this user's effective value per channel: their own choice where they made one, the catalogue default otherwise. Events absent from the catalogue of a deployment never appear, which is what keeps high-volume system events out of the feed.
+	//
+	// Corresponds with GET /v1/notification-preferences (the `GetNotificationPreferences` operationId).
+	GetNotificationPreferences(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PutNotificationPreferencesWithBody Set the caller's notification preferences
+	//
+	// Stores the signed-in user's choices and answers with the whole matrix. A value that equals the catalogue default is stored as no row at all, so a later change to that default still reaches this user.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with PUT /v1/notification-preferences (the `PutNotificationPreferences` operationId).
+	PutNotificationPreferencesWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PutNotificationPreferences Set the caller's notification preferences
+	//
+	// Stores the signed-in user's choices and answers with the whole matrix. A value that equals the catalogue default is stored as no row at all, so a later change to that default still reaches this user.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with PUT /v1/notification-preferences (the `PutNotificationPreferences` operationId).
+	PutNotificationPreferences(ctx context.Context, body PutNotificationPreferencesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListNotifications List the caller's notifications
+	//
+	// Returns the signed-in user's notification feed, newest first, with the unread count. Notifications are a view over this organization's audit trail, narrowed to the events the user subscribes to; the id of a notification is the id of the audit trail entry it reports.
+	//
+	// Corresponds with GET /v1/notifications (the `ListNotifications` operationId).
+	ListNotifications(ctx context.Context, params *ListNotificationsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// MarkNotificationsReadWithBody Mark notifications read
+	//
+	// Marks the given notifications read for the signed-in user, or all of them with all: true. Ids belonging to another organization are ignored rather than rejected, so a retry of a partially applied call is safe.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /v1/notifications/mark-read (the `MarkNotificationsRead` operationId).
+	MarkNotificationsReadWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// MarkNotificationsRead Mark notifications read
+	//
+	// Marks the given notifications read for the signed-in user, or all of them with all: true. Ids belonging to another organization are ignored rather than rejected, so a retry of a partially applied call is safe.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /v1/notifications/mark-read (the `MarkNotificationsRead` operationId).
+	MarkNotificationsRead(ctx context.Context, body MarkNotificationsReadJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
 // ListComponents List components
@@ -9690,7 +10285,7 @@ func (c *Client) GetEntitlementUsageMetrics(ctx context.Context, instanceSlug st
 
 // ReportEntitlementUsageMetricWithBody Report entitlement usage metric for an instance
 //
-// Report a usage metric for a specific entitlement in a given instance. This endpoint allows you to report the usage of an entitlement, including optional metadata and a timestamp.
+// Report a usage metric for a specific entitlement in a given instance, with optional metadata. The server dates every report on receipt; the request carries no timestamp. Send a transactionId to make retries safe: without one, a report sent twice counts twice.
 //
 // Takes any type of body and a specified content type.
 //
@@ -9709,13 +10304,47 @@ func (c *Client) ReportEntitlementUsageMetricWithBody(ctx context.Context, insta
 
 // ReportEntitlementUsageMetric Report entitlement usage metric for an instance
 //
-// Report a usage metric for a specific entitlement in a given instance. This endpoint allows you to report the usage of an entitlement, including optional metadata and a timestamp.
+// Report a usage metric for a specific entitlement in a given instance, with optional metadata. The server dates every report on receipt; the request carries no timestamp. Send a transactionId to make retries safe: without one, a report sent twice counts twice.
 //
 // Takes a body of the `application/json` content type.
 //
 // Corresponds with POST /instances/{instanceSlug}/entitlements/{entitlementSlug}/usage (the `ReportEntitlementUsageMetric` operationId).
 func (c *Client) ReportEntitlementUsageMetric(ctx context.Context, instanceSlug string, entitlementSlug string, body ReportEntitlementUsageMetricJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewReportEntitlementUsageMetricRequest(c.Server, instanceSlug, entitlementSlug, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ListUsageReports List an entitlement's usage reports for an instance
+//
+// The usage history of one instance and entitlement: every accepted report in the range, with the counter before and after it and the limit in force, in reportSeq order, paged with afterSeq. Decimals are strings. Reports are kept for the organization's usage history retention.
+//
+// Corresponds with GET /instances/{instanceSlug}/entitlements/{entitlementSlug}/usage/reports (the `ListUsageReports` operationId).
+func (c *Client) ListUsageReports(ctx context.Context, instanceSlug string, entitlementSlug string, params *ListUsageReportsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListUsageReportsRequest(c.Server, instanceSlug, entitlementSlug, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ExportUsageReports Export an entitlement's usage reports for an instance
+//
+// Streams every report of one instance and entitlement in the range as CSV or NDJSON, in reportSeq order. Decimals are written exactly as the journal stores them.
+//
+// Corresponds with GET /instances/{instanceSlug}/entitlements/{entitlementSlug}/usage/reports/export (the `ExportUsageReports` operationId).
+func (c *Client) ExportUsageReports(ctx context.Context, instanceSlug string, entitlementSlug string, params *ExportUsageReportsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewExportUsageReportsRequest(c.Server, instanceSlug, entitlementSlug, params)
 	if err != nil {
 		return nil, err
 	}
@@ -10852,6 +11481,133 @@ func (c *Client) CreateServiceAccountToken(ctx context.Context, serviceAccountSl
 // Corresponds with DELETE /service-accounts/{serviceAccountSlug}/tokens/{tokenSlug} (the `DeleteServiceAccountToken` operationId).
 func (c *Client) DeleteServiceAccountToken(ctx context.Context, serviceAccountSlug string, tokenSlug string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDeleteServiceAccountTokenRequest(c.Server, serviceAccountSlug, tokenSlug)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ExportOrganizationUsageReports Export the organization's usage reports
+//
+// Streams every usage report of the organization in the range, across instances and entitlements, as CSV or NDJSON, ordered by reportedAt. Filters narrow it to one instance or one entitlement, including deleted ones by ID. Use it to keep the usage history before deleting the organization.
+//
+// Corresponds with GET /usage/reports/export (the `ExportOrganizationUsageReports` operationId).
+func (c *Client) ExportOrganizationUsageReports(ctx context.Context, params *ExportOrganizationUsageReportsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewExportOrganizationUsageReportsRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetNotificationPreferences Read the caller's notification preferences
+//
+// Every notifiable event, with this user's effective value per channel: their own choice where they made one, the catalogue default otherwise. Events absent from the catalogue of a deployment never appear, which is what keeps high-volume system events out of the feed.
+//
+// Corresponds with GET /v1/notification-preferences (the `GetNotificationPreferences` operationId).
+func (c *Client) GetNotificationPreferences(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetNotificationPreferencesRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// PutNotificationPreferencesWithBody Set the caller's notification preferences
+//
+// Stores the signed-in user's choices and answers with the whole matrix. A value that equals the catalogue default is stored as no row at all, so a later change to that default still reaches this user.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with PUT /v1/notification-preferences (the `PutNotificationPreferences` operationId).
+func (c *Client) PutNotificationPreferencesWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutNotificationPreferencesRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// PutNotificationPreferences Set the caller's notification preferences
+//
+// Stores the signed-in user's choices and answers with the whole matrix. A value that equals the catalogue default is stored as no row at all, so a later change to that default still reaches this user.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with PUT /v1/notification-preferences (the `PutNotificationPreferences` operationId).
+func (c *Client) PutNotificationPreferences(ctx context.Context, body PutNotificationPreferencesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutNotificationPreferencesRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ListNotifications List the caller's notifications
+//
+// Returns the signed-in user's notification feed, newest first, with the unread count. Notifications are a view over this organization's audit trail, narrowed to the events the user subscribes to; the id of a notification is the id of the audit trail entry it reports.
+//
+// Corresponds with GET /v1/notifications (the `ListNotifications` operationId).
+func (c *Client) ListNotifications(ctx context.Context, params *ListNotificationsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListNotificationsRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// MarkNotificationsReadWithBody Mark notifications read
+//
+// Marks the given notifications read for the signed-in user, or all of them with all: true. Ids belonging to another organization are ignored rather than rejected, so a retry of a partially applied call is safe.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /v1/notifications/mark-read (the `MarkNotificationsRead` operationId).
+func (c *Client) MarkNotificationsReadWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewMarkNotificationsReadRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// MarkNotificationsRead Mark notifications read
+//
+// Marks the given notifications read for the signed-in user, or all of them with all: true. Ids belonging to another organization are ignored rather than rejected, so a retry of a partially applied call is safe.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /v1/notifications/mark-read (the `MarkNotificationsRead` operationId).
+func (c *Client) MarkNotificationsRead(ctx context.Context, body MarkNotificationsReadJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewMarkNotificationsReadRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -13448,6 +14204,214 @@ func NewReportEntitlementUsageMetricRequestWithBody(server string, instanceSlug 
 	return req, nil
 }
 
+// NewListUsageReportsRequest constructs an http.Request for the ListUsageReports method
+func NewListUsageReportsRequest(server string, instanceSlug string, entitlementSlug string, params *ListUsageReportsParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "instanceSlug", instanceSlug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "entitlementSlug", entitlementSlug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/instances/%s/entitlements/%s/usage/reports", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.From != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "from", *params.From, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.To != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "to", *params.To, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.AfterSeq != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "afterSeq", *params.AfterSeq, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int64"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int32"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.TransactionId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "transactionId", *params.TransactionId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewExportUsageReportsRequest constructs an http.Request for the ExportUsageReports method
+func NewExportUsageReportsRequest(server string, instanceSlug string, entitlementSlug string, params *ExportUsageReportsParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "instanceSlug", instanceSlug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "entitlementSlug", entitlementSlug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/instances/%s/entitlements/%s/usage/reports/export", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.From != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "from", *params.From, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.To != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "to", *params.To, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Format != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "format", *params.Format, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewDeleteInstanceIntegrationRequest constructs an http.Request for the DeleteInstanceIntegration method
 func NewDeleteInstanceIntegrationRequest(server string, instanceSlug string, integrationName string) (*http.Request, error) {
 	var err error
@@ -15513,6 +16477,329 @@ func NewDeleteServiceAccountTokenRequest(server string, serviceAccountSlug strin
 	return req, nil
 }
 
+// NewExportOrganizationUsageReportsRequest constructs an http.Request for the ExportOrganizationUsageReports method
+func NewExportOrganizationUsageReportsRequest(server string, params *ExportOrganizationUsageReportsParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/usage/reports/export")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.From != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "from", *params.From, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.To != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "to", *params.To, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Format != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "format", *params.Format, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.InstanceSlug != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "instanceSlug", *params.InstanceSlug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.InstanceId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "instanceId", *params.InstanceId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.EntitlementSlug != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "entitlementSlug", *params.EntitlementSlug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.EntitlementId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "entitlementId", *params.EntitlementId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "uuid"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetNotificationPreferencesRequest constructs an http.Request for the GetNotificationPreferences method
+func NewGetNotificationPreferencesRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/notification-preferences")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPutNotificationPreferencesRequest calls the generic PutNotificationPreferences builder with application/json body
+func NewPutNotificationPreferencesRequest(server string, body PutNotificationPreferencesJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPutNotificationPreferencesRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPutNotificationPreferencesRequestWithBody constructs an http.Request for the PutNotificationPreferences method, with any body, and a specified content type
+func NewPutNotificationPreferencesRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/notification-preferences")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListNotificationsRequest constructs an http.Request for the ListNotifications method
+func NewListNotificationsRequest(server string, params *ListNotificationsParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/notifications")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Status != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "status", *params.Status, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.ObjectType != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "objectType", *params.ObjectType, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "array", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int32"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewMarkNotificationsReadRequest calls the generic MarkNotificationsRead builder with application/json body
+func NewMarkNotificationsReadRequest(server string, body MarkNotificationsReadJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewMarkNotificationsReadRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewMarkNotificationsReadRequestWithBody constructs an http.Request for the MarkNotificationsRead method, with any body, and a specified content type
+func NewMarkNotificationsReadRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/notifications/mark-read")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 func (c *Client) applyEditors(ctx context.Context, req *http.Request, additionalEditors []RequestEditorFn) error {
 	for _, r := range c.RequestEditors {
 		if err := r(ctx, req); err != nil {
@@ -16270,7 +17557,7 @@ type ClientWithResponsesInterface interface {
 
 	// ReportEntitlementUsageMetricWithBodyWithResponse Report entitlement usage metric for an instance
 	//
-	// Report a usage metric for a specific entitlement in a given instance. This endpoint allows you to report the usage of an entitlement, including optional metadata and a timestamp.
+	// Report a usage metric for a specific entitlement in a given instance, with optional metadata. The server dates every report on receipt; the request carries no timestamp. Send a transactionId to make retries safe: without one, a report sent twice counts twice.
 	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -16279,12 +17566,30 @@ type ClientWithResponsesInterface interface {
 
 	// ReportEntitlementUsageMetricWithResponse Report entitlement usage metric for an instance
 	//
-	// Report a usage metric for a specific entitlement in a given instance. This endpoint allows you to report the usage of an entitlement, including optional metadata and a timestamp.
+	// Report a usage metric for a specific entitlement in a given instance, with optional metadata. The server dates every report on receipt; the request carries no timestamp. Send a transactionId to make retries safe: without one, a report sent twice counts twice.
 	//
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	//
 	// Corresponds with POST /instances/{instanceSlug}/entitlements/{entitlementSlug}/usage (the `ReportEntitlementUsageMetric` operationId).
 	ReportEntitlementUsageMetricWithResponse(ctx context.Context, instanceSlug string, entitlementSlug string, body ReportEntitlementUsageMetricJSONRequestBody, reqEditors ...RequestEditorFn) (*ReportEntitlementUsageMetricResponse, error)
+
+	// ListUsageReportsWithResponse List an entitlement's usage reports for an instance
+	//
+	// The usage history of one instance and entitlement: every accepted report in the range, with the counter before and after it and the limit in force, in reportSeq order, paged with afterSeq. Decimals are strings. Reports are kept for the organization's usage history retention.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /instances/{instanceSlug}/entitlements/{entitlementSlug}/usage/reports (the `ListUsageReports` operationId).
+	ListUsageReportsWithResponse(ctx context.Context, instanceSlug string, entitlementSlug string, params *ListUsageReportsParams, reqEditors ...RequestEditorFn) (*ListUsageReportsResponse, error)
+
+	// ExportUsageReportsWithResponse Export an entitlement's usage reports for an instance
+	//
+	// Streams every report of one instance and entitlement in the range as CSV or NDJSON, in reportSeq order. Decimals are written exactly as the journal stores them.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /instances/{instanceSlug}/entitlements/{entitlementSlug}/usage/reports/export (the `ExportUsageReports` operationId).
+	ExportUsageReportsWithResponse(ctx context.Context, instanceSlug string, entitlementSlug string, params *ExportUsageReportsParams, reqEditors ...RequestEditorFn) (*ExportUsageReportsResponse, error)
 
 	// DeleteInstanceIntegrationWithResponse Delete an instance integration
 	//
@@ -16853,6 +18158,69 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with DELETE /service-accounts/{serviceAccountSlug}/tokens/{tokenSlug} (the `DeleteServiceAccountToken` operationId).
 	DeleteServiceAccountTokenWithResponse(ctx context.Context, serviceAccountSlug string, tokenSlug string, reqEditors ...RequestEditorFn) (*DeleteServiceAccountTokenResponse, error)
+
+	// ExportOrganizationUsageReportsWithResponse Export the organization's usage reports
+	//
+	// Streams every usage report of the organization in the range, across instances and entitlements, as CSV or NDJSON, ordered by reportedAt. Filters narrow it to one instance or one entitlement, including deleted ones by ID. Use it to keep the usage history before deleting the organization.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /usage/reports/export (the `ExportOrganizationUsageReports` operationId).
+	ExportOrganizationUsageReportsWithResponse(ctx context.Context, params *ExportOrganizationUsageReportsParams, reqEditors ...RequestEditorFn) (*ExportOrganizationUsageReportsResponse, error)
+
+	// GetNotificationPreferencesWithResponse Read the caller's notification preferences
+	//
+	// Every notifiable event, with this user's effective value per channel: their own choice where they made one, the catalogue default otherwise. Events absent from the catalogue of a deployment never appear, which is what keeps high-volume system events out of the feed.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /v1/notification-preferences (the `GetNotificationPreferences` operationId).
+	GetNotificationPreferencesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetNotificationPreferencesResponse, error)
+
+	// PutNotificationPreferencesWithBodyWithResponse Set the caller's notification preferences
+	//
+	// Stores the signed-in user's choices and answers with the whole matrix. A value that equals the catalogue default is stored as no row at all, so a later change to that default still reaches this user.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PUT /v1/notification-preferences (the `PutNotificationPreferences` operationId).
+	PutNotificationPreferencesWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutNotificationPreferencesResponse, error)
+
+	// PutNotificationPreferencesWithResponse Set the caller's notification preferences
+	//
+	// Stores the signed-in user's choices and answers with the whole matrix. A value that equals the catalogue default is stored as no row at all, so a later change to that default still reaches this user.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PUT /v1/notification-preferences (the `PutNotificationPreferences` operationId).
+	PutNotificationPreferencesWithResponse(ctx context.Context, body PutNotificationPreferencesJSONRequestBody, reqEditors ...RequestEditorFn) (*PutNotificationPreferencesResponse, error)
+
+	// ListNotificationsWithResponse List the caller's notifications
+	//
+	// Returns the signed-in user's notification feed, newest first, with the unread count. Notifications are a view over this organization's audit trail, narrowed to the events the user subscribes to; the id of a notification is the id of the audit trail entry it reports.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /v1/notifications (the `ListNotifications` operationId).
+	ListNotificationsWithResponse(ctx context.Context, params *ListNotificationsParams, reqEditors ...RequestEditorFn) (*ListNotificationsResponse, error)
+
+	// MarkNotificationsReadWithBodyWithResponse Mark notifications read
+	//
+	// Marks the given notifications read for the signed-in user, or all of them with all: true. Ids belonging to another organization are ignored rather than rejected, so a retry of a partially applied call is safe.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /v1/notifications/mark-read (the `MarkNotificationsRead` operationId).
+	MarkNotificationsReadWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*MarkNotificationsReadResponse, error)
+
+	// MarkNotificationsReadWithResponse Mark notifications read
+	//
+	// Marks the given notifications read for the signed-in user, or all of them with all: true. Ids belonging to another organization are ignored rather than rejected, so a retry of a partially applied call is safe.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /v1/notifications/mark-read (the `MarkNotificationsRead` operationId).
+	MarkNotificationsReadWithResponse(ctx context.Context, body MarkNotificationsReadJSONRequestBody, reqEditors ...RequestEditorFn) (*MarkNotificationsReadResponse, error)
 }
 
 type ListComponentsResponse struct {
@@ -21494,6 +22862,12 @@ func (r GetEntitlementUsageMetricsResponse) ContentType() string {
 	return ""
 }
 
+// ReportEntitlementUsageMetricResponse200Headers the declared response headers of an HTTP 200 response for ReportEntitlementUsageMetric
+type ReportEntitlementUsageMetricResponse200Headers struct {
+	IdempotentReplayed    *string
+	KaitenMetadataDropped *string
+}
+
 type ReportEntitlementUsageMetricResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -21513,6 +22887,10 @@ type ReportEntitlementUsageMetricResponse struct {
 	ApplicationproblemJSON422 *Problem
 	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
 	ApplicationproblemJSON500 *Problem
+	// ApplicationproblemJSON503 the response for an HTTP 503 `application/problem+json` response
+	ApplicationproblemJSON503 *Problem
+	// Headers200 the parsed response headers for an HTTP 200 response
+	Headers200 *ReportEntitlementUsageMetricResponse200Headers
 }
 
 // GetJSON200 returns the response for an HTTP 200 `application/json` response
@@ -21555,6 +22933,11 @@ func (r ReportEntitlementUsageMetricResponse) GetApplicationproblemJSON500() *Pr
 	return r.ApplicationproblemJSON500
 }
 
+// GetApplicationproblemJSON503 returns the response for an HTTP 503 `application/problem+json` response
+func (r ReportEntitlementUsageMetricResponse) GetApplicationproblemJSON503() *Problem {
+	return r.ApplicationproblemJSON503
+}
+
 // GetBody returns the raw response body bytes
 func (r ReportEntitlementUsageMetricResponse) GetBody() []byte {
 	return r.Body
@@ -21578,6 +22961,172 @@ func (r ReportEntitlementUsageMetricResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r ReportEntitlementUsageMetricResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListUsageReportsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *UsageReportPage
+	// ApplicationproblemJSON400 the response for an HTTP 400 `application/problem+json` response
+	ApplicationproblemJSON400 *Problem
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r ListUsageReportsResponse) GetJSON200() *UsageReportPage {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON400 returns the response for an HTTP 400 `application/problem+json` response
+func (r ListUsageReportsResponse) GetApplicationproblemJSON400() *Problem {
+	return r.ApplicationproblemJSON400
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ListUsageReportsResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ListUsageReportsResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r ListUsageReportsResponse) GetApplicationproblemJSON404() *Problem {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r ListUsageReportsResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r ListUsageReportsResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r ListUsageReportsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ListUsageReportsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListUsageReportsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListUsageReportsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+// ExportUsageReportsResponse200Headers the declared response headers of an HTTP 200 response for ExportUsageReports
+type ExportUsageReportsResponse200Headers struct {
+	ContentDisposition *string
+}
+
+type ExportUsageReportsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// ApplicationproblemJSON400 the response for an HTTP 400 `application/problem+json` response
+	ApplicationproblemJSON400 *Problem
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+	// Headers200 the parsed response headers for an HTTP 200 response
+	Headers200 *ExportUsageReportsResponse200Headers
+}
+
+// GetApplicationproblemJSON400 returns the response for an HTTP 400 `application/problem+json` response
+func (r ExportUsageReportsResponse) GetApplicationproblemJSON400() *Problem {
+	return r.ApplicationproblemJSON400
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ExportUsageReportsResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ExportUsageReportsResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r ExportUsageReportsResponse) GetApplicationproblemJSON404() *Problem {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r ExportUsageReportsResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r ExportUsageReportsResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r ExportUsageReportsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ExportUsageReportsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ExportUsageReportsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ExportUsageReportsResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -25215,6 +26764,379 @@ func (r DeleteServiceAccountTokenResponse) ContentType() string {
 	return ""
 }
 
+// ExportOrganizationUsageReportsResponse200Headers the declared response headers of an HTTP 200 response for ExportOrganizationUsageReports
+type ExportOrganizationUsageReportsResponse200Headers struct {
+	ContentDisposition *string
+}
+
+type ExportOrganizationUsageReportsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// ApplicationproblemJSON400 the response for an HTTP 400 `application/problem+json` response
+	ApplicationproblemJSON400 *Problem
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+	// Headers200 the parsed response headers for an HTTP 200 response
+	Headers200 *ExportOrganizationUsageReportsResponse200Headers
+}
+
+// GetApplicationproblemJSON400 returns the response for an HTTP 400 `application/problem+json` response
+func (r ExportOrganizationUsageReportsResponse) GetApplicationproblemJSON400() *Problem {
+	return r.ApplicationproblemJSON400
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ExportOrganizationUsageReportsResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ExportOrganizationUsageReportsResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r ExportOrganizationUsageReportsResponse) GetApplicationproblemJSON404() *Problem {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r ExportOrganizationUsageReportsResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r ExportOrganizationUsageReportsResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r ExportOrganizationUsageReportsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ExportOrganizationUsageReportsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ExportOrganizationUsageReportsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ExportOrganizationUsageReportsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetNotificationPreferencesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *PreferenceMatrix
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetNotificationPreferencesResponse) GetJSON200() *PreferenceMatrix {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r GetNotificationPreferencesResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r GetNotificationPreferencesResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r GetNotificationPreferencesResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r GetNotificationPreferencesResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetNotificationPreferencesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetNotificationPreferencesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetNotificationPreferencesResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type PutNotificationPreferencesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *PreferenceMatrix
+	// ApplicationproblemJSON400 the response for an HTTP 400 `application/problem+json` response
+	ApplicationproblemJSON400 *Problem
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r PutNotificationPreferencesResponse) GetJSON200() *PreferenceMatrix {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON400 returns the response for an HTTP 400 `application/problem+json` response
+func (r PutNotificationPreferencesResponse) GetApplicationproblemJSON400() *Problem {
+	return r.ApplicationproblemJSON400
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r PutNotificationPreferencesResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r PutNotificationPreferencesResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r PutNotificationPreferencesResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r PutNotificationPreferencesResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r PutNotificationPreferencesResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r PutNotificationPreferencesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PutNotificationPreferencesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r PutNotificationPreferencesResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListNotificationsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *List
+	// ApplicationproblemJSON400 the response for an HTTP 400 `application/problem+json` response
+	ApplicationproblemJSON400 *Problem
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r ListNotificationsResponse) GetJSON200() *List {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON400 returns the response for an HTTP 400 `application/problem+json` response
+func (r ListNotificationsResponse) GetApplicationproblemJSON400() *Problem {
+	return r.ApplicationproblemJSON400
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ListNotificationsResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ListNotificationsResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r ListNotificationsResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r ListNotificationsResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r ListNotificationsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ListNotificationsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListNotificationsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListNotificationsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type MarkNotificationsReadResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *MarkReadResult
+	// ApplicationproblemJSON400 the response for an HTTP 400 `application/problem+json` response
+	ApplicationproblemJSON400 *Problem
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r MarkNotificationsReadResponse) GetJSON200() *MarkReadResult {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON400 returns the response for an HTTP 400 `application/problem+json` response
+func (r MarkNotificationsReadResponse) GetApplicationproblemJSON400() *Problem {
+	return r.ApplicationproblemJSON400
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r MarkNotificationsReadResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r MarkNotificationsReadResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r MarkNotificationsReadResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r MarkNotificationsReadResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r MarkNotificationsReadResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r MarkNotificationsReadResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r MarkNotificationsReadResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r MarkNotificationsReadResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 // ListComponentsWithResponse List components
 //
 // Returns a cursor-paginated page of components for the current organization.
@@ -26402,7 +28324,7 @@ func (c *ClientWithResponses) GetEntitlementUsageMetricsWithResponse(ctx context
 
 // ReportEntitlementUsageMetricWithBodyWithResponse Report entitlement usage metric for an instance
 //
-// Report a usage metric for a specific entitlement in a given instance. This endpoint allows you to report the usage of an entitlement, including optional metadata and a timestamp.
+// Report a usage metric for a specific entitlement in a given instance, with optional metadata. The server dates every report on receipt; the request carries no timestamp. Send a transactionId to make retries safe: without one, a report sent twice counts twice.
 //
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 //
@@ -26417,7 +28339,7 @@ func (c *ClientWithResponses) ReportEntitlementUsageMetricWithBodyWithResponse(c
 
 // ReportEntitlementUsageMetricWithResponse Report entitlement usage metric for an instance
 //
-// Report a usage metric for a specific entitlement in a given instance. This endpoint allows you to report the usage of an entitlement, including optional metadata and a timestamp.
+// Report a usage metric for a specific entitlement in a given instance, with optional metadata. The server dates every report on receipt; the request carries no timestamp. Send a transactionId to make retries safe: without one, a report sent twice counts twice.
 //
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 //
@@ -26428,6 +28350,36 @@ func (c *ClientWithResponses) ReportEntitlementUsageMetricWithResponse(ctx conte
 		return nil, err
 	}
 	return ParseReportEntitlementUsageMetricResponse(rsp)
+}
+
+// ListUsageReportsWithResponse List an entitlement's usage reports for an instance
+//
+// The usage history of one instance and entitlement: every accepted report in the range, with the counter before and after it and the limit in force, in reportSeq order, paged with afterSeq. Decimals are strings. Reports are kept for the organization's usage history retention.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /instances/{instanceSlug}/entitlements/{entitlementSlug}/usage/reports (the `ListUsageReports` operationId).
+func (c *ClientWithResponses) ListUsageReportsWithResponse(ctx context.Context, instanceSlug string, entitlementSlug string, params *ListUsageReportsParams, reqEditors ...RequestEditorFn) (*ListUsageReportsResponse, error) {
+	rsp, err := c.ListUsageReports(ctx, instanceSlug, entitlementSlug, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListUsageReportsResponse(rsp)
+}
+
+// ExportUsageReportsWithResponse Export an entitlement's usage reports for an instance
+//
+// Streams every report of one instance and entitlement in the range as CSV or NDJSON, in reportSeq order. Decimals are written exactly as the journal stores them.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /instances/{instanceSlug}/entitlements/{entitlementSlug}/usage/reports/export (the `ExportUsageReports` operationId).
+func (c *ClientWithResponses) ExportUsageReportsWithResponse(ctx context.Context, instanceSlug string, entitlementSlug string, params *ExportUsageReportsParams, reqEditors ...RequestEditorFn) (*ExportUsageReportsResponse, error) {
+	rsp, err := c.ExportUsageReports(ctx, instanceSlug, entitlementSlug, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseExportUsageReportsResponse(rsp)
 }
 
 // DeleteInstanceIntegrationWithResponse Delete an instance integration
@@ -27368,6 +29320,111 @@ func (c *ClientWithResponses) DeleteServiceAccountTokenWithResponse(ctx context.
 		return nil, err
 	}
 	return ParseDeleteServiceAccountTokenResponse(rsp)
+}
+
+// ExportOrganizationUsageReportsWithResponse Export the organization's usage reports
+//
+// Streams every usage report of the organization in the range, across instances and entitlements, as CSV or NDJSON, ordered by reportedAt. Filters narrow it to one instance or one entitlement, including deleted ones by ID. Use it to keep the usage history before deleting the organization.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /usage/reports/export (the `ExportOrganizationUsageReports` operationId).
+func (c *ClientWithResponses) ExportOrganizationUsageReportsWithResponse(ctx context.Context, params *ExportOrganizationUsageReportsParams, reqEditors ...RequestEditorFn) (*ExportOrganizationUsageReportsResponse, error) {
+	rsp, err := c.ExportOrganizationUsageReports(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseExportOrganizationUsageReportsResponse(rsp)
+}
+
+// GetNotificationPreferencesWithResponse Read the caller's notification preferences
+//
+// Every notifiable event, with this user's effective value per channel: their own choice where they made one, the catalogue default otherwise. Events absent from the catalogue of a deployment never appear, which is what keeps high-volume system events out of the feed.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /v1/notification-preferences (the `GetNotificationPreferences` operationId).
+func (c *ClientWithResponses) GetNotificationPreferencesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetNotificationPreferencesResponse, error) {
+	rsp, err := c.GetNotificationPreferences(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetNotificationPreferencesResponse(rsp)
+}
+
+// PutNotificationPreferencesWithBodyWithResponse Set the caller's notification preferences
+//
+// Stores the signed-in user's choices and answers with the whole matrix. A value that equals the catalogue default is stored as no row at all, so a later change to that default still reaches this user.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PUT /v1/notification-preferences (the `PutNotificationPreferences` operationId).
+func (c *ClientWithResponses) PutNotificationPreferencesWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutNotificationPreferencesResponse, error) {
+	rsp, err := c.PutNotificationPreferencesWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePutNotificationPreferencesResponse(rsp)
+}
+
+// PutNotificationPreferencesWithResponse Set the caller's notification preferences
+//
+// Stores the signed-in user's choices and answers with the whole matrix. A value that equals the catalogue default is stored as no row at all, so a later change to that default still reaches this user.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PUT /v1/notification-preferences (the `PutNotificationPreferences` operationId).
+func (c *ClientWithResponses) PutNotificationPreferencesWithResponse(ctx context.Context, body PutNotificationPreferencesJSONRequestBody, reqEditors ...RequestEditorFn) (*PutNotificationPreferencesResponse, error) {
+	rsp, err := c.PutNotificationPreferences(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePutNotificationPreferencesResponse(rsp)
+}
+
+// ListNotificationsWithResponse List the caller's notifications
+//
+// Returns the signed-in user's notification feed, newest first, with the unread count. Notifications are a view over this organization's audit trail, narrowed to the events the user subscribes to; the id of a notification is the id of the audit trail entry it reports.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /v1/notifications (the `ListNotifications` operationId).
+func (c *ClientWithResponses) ListNotificationsWithResponse(ctx context.Context, params *ListNotificationsParams, reqEditors ...RequestEditorFn) (*ListNotificationsResponse, error) {
+	rsp, err := c.ListNotifications(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListNotificationsResponse(rsp)
+}
+
+// MarkNotificationsReadWithBodyWithResponse Mark notifications read
+//
+// Marks the given notifications read for the signed-in user, or all of them with all: true. Ids belonging to another organization are ignored rather than rejected, so a retry of a partially applied call is safe.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /v1/notifications/mark-read (the `MarkNotificationsRead` operationId).
+func (c *ClientWithResponses) MarkNotificationsReadWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*MarkNotificationsReadResponse, error) {
+	rsp, err := c.MarkNotificationsReadWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseMarkNotificationsReadResponse(rsp)
+}
+
+// MarkNotificationsReadWithResponse Mark notifications read
+//
+// Marks the given notifications read for the signed-in user, or all of them with all: true. Ids belonging to another organization are ignored rather than rejected, so a retry of a partially applied call is safe.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /v1/notifications/mark-read (the `MarkNotificationsRead` operationId).
+func (c *ClientWithResponses) MarkNotificationsReadWithResponse(ctx context.Context, body MarkNotificationsReadJSONRequestBody, reqEditors ...RequestEditorFn) (*MarkNotificationsReadResponse, error) {
+	rsp, err := c.MarkNotificationsRead(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseMarkNotificationsReadResponse(rsp)
 }
 
 // ParseListComponentsResponse parses an HTTP response from a ListComponentsWithResponse call
@@ -31266,6 +33323,175 @@ func ParseReportEntitlementUsageMetricResponse(rsp *http.Response) (*ReportEntit
 		}
 		response.ApplicationproblemJSON500 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON503 = &dest
+
+	}
+
+	switch {
+	case rsp.StatusCode == 200:
+		var headers ReportEntitlementUsageMetricResponse200Headers
+		if values := rsp.Header.Values("Idempotent-Replayed"); len(values) > 0 {
+			var value string
+			if err := runtime.BindStyledParameterWithOptions("simple", "Idempotent-Replayed", values[0], &value, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			}
+			headers.IdempotentReplayed = &value
+		}
+		if values := rsp.Header.Values("Kaiten-Metadata-Dropped"); len(values) > 0 {
+			var value string
+			if err := runtime.BindStyledParameterWithOptions("simple", "Kaiten-Metadata-Dropped", values[0], &value, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			}
+			headers.KaitenMetadataDropped = &value
+		}
+		response.Headers200 = &headers
+	}
+
+	return response, nil
+}
+
+// ParseListUsageReportsResponse parses an HTTP response from a ListUsageReportsWithResponse call
+func ParseListUsageReportsResponse(rsp *http.Response) (*ListUsageReportsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListUsageReportsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest UsageReportPage
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseExportUsageReportsResponse parses an HTTP response from a ExportUsageReportsWithResponse call
+func ParseExportUsageReportsResponse(rsp *http.Response) (*ExportUsageReportsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ExportUsageReportsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	switch {
+	case rsp.StatusCode == 200:
+		var headers ExportUsageReportsResponse200Headers
+		if values := rsp.Header.Values("Content-Disposition"); len(values) > 0 {
+			var value string
+			if err := runtime.BindStyledParameterWithOptions("simple", "Content-Disposition", values[0], &value, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			}
+			headers.ContentDisposition = &value
+		}
+		response.Headers200 = &headers
 	}
 
 	return response, nil
@@ -34299,6 +36525,310 @@ func ParseDeleteServiceAccountTokenResponse(rsp *http.Response) (*DeleteServiceA
 	return response, nil
 }
 
+// ParseExportOrganizationUsageReportsResponse parses an HTTP response from a ExportOrganizationUsageReportsWithResponse call
+func ParseExportOrganizationUsageReportsResponse(rsp *http.Response) (*ExportOrganizationUsageReportsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ExportOrganizationUsageReportsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	switch {
+	case rsp.StatusCode == 200:
+		var headers ExportOrganizationUsageReportsResponse200Headers
+		if values := rsp.Header.Values("Content-Disposition"); len(values) > 0 {
+			var value string
+			if err := runtime.BindStyledParameterWithOptions("simple", "Content-Disposition", values[0], &value, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			}
+			headers.ContentDisposition = &value
+		}
+		response.Headers200 = &headers
+	}
+
+	return response, nil
+}
+
+// ParseGetNotificationPreferencesResponse parses an HTTP response from a GetNotificationPreferencesWithResponse call
+func ParseGetNotificationPreferencesResponse(rsp *http.Response) (*GetNotificationPreferencesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetNotificationPreferencesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PreferenceMatrix
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePutNotificationPreferencesResponse parses an HTTP response from a PutNotificationPreferencesWithResponse call
+func ParsePutNotificationPreferencesResponse(rsp *http.Response) (*PutNotificationPreferencesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PutNotificationPreferencesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PreferenceMatrix
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListNotificationsResponse parses an HTTP response from a ListNotificationsWithResponse call
+func ParseListNotificationsResponse(rsp *http.Response) (*ListNotificationsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListNotificationsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest List
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseMarkNotificationsReadResponse parses an HTTP response from a MarkNotificationsReadWithResponse call
+func ParseMarkNotificationsReadResponse(rsp *http.Response) (*MarkNotificationsReadResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &MarkNotificationsReadResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest MarkReadResult
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
 // WebhookInitiator sends OpenAPI 3.1 webhook requests to target URLs.
 // Modeled on the generated Client, but with no stored Server -- the full
 // target URL is provided per-call by the caller (typically discovered
@@ -34589,6 +37119,21 @@ type WebhookInitiatorInterface interface {
 	OnLicenseUpdatedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	OnLicenseUpdated(ctx context.Context, targetURL string, body OnLicenseUpdatedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// OnLicenseFamilyCreatedWithBody fires the com.kaiten.license_family.v1.created webhook with any body
+	OnLicenseFamilyCreatedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	OnLicenseFamilyCreated(ctx context.Context, targetURL string, body OnLicenseFamilyCreatedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// OnLicenseFamilyDeletedWithBody fires the com.kaiten.license_family.v1.deleted webhook with any body
+	OnLicenseFamilyDeletedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	OnLicenseFamilyDeleted(ctx context.Context, targetURL string, body OnLicenseFamilyDeletedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// OnLicenseFamilyUpdatedWithBody fires the com.kaiten.license_family.v1.updated webhook with any body
+	OnLicenseFamilyUpdatedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	OnLicenseFamilyUpdated(ctx context.Context, targetURL string, body OnLicenseFamilyUpdatedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// OnMetadataFieldArchivedWithBody fires the com.kaiten.metadata_field.v1.archived webhook with any body
 	OnMetadataFieldArchivedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -35696,6 +38241,78 @@ func (p *WebhookInitiator) OnLicenseUpdatedWithBody(ctx context.Context, targetU
 
 func (p *WebhookInitiator) OnLicenseUpdated(ctx context.Context, targetURL string, body OnLicenseUpdatedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewOnLicenseUpdatedWebhookRequest(targetURL, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnLicenseFamilyCreatedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnLicenseFamilyCreatedWebhookRequestWithBody(targetURL, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnLicenseFamilyCreated(ctx context.Context, targetURL string, body OnLicenseFamilyCreatedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnLicenseFamilyCreatedWebhookRequest(targetURL, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnLicenseFamilyDeletedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnLicenseFamilyDeletedWebhookRequestWithBody(targetURL, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnLicenseFamilyDeleted(ctx context.Context, targetURL string, body OnLicenseFamilyDeletedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnLicenseFamilyDeletedWebhookRequest(targetURL, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnLicenseFamilyUpdatedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnLicenseFamilyUpdatedWebhookRequestWithBody(targetURL, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnLicenseFamilyUpdated(ctx context.Context, targetURL string, body OnLicenseFamilyUpdatedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnLicenseFamilyUpdatedWebhookRequest(targetURL, body)
 	if err != nil {
 		return nil, err
 	}
@@ -37251,6 +39868,99 @@ func NewOnLicenseUpdatedWebhookRequest(targetURL string, body OnLicenseUpdatedJS
 
 // NewOnLicenseUpdatedWebhookRequestWithBody builds a POST request for the com.kaiten.license.v1.updated webhook with any body
 func NewOnLicenseUpdatedWebhookRequestWithBody(targetURL string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+	_ = err
+
+	reqURL, err := url.Parse(targetURL)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, reqURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewOnLicenseFamilyCreatedWebhookRequest builds a application/json POST request for the com.kaiten.license_family.v1.created webhook
+func NewOnLicenseFamilyCreatedWebhookRequest(targetURL string, body OnLicenseFamilyCreatedJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewOnLicenseFamilyCreatedWebhookRequestWithBody(targetURL, "application/json", bodyReader)
+}
+
+// NewOnLicenseFamilyCreatedWebhookRequestWithBody builds a POST request for the com.kaiten.license_family.v1.created webhook with any body
+func NewOnLicenseFamilyCreatedWebhookRequestWithBody(targetURL string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+	_ = err
+
+	reqURL, err := url.Parse(targetURL)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, reqURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewOnLicenseFamilyDeletedWebhookRequest builds a application/json POST request for the com.kaiten.license_family.v1.deleted webhook
+func NewOnLicenseFamilyDeletedWebhookRequest(targetURL string, body OnLicenseFamilyDeletedJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewOnLicenseFamilyDeletedWebhookRequestWithBody(targetURL, "application/json", bodyReader)
+}
+
+// NewOnLicenseFamilyDeletedWebhookRequestWithBody builds a POST request for the com.kaiten.license_family.v1.deleted webhook with any body
+func NewOnLicenseFamilyDeletedWebhookRequestWithBody(targetURL string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+	_ = err
+
+	reqURL, err := url.Parse(targetURL)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, reqURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewOnLicenseFamilyUpdatedWebhookRequest builds a application/json POST request for the com.kaiten.license_family.v1.updated webhook
+func NewOnLicenseFamilyUpdatedWebhookRequest(targetURL string, body OnLicenseFamilyUpdatedJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewOnLicenseFamilyUpdatedWebhookRequestWithBody(targetURL, "application/json", bodyReader)
+}
+
+// NewOnLicenseFamilyUpdatedWebhookRequestWithBody builds a POST request for the com.kaiten.license_family.v1.updated webhook with any body
+func NewOnLicenseFamilyUpdatedWebhookRequestWithBody(targetURL string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 	_ = err
 

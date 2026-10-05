@@ -15,9 +15,11 @@ package sdk
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"strings"
+	"sync/atomic"
 	"time"
 
 	"github.com/kaitencloud/sdk-go/internal/gen"
@@ -44,6 +46,13 @@ type Client struct {
 	// cannot send a cursor, so they need the base URL, HTTP client and
 	// request editors the generated client was handed.
 	list listTransport
+
+	// log is where the client reports what an operator should know; nil means
+	// slog.Default().
+	log *slog.Logger
+	// transactionIDsUnsupported is set once a server refuses usage report
+	// transaction IDs: from then on reports go out without them.
+	transactionIDsUnsupported atomic.Bool
 
 	Components        *Components
 	Customers         *Customers
@@ -72,7 +81,10 @@ func NewClient(baseURL string, opts ...Option) (*Client, error) {
 		return nil, fmt.Errorf("create SDK client: %w", err)
 	}
 
-	return newClient(raw, resolved.listTransport()), nil
+	client := newClient(raw, resolved.listTransport())
+	client.log = resolved.logger
+
+	return client, nil
 }
 
 func newClient(raw *gen.ClientWithResponses, list listTransport) *Client {
@@ -138,4 +150,11 @@ func (t listTransport) resolve(path string, query url.Values) (string, error) {
 // Raw returns the underlying generated Core API client for low-level access.
 func (c *Client) Raw() *gen.ClientWithResponses {
 	return c.raw
+}
+
+func (c *Client) logger() *slog.Logger {
+	if c.log != nil {
+		return c.log
+	}
+	return slog.Default()
 }
