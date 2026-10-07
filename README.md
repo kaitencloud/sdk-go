@@ -373,6 +373,17 @@ and `task test`. A change to any exported identifier is a release concern for ev
 consumer of this module: run `task release:check` and say in the pull request which
 semver bump it forces.
 
+Every commit must be signed off (`git commit -s`) under the Developer Certificate of
+Origin: [CONTRIBUTING.md](CONTRIBUTING.md) explains it, and how to fix a commit that
+missed it.
+
 ## License
 
-Licensed under the [Apache License, Version 2.0](LICENSE).
+Kaiten SDK for Go is open source and licensed under the
+[Apache License, Version 2.0](./LICENSE).
+
+By contributing, you agree to certify your contribution under the
+[Developer Certificate of Origin 1.1](./DCO.md).
+
+The Kaiten name and logos are not licensed under Apache-2.0. See the
+[Kaiten trademark policy](https://github.com/kaitencloud/kaiten/blob/main/TRADEMARKS.md).

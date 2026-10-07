@@ -1,3 +1,6 @@
+// Copyright 2026 KAITEN INC
+// SPDX-License-Identifier: Apache-2.0
+
 package sdk
 
 // NumberUsageValue builds an EntitlementUsageValue for a numeric entitlement value.

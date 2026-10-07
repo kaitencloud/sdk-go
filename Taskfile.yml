@@ -76,6 +76,8 @@ tasks:
         msg: OpenAPI spec not found at {{.OPENAPI_SPEC}}
     cmds:
       - go run github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@{{.OAPI_CODEGEN_VERSION}} --config oapi-codegen.cfg.yaml "{{.OPENAPI_SPEC}}"
+      - task: license-header
+        vars: { FILE: internal/gen/client.gen.go }
 
   generate:platform:
     desc: Regenerate the Platform API client from PLATFORM_OPENAPI_SPEC
@@ -86,3 +88,19 @@ tasks:
         msg: Platform OpenAPI spec not found at {{.PLATFORM_OPENAPI_SPEC}}
     cmds:
       - go run github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@{{.OAPI_CODEGEN_PLATFORM_VERSION}} --config oapi-codegen.platform.cfg.yaml "{{.PLATFORM_OPENAPI_SPEC}}"
+      - task: license-header
+        vars: { FILE: internal/genplatform/client.gen.go }
+
+  license-header:
+    internal: true
+    desc: Put the SPDX license header on a freshly generated file
+    # oapi-codegen has no option for it, and every Go file must open with the two
+    # lines of the licensing pack's LICENSE_HEADER.txt: TestLicenseHeaders fails
+    # on a file without them. The blank line keeps them out of the package doc.
+    cmds:
+      - |
+        {
+          printf '// Copyright 2026 KAITEN INC\n// SPDX-License-Identifier: Apache-2.0\n\n'
+          cat "{{.FILE}}"
+        } > "{{.FILE}}.tmp"
+        mv "{{.FILE}}.tmp" "{{.FILE}}"
