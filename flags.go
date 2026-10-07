@@ -1,3 +1,6 @@
+// Copyright 2026 KAITEN INC
+// SPDX-License-Identifier: Apache-2.0
+
 package sdk
 
 // BasicDefaultVariant builds the DefaultVariant a feature flag serves when no targeting
