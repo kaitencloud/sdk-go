@@ -5,7 +5,11 @@ package sdk
 
 import (
 	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
 	"net/http"
+	"path"
 	"slices"
 	"testing"
 	"time"
@@ -22,8 +26,8 @@ import (
 // every call, with no type error to catch it.
 //
 // The expected sets below are transcribed from app/openapi.yaml's Create*/Update* bodies.
-// A create body and its update body routinely differ -- a slug is assigned once and then
-// immutable, a license's lifecycle state is chosen on create and moved by its own
+// A create body and its update body routinely differ -- a component's predecessor is
+// linked once, a license's lifecycle state is chosen on create and moved by its own
 // operations afterwards -- so each direction is listed separately rather than assumed
 // symmetric.
 func TestRequestBodiesMatchTheirSpecBodies(t *testing.T) {
@@ -68,7 +72,7 @@ func TestRequestBodiesMatchTheirSpecBodies(t *testing.T) {
 			call: func(ctx context.Context, c *Client) error {
 				return c.Customers.Update(ctx, name, CustomerInput{Name: name, ExternalCustomerID: &name, Slug: &name})
 			},
-			expected: []string{"externalCustomerId", "name"},
+			expected: []string{"externalCustomerId", "name", "slug"},
 		},
 		{
 			name: "create deployment zone",
@@ -83,7 +87,7 @@ func TestRequestBodiesMatchTheirSpecBodies(t *testing.T) {
 			call: func(ctx context.Context, c *Client) error {
 				return c.DeploymentZones.Update(ctx, name, DeploymentZoneInput{Name: name, Type: "production", Description: "d", Metadata: map[string]any{"region": "eu-west-1"}, ReleaseID: &name, Slug: &name})
 			},
-			expected: []string{"description", "metadata", "name", "releaseId", "type"},
+			expected: []string{"description", "metadata", "name", "releaseId", "slug", "type"},
 		},
 		{
 			name: "create entitlement group",
@@ -99,7 +103,7 @@ func TestRequestBodiesMatchTheirSpecBodies(t *testing.T) {
 			call: func(ctx context.Context, c *Client) error {
 				return c.EntitlementGroups.Update(ctx, name, EntitlementGroupInput{Name: name, Slug: &name})
 			},
-			expected: []string{"description", "name"},
+			expected: []string{"description", "name", "slug"},
 		},
 		{
 			name: "create entitlement",
@@ -114,7 +118,7 @@ func TestRequestBodiesMatchTheirSpecBodies(t *testing.T) {
 			call: func(ctx context.Context, c *Client) error {
 				return c.Entitlements.Update(ctx, name, EntitlementInput{Name: name, Slug: &name, GroupSlugs: []string{"platform"}})
 			},
-			expected: []string{"description", "groupSlugs", "name"},
+			expected: []string{"description", "groupSlugs", "name", "slug"},
 		},
 		{
 			name: "create instance",
@@ -170,12 +174,12 @@ func TestRequestBodiesMatchTheirSpecBodies(t *testing.T) {
 			call: func(ctx context.Context, c *Client) error {
 				return c.Licenses.Update(ctx, name, LicenseInput{Name: name, Description: "d", Type: LicenseType("COMMUNITY"), Version: "1", VersionName: &name, IsDefault: true, Slug: &name, FamilySlug: &name, FamilyID: &name, LifecycleState: &draft})
 			},
-			// Version renders as the read-back echo the server accepts. Slug and
-			// familySlug are refused and lifecycleState moves through Publish,
-			// Archive and Unarchive, so none of the three renders even though all
-			// were set; familyId does, as the value a read-modify-write caller
-			// carries back.
-			expected: []string{"description", "familyId", "isDefault", "name", "type", "version", "versionName"},
+			// Version renders as the read-back echo the server accepts. familySlug is
+			// refused whatever its value and lifecycleState moves through Publish,
+			// Archive and Unarchive, so neither renders even though both were set;
+			// familyId and slug do, as the values a read-modify-write caller carries
+			// back.
+			expected: []string{"description", "familyId", "isDefault", "name", "slug", "type", "version", "versionName"},
 		},
 		{
 			name: "create service account",
@@ -190,7 +194,7 @@ func TestRequestBodiesMatchTheirSpecBodies(t *testing.T) {
 			call: func(ctx context.Context, c *Client) error {
 				return c.ServiceAccounts.Update(ctx, name, ServiceAccountInput{Name: name, Slug: &name})
 			},
-			expected: []string{"name"},
+			expected: []string{"name", "slug"},
 		},
 		{
 			name: "create service account token",
@@ -225,6 +229,131 @@ func TestRequestBodiesMatchTheirSpecBodies(t *testing.T) {
 				t.Errorf("request body keys = %v, want %v", got, test.expected)
 			}
 		})
+	}
+}
+
+// TestUpdateLetsTheAPIRefuseARename pins the six updates that never rename.
+//
+// Their PUTs check a slug in the body against the path: the current one is accepted and
+// any other is a 422, <Operation>.SlugNotRenameable. The update payloads used to drop
+// Slug, so a caller asking for a rename got a success and kept the old slug without being
+// told. The responder applies the API's rule, so this test fails on a payload that drops
+// the slug again. The omitted half matters too: an input with no slug renders none.
+func TestUpdateLetsTheAPIRefuseARename(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name   string
+		code   string
+		update func(ctx context.Context, c *Client, slug *string) error
+	}{
+		{
+			name: "customer",
+			code: "UpdateCustomer.SlugNotRenameable",
+			update: func(ctx context.Context, c *Client, slug *string) error {
+				return c.Customers.Update(ctx, "current", CustomerInput{Name: "n", Slug: slug})
+			},
+		},
+		{
+			name: "deployment zone",
+			code: "UpdateDeploymentZone.SlugNotRenameable",
+			update: func(ctx context.Context, c *Client, slug *string) error {
+				return c.DeploymentZones.Update(ctx, "current", DeploymentZoneInput{Name: "n", Type: "production", Slug: slug})
+			},
+		},
+		{
+			name: "entitlement group",
+			code: "UpdateEntitlementGroup.SlugNotRenameable",
+			update: func(ctx context.Context, c *Client, slug *string) error {
+				return c.EntitlementGroups.Update(ctx, "current", EntitlementGroupInput{Name: "n", Slug: slug})
+			},
+		},
+		{
+			name: "entitlement",
+			code: "UpdateEntitlement.SlugNotRenameable",
+			update: func(ctx context.Context, c *Client, slug *string) error {
+				return c.Entitlements.Update(ctx, "current", EntitlementInput{Name: "n", Slug: slug})
+			},
+		},
+		{
+			name: "license",
+			code: "UpdateLicense.SlugNotRenameable",
+			update: func(ctx context.Context, c *Client, slug *string) error {
+				return c.Licenses.Update(ctx, "current", LicenseInput{Name: "n", Type: LicenseType("COMMUNITY"), Slug: slug})
+			},
+		},
+		{
+			name: "service account",
+			code: "UpdateServiceAccount.SlugNotRenameable",
+			update: func(ctx context.Context, c *Client, slug *string) error {
+				return c.ServiceAccounts.Update(ctx, "current", ServiceAccountInput{Name: "n", Slug: slug})
+			},
+		},
+	}
+
+	current, renamed := "current", "renamed"
+
+	for _, test := range tests {
+		t.Run(test.name+" refuses another slug", func(t *testing.T) {
+			t.Parallel()
+
+			client, _ := givenClient(t, refuseRenames(test.code))
+
+			err := test.update(t.Context(), client, &renamed)
+
+			var apiErr *Error
+			if !errors.As(err, &apiErr) {
+				t.Fatalf("Update() error = %v, want the API's refusal", err)
+			}
+
+			if apiErr.StatusCode != http.StatusUnprocessableEntity || apiErr.Code != test.code {
+				t.Errorf("Update() error = %d %s, want 422 %s", apiErr.StatusCode, apiErr.Code, test.code)
+			}
+		})
+
+		t.Run(test.name+" accepts the current slug", func(t *testing.T) {
+			t.Parallel()
+
+			client, _ := givenClient(t, refuseRenames(test.code))
+
+			if err := test.update(t.Context(), client, &current); err != nil {
+				t.Fatalf("Update() error = %v", err)
+			}
+		})
+
+		t.Run(test.name+" renders no slug when none is set", func(t *testing.T) {
+			t.Parallel()
+
+			client, sent := givenClient(t, refuseRenames(test.code))
+
+			if err := test.update(t.Context(), client, nil); err != nil {
+				t.Fatalf("Update() error = %v", err)
+			}
+
+			if _, ok := sent.only(t).decodeBody(t)["slug"]; ok {
+				t.Errorf("request body = %s, want no slug key", sent.only(t).body)
+			}
+		})
+	}
+}
+
+// refuseRenames answers an update the way the PUTs that never rename do: a slug in the
+// body other than the path's last segment is a 422 carrying code, anything else a 204.
+func refuseRenames(code string) responder {
+	return func(req *http.Request) (*http.Response, error) {
+		var body struct {
+			Slug string `json:"slug"`
+		}
+		if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
+			return nil, err
+		}
+
+		if body.Slug != "" && body.Slug != path.Base(req.URL.Path) {
+			return jsonResponse(req, http.StatusUnprocessableEntity,
+				fmt.Sprintf(`{"title":"Unprocessable Entity","status":422,"code":%q,"detail":"slug cannot be changed through this endpoint; omit it or send the current slug"}`, code)), nil
+		}
+
+		return jsonResponse(req, http.StatusNoContent, ""), nil
 	}
 }
 
