@@ -1,14 +1,20 @@
 name: CI
 
+# The default-branch ruleset requires three checks, named `lint`, `build` and
+# `test`, as in every Kaiten SDK repository. Each job below reports one of them.
+
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: read
+
 jobs:
-  lint-build-test:
-    name: Lint, Build & Test
+  lint:
+    name: lint
     runs-on: ubuntu-latest
 
     steps:
@@ -35,15 +41,43 @@ jobs:
       - name: Verify module metadata
         run: go mod tidy && git diff --exit-code -- go.mod go.sum
 
-      - name: Build
-        run: go build -v ./...
-
-      - name: Test
-        run: go test -race -shuffle=on -cover ./...
-
       # This module is published, so a vulnerable dependency ships to every
       # consumer. govulncheck reports only the advisories whose vulnerable
       # symbols this code actually reaches, so a finding here is real work
       # rather than a CVE in a function nothing calls.
       - name: Vulnerability scan
         run: go run golang.org/x/vuln/cmd/govulncheck@v1.1.4 ./...
+
+  build:
+    name: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.25.x"
+          cache-dependency-path: go.sum
+
+      - name: Build
+        run: go build -v ./...
+
+  test:
+    name: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.25.x"
+          cache-dependency-path: go.sum
+
+      - name: Test
+        run: go test -race -shuffle=on -cover ./...
