@@ -71,7 +71,11 @@ type ComponentInput struct {
 type CustomerInput struct {
 	Name               string
 	ExternalCustomerID *string
-	Slug               *string
+
+	// Slug is generated when nil on create. Update sends it for the API to check: the
+	// current slug is accepted, and any other is refused with a 422,
+	// UpdateCustomer.SlugNotRenameable.
+	Slug *string
 }
 
 // DeploymentZoneInput is the input for creating or updating a deployment zone.
@@ -81,7 +85,11 @@ type DeploymentZoneInput struct {
 	Description string
 	Metadata    map[string]any
 	ReleaseID   *string
-	Slug        *string
+
+	// Slug is generated when nil on create. Update sends it for the API to check: the
+	// current slug is accepted, and any other is refused with a 422,
+	// UpdateDeploymentZone.SlugNotRenameable.
+	Slug *string
 }
 
 // EnsureOrganizationInput is the input for ensuring a platform organization exists.
@@ -99,7 +107,11 @@ type EnsureOrganizationInput struct {
 type EntitlementGroupInput struct {
 	Name        string
 	Description *string
-	Slug        *string
+
+	// Slug is generated when nil on create. Update sends it for the API to check: the
+	// current slug is accepted, and any other is refused with a 422,
+	// UpdateEntitlementGroup.SlugNotRenameable.
+	Slug *string
 }
 
 // EntitlementInput is the input for creating or updating an entitlement.
@@ -117,7 +129,11 @@ type EntitlementInput struct {
 	Type              *EntitlementType
 	AggregationMethod *EntitlementAggregationMethod
 	GroupSlugs        []string
-	Slug              *string
+
+	// Slug is generated when nil on create. Update sends it for the API to check: the
+	// current slug is accepted, and any other is refused with a 422,
+	// UpdateEntitlement.SlugNotRenameable.
+	Slug *string
 
 	// Icon is a provider-namespaced token such as "lucide:rocket", deliberately not tied
 	// to any one icon library.
@@ -177,8 +193,9 @@ type InstanceInput struct {
 //     next number from there, so the create body declares no such field at all.
 //     Update sends it only as an echo of what was read, since a version's slug is
 //     built from its number.
-//   - Slug is accepted on create and refused on update. A slug is the license's stable
-//     identity once assigned.
+//   - Slug is chosen on create and never changed. Update sends it for the API to check
+//     against the path: the current slug is accepted, and any other is a 422,
+//     UpdateLicense.SlugNotRenameable.
 //   - FamilySlug is accepted on create and refused on update, so updatePayload never
 //     renders it. FamilyID is accepted on both, but on update only as the license's
 //     own family.
@@ -203,8 +220,10 @@ type LicenseInput struct {
 	VersionName *string
 	IsDefault   bool
 
-	// Slug is the license's URL-friendly identity, auto-generated when nil -- create only.
-	// Update refuses it.
+	// Slug is the license's URL-friendly identity, auto-generated when nil on create.
+	// Update sends it for the API to check against the path: the current slug is
+	// accepted, so a License read back can be written back, and any other is a 422,
+	// UpdateLicense.SlugNotRenameable.
 	Slug *string
 
 	// FamilySlug names, by slug, the family this license becomes the next version of
@@ -273,6 +292,10 @@ type ReleaseInput struct {
 // ServiceAccountInput is the input for creating or updating a service account.
 type ServiceAccountInput struct {
 	Name string
+
+	// Slug is generated when nil on create. Update sends it for the API to check: the
+	// current slug is accepted, and any other is refused with a 422,
+	// UpdateServiceAccount.SlugNotRenameable.
 	Slug *string
 }
 
@@ -378,13 +401,11 @@ func (in CustomerInput) createPayload() customerCreatePayload {
 type customerUpdatePayload struct {
 	Name               string  `json:"name"`
 	ExternalCustomerID *string `json:"externalCustomerId,omitempty"`
+	Slug               *string `json:"slug,omitempty"`
 }
 
 func (in CustomerInput) updatePayload() customerUpdatePayload {
-	return customerUpdatePayload{
-		Name:               in.Name,
-		ExternalCustomerID: in.ExternalCustomerID,
-	}
+	return customerUpdatePayload(in)
 }
 
 type deploymentZoneCreatePayload struct {
@@ -413,6 +434,7 @@ type deploymentZoneUpdatePayload struct {
 	Description string         `json:"description"`
 	Metadata    map[string]any `json:"metadata,omitempty"`
 	ReleaseID   *string        `json:"releaseId,omitempty"`
+	Slug        *string        `json:"slug,omitempty"`
 }
 
 func (in DeploymentZoneInput) updatePayload() deploymentZoneUpdatePayload {
@@ -422,6 +444,7 @@ func (in DeploymentZoneInput) updatePayload() deploymentZoneUpdatePayload {
 		Description: in.Description,
 		Metadata:    cloneMap(in.Metadata),
 		ReleaseID:   in.ReleaseID,
+		Slug:        in.Slug,
 	}
 }
 
@@ -442,13 +465,11 @@ func (in EntitlementGroupInput) createPayload() entitlementGroupCreatePayload {
 type entitlementGroupUpdatePayload struct {
 	Name        string  `json:"name"`
 	Description *string `json:"description"`
+	Slug        *string `json:"slug,omitempty"`
 }
 
 func (in EntitlementGroupInput) updatePayload() entitlementGroupUpdatePayload {
-	return entitlementGroupUpdatePayload{
-		Name:        in.Name,
-		Description: in.Description,
-	}
+	return entitlementGroupUpdatePayload(in)
 }
 
 type entitlementPayload struct {
@@ -481,14 +502,13 @@ func (in EntitlementInput) createPayload() entitlementPayload {
 	}
 }
 
-// entitlementUpdatePayload is entitlementPayload without the slug: an entitlement's slug
-// is its identity in the path, and UpdateEntitlementBody does not publish one.
 type entitlementUpdatePayload struct {
 	Name              string                        `json:"name"`
 	Description       *string                       `json:"description"`
 	Type              *EntitlementType              `json:"type,omitempty"`
 	AggregationMethod *EntitlementAggregationMethod `json:"aggregationMethod,omitempty"`
 	GroupSlugs        *[]string                     `json:"groupSlugs,omitempty"`
+	Slug              *string                       `json:"slug,omitempty"`
 	Icon              *string                       `json:"icon,omitempty"`
 	UnitSingular      *string                       `json:"unitSingular,omitempty"`
 	UnitPlural        *string                       `json:"unitPlural,omitempty"`
@@ -503,6 +523,7 @@ func (in EntitlementInput) updatePayload() entitlementUpdatePayload {
 		Type:              in.Type,
 		AggregationMethod: in.AggregationMethod,
 		GroupSlugs:        cloneStringSlice(in.GroupSlugs),
+		Slug:              in.Slug,
 		Icon:              in.Icon,
 		UnitSingular:      in.UnitSingular,
 		UnitPlural:        in.UnitPlural,
@@ -614,14 +635,13 @@ func (in LicenseInput) createPayload() licenseCreatePayload {
 	}
 }
 
-// licenseUpdatePayload drops Slug, FamilySlug and LifecycleState. The slug is the
-// license's identity in the path. familySlug is create-only: PUT refuses it with
-// UpdateLicense.FamilyNotReassignable rather than ignore it, so rendering it from an
-// input filled once for both calls would fail every update. lifecycleState moves
-// through Licenses.Publish, Archive and Unarchive: PUT accepts the stored state and
-// refuses any other with UpdateLicense.LifecycleStateNotSettable, so the state an
-// input was created with would fail every update once the version has moved on.
-// FamilyID stays, as the value a read-modify-write caller carries back.
+// licenseUpdatePayload drops FamilySlug and LifecycleState. familySlug is create-only:
+// PUT refuses it with UpdateLicense.FamilyNotReassignable rather than ignore it, so
+// rendering it from an input filled once for both calls would fail every update.
+// lifecycleState moves through Licenses.Publish, Archive and Unarchive: PUT accepts the
+// stored state and refuses any other with UpdateLicense.LifecycleStateNotSettable, so the
+// state an input was created with would fail every update once the version has moved on.
+// Slug and FamilyID stay, as the values a read-modify-write caller carries back.
 type licenseUpdatePayload struct {
 	Name        string      `json:"name"`
 	Description string      `json:"description"`
@@ -629,6 +649,7 @@ type licenseUpdatePayload struct {
 	Version     string      `json:"version"`
 	VersionName *string     `json:"versionName,omitempty"`
 	IsDefault   bool        `json:"isDefault"`
+	Slug        *string     `json:"slug,omitempty"`
 	FamilyID    *string     `json:"familyId,omitempty"`
 }
 
@@ -640,6 +661,7 @@ func (in LicenseInput) updatePayload() licenseUpdatePayload {
 		Version:     in.Version,
 		VersionName: in.VersionName,
 		IsDefault:   in.IsDefault,
+		Slug:        in.Slug,
 		FamilyID:    in.FamilyID,
 	}
 }
@@ -704,11 +726,12 @@ func (in ServiceAccountInput) createPayload() serviceAccountCreatePayload {
 }
 
 type serviceAccountUpdatePayload struct {
-	Name string `json:"name"`
+	Name string  `json:"name"`
+	Slug *string `json:"slug,omitempty"`
 }
 
 func (in ServiceAccountInput) updatePayload() serviceAccountUpdatePayload {
-	return serviceAccountUpdatePayload{Name: in.Name}
+	return serviceAccountUpdatePayload(in)
 }
 
 // Scopes renders even when nil, as JSON null: CreateServiceAccountTokenBody declares it

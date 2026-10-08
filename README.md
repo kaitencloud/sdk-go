@@ -147,6 +147,11 @@ err = client.Instances.UpdateStatus(ctx, *instance.Slug, sdk.InstanceStatusHealt
 `InstanceInput.Slug` is generated when nil on create and renames the instance on
 update; a slug another instance holds is a 409.
 
+Customers, deployment zones, entitlements, entitlement groups, licenses and service
+accounts are never renamed. Their `Update` sends `Slug` for the API to check: the
+current slug is accepted, and any other is a 422 whose `*sdk.Error` carries the code
+`<Operation>.SlugNotRenameable` (for example `UpdateEntitlement.SlugNotRenameable`).
+
 ### Licenses and entitlements
 
 A license is one version of a family; `LicenseFamilies` reads the family with its
