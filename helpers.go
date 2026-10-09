@@ -6,6 +6,7 @@ package sdk
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -17,6 +18,18 @@ import (
 
 // ErrThresholdExceeded is returned when reporting usage would exceed the configured entitlement limit.
 var ErrThresholdExceeded = fmt.Errorf("usage threshold exceeded")
+
+// ErrTransactionIDReused is returned when a usage report's TransactionID was
+// already used, within Kaiten's idempotency window, for a report with another
+// behavior or value. It is a bug in how the caller makes keys, not a transient
+// failure: retrying the same report under the same key fails the same way. A
+// correction is a new report under a new key.
+var ErrTransactionIDReused = errors.New("usage report transaction ID already used for a different report")
+
+// ErrInvalidTransactionID is returned, before any request, for a TransactionID
+// Kaiten would refuse: it must be 1 to 128 characters of letters, digits, '.',
+// '_', ':' and '-'.
+var ErrInvalidTransactionID = errors.New("invalid usage report transaction ID")
 
 // contentTypeJSON is the only media type this SDK sends or accepts. Every generated
 // write wrapper takes it as a plain string argument, so naming it once keeps a typo

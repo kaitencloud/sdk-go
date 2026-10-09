@@ -5,6 +5,7 @@ package sdk
 
 import (
 	"context"
+	"log/slog"
 	"net/http"
 	"strings"
 
@@ -32,6 +33,7 @@ type clientOptions struct {
 	baseURL    string
 	httpClient *http.Client
 	editors    []RequestEditorFn
+	logger     *slog.Logger
 }
 
 // WithHTTPClient sets the *http.Client used to send requests. It replaces the client
@@ -46,6 +48,15 @@ func WithHTTPClient(client *http.Client) Option {
 func WithRequestEditorFn(fn RequestEditorFn) Option {
 	return func(o *clientOptions) {
 		o.editors = append(o.editors, fn)
+	}
+}
+
+// WithLogger sets where the client logs the rare event worth an operator's
+// attention, such as a server too old for usage report transaction IDs. The
+// default is slog.Default().
+func WithLogger(logger *slog.Logger) Option {
+	return func(o *clientOptions) {
+		o.logger = logger
 	}
 }
 
