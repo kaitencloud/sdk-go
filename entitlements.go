@@ -42,6 +42,11 @@ func (s *Entitlements) Create(ctx context.Context, input EntitlementInput) (Enti
 }
 
 // Update updates the entitlement identified by entitlementSlug.
+//
+// It replaces the entitlement rather than patching it: an optional field left nil is
+// reset, and a periodic entitlement's ResetPeriod and ResetAnchor have to be sent back
+// as they are. EntitlementInput says which fields that covers; reading the entitlement
+// with Get and carrying its fields over is the safe way to change one of them.
 func (s *Entitlements) Update(ctx context.Context, entitlementSlug string, input EntitlementInput) error {
 	body, err := jsonBody(input.updatePayload())
 	if err != nil {

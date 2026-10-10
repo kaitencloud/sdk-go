@@ -10,9 +10,13 @@ import (
 	"fmt"
 	"net/http"
 	"path"
+	"reflect"
 	"slices"
+	"strings"
 	"testing"
 	"time"
+
+	"github.com/kaitencloud/sdk-go/internal/gen"
 )
 
 // TestRequestBodiesMatchTheirSpecBodies pins the exact key set every write renders.
@@ -37,6 +41,12 @@ func TestRequestBodiesMatchTheirSpecBodies(t *testing.T) {
 	name := "pinned"
 	scopes := []string{"read:instances"}
 	draft := LicenseLifecycleDraft
+	periodic := periodicEntitlementInput(name)
+
+	grantValue, err := NumberLicenseValue(1000)
+	if err != nil {
+		t.Fatalf("NumberLicenseValue() error = %v", err)
+	}
 
 	tests := []struct {
 		name     string
@@ -119,6 +129,51 @@ func TestRequestBodiesMatchTheirSpecBodies(t *testing.T) {
 				return c.Entitlements.Update(ctx, name, EntitlementInput{Name: name, Slug: &name, GroupSlugs: []string{"platform"}})
 			},
 			expected: []string{"description", "groupSlugs", "name", "slug"},
+		},
+		{
+			name: "create periodic entitlement",
+			call: func(ctx context.Context, c *Client) error {
+				_, err := c.Entitlements.Create(ctx, periodic)
+				return err
+			},
+			expected: []string{"aggregationMethod", "description", "name", "resetAnchor", "resetPeriod", "saleUnitFactor", "saleUnitPlural", "saleUnitSingular", "slug", "type", "unitPlural", "unitSingular", "warningThresholdPercent"},
+		},
+		{
+			name: "update periodic entitlement",
+			call: func(ctx context.Context, c *Client) error {
+				return c.Entitlements.Update(ctx, name, periodic)
+			},
+			// The window renders on update too: once set, the API refuses an update
+			// that does not carry it back.
+			expected: []string{"aggregationMethod", "description", "name", "resetAnchor", "resetPeriod", "saleUnitFactor", "saleUnitPlural", "saleUnitSingular", "slug", "type", "unitPlural", "unitSingular", "warningThresholdPercent"},
+		},
+		{
+			name: "associate license entitlement",
+			call: func(ctx context.Context, c *Client) error {
+				return c.Licenses.AssociateEntitlement(ctx, name, name, grantValue)
+			},
+			expected: []string{"entitlementSlug", "value"},
+		},
+		{
+			name: "associate license entitlement with an allowance",
+			call: func(ctx context.Context, c *Client) error {
+				return c.Licenses.AssociateEntitlement(ctx, name, name, grantValue, WithOveragePercent(20))
+			},
+			expected: []string{"entitlementSlug", "limitCapExceededOveragePercent", "value"},
+		},
+		{
+			name: "update license entitlement",
+			call: func(ctx context.Context, c *Client) error {
+				return c.Licenses.UpdateEntitlement(ctx, name, name, grantValue)
+			},
+			expected: []string{"value"},
+		},
+		{
+			name: "update license entitlement with an allowance",
+			call: func(ctx context.Context, c *Client) error {
+				return c.Licenses.UpdateEntitlement(ctx, name, name, grantValue, WithOveragePercent(20))
+			},
+			expected: []string{"limitCapExceededOveragePercent", "value"},
 		},
 		{
 			name: "create instance",
@@ -230,6 +285,170 @@ func TestRequestBodiesMatchTheirSpecBodies(t *testing.T) {
 			}
 		})
 	}
+}
+
+// TestEntitlementAndGrantWritesReachEveryWritableKey fails when the spec gives the
+// entitlement or grant bodies a field no input can send.
+//
+// TestRequestBodiesMatchTheirSpecBodies cannot catch that: its expected sets are
+// transcribed by hand, so a field the spec adds is missing from the expectation exactly
+// as it is missing from the input. That is how resetPeriod, resetAnchor,
+// warningThresholdPercent, the sale-unit trio and limitCapExceededOveragePercent stayed
+// out of reach while internal/gen already declared them -- and because both PUTs replace
+// rather than patch, every Update reset what it could not send. This test reads the
+// body's keys off the generated request type instead, so a regenerated client with a new
+// key fails here until the input renders it or the key is listed below as read-only.
+func TestEntitlementAndGrantWritesReachEveryWritableKey(t *testing.T) {
+	t.Parallel()
+
+	name := "pinned"
+	complete := completeEntitlementInput(name)
+
+	grantValue, err := NumberLicenseValue(1000)
+	if err != nil {
+		t.Fatalf("NumberLicenseValue() error = %v", err)
+	}
+
+	// The fields the spec marks readOnly: they are in the generated request type because
+	// the bodies reuse the resource schemas, and the API ignores them on a write.
+	entitlementReadOnly := []string{"createdAt", "entitlementGroups", "id", "updatedAt"}
+	grantReadOnly := []string{"createdAt", "createdBy", "entitlementGroups", "entitlementName", "entitlementType", "licenseId", "licenseSlug", "updatedAt", "updatedBy"}
+
+	tests := []struct {
+		name     string
+		body     any
+		readOnly []string
+		// unsent lists writable keys an input leaves out on purpose, each with its
+		// reason next to the payload type.
+		unsent []string
+		call   func(context.Context, *Client) error
+	}{
+		{
+			name:     "create entitlement",
+			body:     gen.CreateEntitlementJSONRequestBody{},
+			readOnly: entitlementReadOnly,
+			call: func(ctx context.Context, c *Client) error {
+				_, err := c.Entitlements.Create(ctx, complete)
+				return err
+			},
+		},
+		{
+			name:     "update entitlement",
+			body:     gen.UpdateEntitlementJSONRequestBody{},
+			readOnly: entitlementReadOnly,
+			call: func(ctx context.Context, c *Client) error {
+				return c.Entitlements.Update(ctx, name, complete)
+			},
+		},
+		{
+			name:     "associate license entitlement",
+			body:     gen.AssociateEntitlementWithLicenseJSONRequestBody{},
+			readOnly: grantReadOnly,
+			call: func(ctx context.Context, c *Client) error {
+				return c.Licenses.AssociateEntitlement(ctx, name, name, grantValue, WithOveragePercent(20))
+			},
+		},
+		{
+			name:     "update license entitlement",
+			body:     gen.UpdateLicenseEntitlementJSONRequestBody{},
+			readOnly: grantReadOnly,
+			// See licenseEntitlementUpdatePayload: the path names the grant.
+			unsent: []string{"entitlementSlug"},
+			call: func(ctx context.Context, c *Client) error {
+				return c.Licenses.UpdateEntitlement(ctx, name, name, grantValue, WithOveragePercent(20))
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+
+			var writable []string
+			for _, key := range jsonKeys(t, reflect.TypeOf(test.body)) {
+				if !slices.Contains(test.readOnly, key) && !slices.Contains(test.unsent, key) {
+					writable = append(writable, key)
+				}
+			}
+
+			client, sent := givenClient(t, respondToWrite)
+
+			if err := test.call(t.Context(), client); err != nil {
+				t.Fatalf("call() error = %v", err)
+			}
+
+			if got := sent.only(t).bodyKeys(t); !slices.Equal(got, writable) {
+				t.Errorf("request body keys = %v, want every writable key of %T: %v", got, test.body, writable)
+			}
+		})
+	}
+}
+
+// periodicEntitlementInput is a NUMBER entitlement counted per calendar month, with a
+// warning threshold and a sale unit, and none of the presentation fields.
+func periodicEntitlementInput(name string) EntitlementInput {
+	number := EntitlementType("NUMBER")
+	sum := EntitlementAggregationMethod("SUM")
+	month := EntitlementResetPeriodMonth
+	calendar := EntitlementResetAnchorCalendar
+	singular, plural := "order", "orders"
+	saleSingular, salePlural := "pack", "packs"
+	factor := 10.0
+	warning := int32(80)
+
+	return EntitlementInput{
+		Name:                    name,
+		Slug:                    &name,
+		Type:                    &number,
+		AggregationMethod:       &sum,
+		UnitSingular:            &singular,
+		UnitPlural:              &plural,
+		SaleUnitSingular:        &saleSingular,
+		SaleUnitPlural:          &salePlural,
+		SaleUnitFactor:          &factor,
+		ResetPeriod:             &month,
+		ResetAnchor:             &calendar,
+		WarningThresholdPercent: &warning,
+	}
+}
+
+// completeEntitlementInput sets every field of EntitlementInput.
+func completeEntitlementInput(name string) EntitlementInput {
+	input := periodicEntitlementInput(name)
+
+	description, icon := "Orders placed in the month", "lucide:receipt"
+	userFacing := true
+	displayOrder := int32(2)
+
+	input.Description = &description
+	input.GroupSlugs = []string{"restaurant-operations"}
+	input.Icon = &icon
+	input.UserFacing = &userFacing
+	input.DisplayOrder = &displayOrder
+
+	return input
+}
+
+// jsonKeys returns the JSON names of a generated struct's fields, sorted.
+func jsonKeys(t *testing.T, structType reflect.Type) []string {
+	t.Helper()
+
+	if structType.Kind() != reflect.Struct {
+		t.Fatalf("%s is a %s, want a struct", structType, structType.Kind())
+	}
+
+	keys := make([]string, 0, structType.NumField())
+	for i := range structType.NumField() {
+		name, _, _ := strings.Cut(structType.Field(i).Tag.Get("json"), ",")
+		if name == "" || name == "-" {
+			continue
+		}
+		keys = append(keys, name)
+	}
+
+	slices.Sort(keys)
+
+	return keys
 }
 
 // TestUpdateLetsTheAPIRefuseARename pins the six updates that never rename.

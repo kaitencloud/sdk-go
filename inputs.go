@@ -116,13 +116,21 @@ type EntitlementGroupInput struct {
 
 // EntitlementInput is the input for creating or updating an entitlement.
 //
-// The presentation fields -- Icon, UnitSingular, UnitPlural, UserFacing and DisplayOrder --
-// are what customer-facing components render: a pricing table shows the user-facing
+// The presentation fields -- Icon, the unit labels, UserFacing and DisplayOrder -- are
+// what customer-facing components render: a pricing table shows the user-facing
 // entitlements in DisplayOrder with their unit labels, and hides the rest. They are
 // optional because most entitlements are internal counters that should stay hidden, which
 // is exactly what leaving them nil produces.
 //
 // The API validates the unit labels as an all-or-none pair, so set both or neither.
+//
+// Update replaces the entitlement rather than patching it. The API resets an optional
+// field the body leaves out instead of keeping the stored value, so an update built from
+// scratch clears Description, Icon, the unit labels, UserFacing, DisplayOrder and
+// WarningThresholdPercent -- and an update of a periodic entitlement that does not carry
+// its ResetPeriod and ResetAnchor back is refused. Read the entitlement first and carry
+// back what should stay: an Entitlement's fields have the same types as these. GroupSlugs
+// is the exception, where nil leaves the groups as they are.
 type EntitlementInput struct {
 	Name              string
 	Description       *string
@@ -144,12 +152,47 @@ type EntitlementInput struct {
 	UnitSingular *string
 	UnitPlural   *string
 
+	// SaleUnitSingular, SaleUnitPlural and SaleUnitFactor name the unit the entitlement
+	// is sold in when it differs from the base unit: a "pack" of SaleUnitFactor seats.
+	// All three or none, and only together with UnitSingular and UnitPlural -- anything
+	// else is a 400, <Operation>.InvalidUnitsConfiguration.
+	SaleUnitSingular *string
+	SaleUnitPlural   *string
+	SaleUnitFactor   *float64
+
 	// UserFacing exposes the entitlement in customer-facing components. Defaults to false
 	// server-side, which keeps raw counters out of a pricing page.
 	UserFacing *bool
 
 	// DisplayOrder sorts the entitlement within customer-facing components, ascending.
 	DisplayOrder *int32
+
+	// ResetPeriod makes a NUMBER entitlement periodic: its usage starts again from zero
+	// every period, and a grant's value caps the usage of the current window rather than
+	// a lifetime total. Nil keeps a lifetime counter. Only NUMBER and NUMBER_AI_CREDIT
+	// entitlements take one, and not with the LATEST aggregation method, whose reports
+	// already state a current count -- either is a 400,
+	// <Operation>.InvalidResetConfiguration.
+	//
+	// It is a one-way door. Once an entitlement has a period, every Update has to carry
+	// it back: nil, or a different period, is a 400, UpdateEntitlement.ImmutableResetPeriod,
+	// because the API reads an omitted period as an attempt to remove it. An Update may
+	// still give a period to an entitlement that has none, once.
+	ResetPeriod *EntitlementResetPeriod
+
+	// ResetAnchor is what the windows align on. It goes with ResetPeriod -- sent without
+	// one it is a 400 -- and nil with a ResetPeriod is EntitlementResetAnchorCalendar.
+	// Once set it is immutable the same way, refused with
+	// UpdateEntitlement.ImmutableResetAnchor.
+	ResetAnchor *EntitlementResetAnchor
+
+	// WarningThresholdPercent is the share of a grant's value, from 0 to 100, at which
+	// usage raises an early warning -- the INSTANCE_ENTITLEMENT_USAGE_WARNING_THRESHOLD_REACHED
+	// event -- before it reaches the cap. Zero, the server's default, disables it. NUMBER
+	// and NUMBER_AI_CREDIT only: on another type it is a 400,
+	// <Operation>.InvalidEnforcementPolicyConfiguration. Update resets it like any
+	// optional field, so nil there turns the warning off.
+	WarningThresholdPercent *int32
 }
 
 // InstanceInput is the input for creating or updating an instance.
@@ -358,6 +401,45 @@ type UsageReportInput struct {
 	Metadata map[string]any
 }
 
+// LicenseEntitlementOption sets an optional field of the grant that
+// Licenses.AssociateEntitlement or Licenses.UpdateEntitlement writes.
+type LicenseEntitlementOption func(*licenseEntitlementOptions)
+
+// licenseEntitlementOptions accumulates what a LicenseEntitlementOption sets.
+type licenseEntitlementOptions struct {
+	overagePercent *int32
+}
+
+// WithOveragePercent sets how far usage may exceed a numeric grant's value before the
+// API refuses a report. It is sent as limitCapExceededOveragePercent and read back on
+// LicenseEntitlement.LimitCapExceededOveragePercent. 0 is a hard limit. A positive
+// percentage is a soft one: 20 on a value of 1000 accepts usage up to 1200. -1 is
+// unlimited, and is required exactly when the value is the unlimited sentinel -1.
+//
+// Without it the server derives the allowance from the value: -1 for an unlimited
+// value, 0 for any other. Licenses.UpdateEntitlement replaces the grant, so leaving the
+// option out there turns a soft limit back into a hard one -- pass the grant's current
+// percentage to keep it.
+//
+// Only a numeric grant has an allowance. Set on a BOOLEAN or CONFIG value, or out of
+// range, it is a 400 whose code ends in .InvalidLimitCapExceededOveragePercent.
+func WithOveragePercent(percent int32) LicenseEntitlementOption {
+	return func(o *licenseEntitlementOptions) {
+		o.overagePercent = &percent
+	}
+}
+
+func newLicenseEntitlementOptions(opts []LicenseEntitlementOption) licenseEntitlementOptions {
+	var options licenseEntitlementOptions
+	for _, opt := range opts {
+		if opt != nil {
+			opt(&options)
+		}
+	}
+
+	return options
+}
+
 type componentCreatePayload struct {
 	Name                string  `json:"name"`
 	Version             string  `json:"version"`
@@ -472,63 +554,95 @@ func (in EntitlementGroupInput) updatePayload() entitlementGroupUpdatePayload {
 	return entitlementGroupUpdatePayload(in)
 }
 
+// The usage window and the warning threshold are omitempty like the presentation fields,
+// and absence means the same thing on both bodies: no period is a lifetime counter, no
+// anchor is CALENDAR, no threshold is 0. A nil pointer must render no key rather than a
+// null -- none of the three is nullable. A zero WarningThresholdPercent still renders,
+// since omitempty only drops a nil pointer, so a caller can send 0 on purpose.
 type entitlementPayload struct {
-	Name              string                        `json:"name"`
-	Description       *string                       `json:"description"`
-	Type              *EntitlementType              `json:"type,omitempty"`
-	AggregationMethod *EntitlementAggregationMethod `json:"aggregationMethod,omitempty"`
-	GroupSlugs        *[]string                     `json:"groupSlugs,omitempty"`
-	Slug              *string                       `json:"slug,omitempty"`
-	Icon              *string                       `json:"icon,omitempty"`
-	UnitSingular      *string                       `json:"unitSingular,omitempty"`
-	UnitPlural        *string                       `json:"unitPlural,omitempty"`
-	UserFacing        *bool                         `json:"userFacing,omitempty"`
-	DisplayOrder      *int32                        `json:"displayOrder,omitempty"`
+	Name                    string                        `json:"name"`
+	Description             *string                       `json:"description"`
+	Type                    *EntitlementType              `json:"type,omitempty"`
+	AggregationMethod       *EntitlementAggregationMethod `json:"aggregationMethod,omitempty"`
+	GroupSlugs              *[]string                     `json:"groupSlugs,omitempty"`
+	Slug                    *string                       `json:"slug,omitempty"`
+	Icon                    *string                       `json:"icon,omitempty"`
+	UnitSingular            *string                       `json:"unitSingular,omitempty"`
+	UnitPlural              *string                       `json:"unitPlural,omitempty"`
+	SaleUnitSingular        *string                       `json:"saleUnitSingular,omitempty"`
+	SaleUnitPlural          *string                       `json:"saleUnitPlural,omitempty"`
+	SaleUnitFactor          *float64                      `json:"saleUnitFactor,omitempty"`
+	UserFacing              *bool                         `json:"userFacing,omitempty"`
+	DisplayOrder            *int32                        `json:"displayOrder,omitempty"`
+	ResetPeriod             *EntitlementResetPeriod       `json:"resetPeriod,omitempty"`
+	ResetAnchor             *EntitlementResetAnchor       `json:"resetAnchor,omitempty"`
+	WarningThresholdPercent *int32                        `json:"warningThresholdPercent,omitempty"`
 }
 
 func (in EntitlementInput) createPayload() entitlementPayload {
 	return entitlementPayload{
-		Name:              in.Name,
-		Description:       in.Description,
-		Type:              in.Type,
-		AggregationMethod: in.AggregationMethod,
-		GroupSlugs:        cloneStringSlice(in.GroupSlugs),
-		Slug:              in.Slug,
-		Icon:              in.Icon,
-		UnitSingular:      in.UnitSingular,
-		UnitPlural:        in.UnitPlural,
-		UserFacing:        in.UserFacing,
-		DisplayOrder:      in.DisplayOrder,
+		Name:                    in.Name,
+		Description:             in.Description,
+		Type:                    in.Type,
+		AggregationMethod:       in.AggregationMethod,
+		GroupSlugs:              cloneStringSlice(in.GroupSlugs),
+		Slug:                    in.Slug,
+		Icon:                    in.Icon,
+		UnitSingular:            in.UnitSingular,
+		UnitPlural:              in.UnitPlural,
+		SaleUnitSingular:        in.SaleUnitSingular,
+		SaleUnitPlural:          in.SaleUnitPlural,
+		SaleUnitFactor:          in.SaleUnitFactor,
+		UserFacing:              in.UserFacing,
+		DisplayOrder:            in.DisplayOrder,
+		ResetPeriod:             in.ResetPeriod,
+		ResetAnchor:             in.ResetAnchor,
+		WarningThresholdPercent: in.WarningThresholdPercent,
 	}
 }
 
+// entitlementUpdatePayload renders the usage window whenever it is set, not only the
+// first time: once an entitlement has a period, the API refuses an update that does not
+// carry it back, so dropping it here would fail every update of a periodic entitlement.
 type entitlementUpdatePayload struct {
-	Name              string                        `json:"name"`
-	Description       *string                       `json:"description"`
-	Type              *EntitlementType              `json:"type,omitempty"`
-	AggregationMethod *EntitlementAggregationMethod `json:"aggregationMethod,omitempty"`
-	GroupSlugs        *[]string                     `json:"groupSlugs,omitempty"`
-	Slug              *string                       `json:"slug,omitempty"`
-	Icon              *string                       `json:"icon,omitempty"`
-	UnitSingular      *string                       `json:"unitSingular,omitempty"`
-	UnitPlural        *string                       `json:"unitPlural,omitempty"`
-	UserFacing        *bool                         `json:"userFacing,omitempty"`
-	DisplayOrder      *int32                        `json:"displayOrder,omitempty"`
+	Name                    string                        `json:"name"`
+	Description             *string                       `json:"description"`
+	Type                    *EntitlementType              `json:"type,omitempty"`
+	AggregationMethod       *EntitlementAggregationMethod `json:"aggregationMethod,omitempty"`
+	GroupSlugs              *[]string                     `json:"groupSlugs,omitempty"`
+	Slug                    *string                       `json:"slug,omitempty"`
+	Icon                    *string                       `json:"icon,omitempty"`
+	UnitSingular            *string                       `json:"unitSingular,omitempty"`
+	UnitPlural              *string                       `json:"unitPlural,omitempty"`
+	SaleUnitSingular        *string                       `json:"saleUnitSingular,omitempty"`
+	SaleUnitPlural          *string                       `json:"saleUnitPlural,omitempty"`
+	SaleUnitFactor          *float64                      `json:"saleUnitFactor,omitempty"`
+	UserFacing              *bool                         `json:"userFacing,omitempty"`
+	DisplayOrder            *int32                        `json:"displayOrder,omitempty"`
+	ResetPeriod             *EntitlementResetPeriod       `json:"resetPeriod,omitempty"`
+	ResetAnchor             *EntitlementResetAnchor       `json:"resetAnchor,omitempty"`
+	WarningThresholdPercent *int32                        `json:"warningThresholdPercent,omitempty"`
 }
 
 func (in EntitlementInput) updatePayload() entitlementUpdatePayload {
 	return entitlementUpdatePayload{
-		Name:              in.Name,
-		Description:       in.Description,
-		Type:              in.Type,
-		AggregationMethod: in.AggregationMethod,
-		GroupSlugs:        cloneStringSlice(in.GroupSlugs),
-		Slug:              in.Slug,
-		Icon:              in.Icon,
-		UnitSingular:      in.UnitSingular,
-		UnitPlural:        in.UnitPlural,
-		UserFacing:        in.UserFacing,
-		DisplayOrder:      in.DisplayOrder,
+		Name:                    in.Name,
+		Description:             in.Description,
+		Type:                    in.Type,
+		AggregationMethod:       in.AggregationMethod,
+		GroupSlugs:              cloneStringSlice(in.GroupSlugs),
+		Slug:                    in.Slug,
+		Icon:                    in.Icon,
+		UnitSingular:            in.UnitSingular,
+		UnitPlural:              in.UnitPlural,
+		SaleUnitSingular:        in.SaleUnitSingular,
+		SaleUnitPlural:          in.SaleUnitPlural,
+		SaleUnitFactor:          in.SaleUnitFactor,
+		UserFacing:              in.UserFacing,
+		DisplayOrder:            in.DisplayOrder,
+		ResetPeriod:             in.ResetPeriod,
+		ResetAnchor:             in.ResetAnchor,
+		WarningThresholdPercent: in.WarningThresholdPercent,
 	}
 }
 
@@ -664,6 +778,23 @@ func (in LicenseInput) updatePayload() licenseUpdatePayload {
 		Slug:        in.Slug,
 		FamilyID:    in.FamilyID,
 	}
+}
+
+// limitCapExceededOveragePercent is omitempty on both grant bodies: absence is how a body
+// asks for the allowance the server derives from the value, and the field is not
+// nullable. So a grant written without WithOveragePercent sends the bytes it sent before
+// the option existed, while WithOveragePercent(0) still renders its zero.
+type licenseEntitlementCreatePayload struct {
+	EntitlementSlug                string                  `json:"entitlementSlug"`
+	Value                          LicenseEntitlementValue `json:"value"`
+	LimitCapExceededOveragePercent *int32                  `json:"limitCapExceededOveragePercent,omitempty"`
+}
+
+// licenseEntitlementUpdatePayload carries no entitlementSlug: the path names the grant,
+// and the body accepts the slug only as a repeat of the path's.
+type licenseEntitlementUpdatePayload struct {
+	Value                          LicenseEntitlementValue `json:"value"`
+	LimitCapExceededOveragePercent *int32                  `json:"limitCapExceededOveragePercent,omitempty"`
 }
 
 type metadataFieldPayload struct {

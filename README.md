@@ -179,6 +179,40 @@ moves only through `Licenses.Publish`, `Licenses.Archive` and `Licenses.Unarchiv
 `sdk.BooleanLicenseValue` and `sdk.ConfigLicenseValue` build the other two value
 kinds.
 
+An entitlement says how usage is measured, and a grant how much of it a license allows
+and how strictly. A periodic entitlement counts per window, and a grant may tolerate
+usage past its value:
+
+```go
+// Orders count per calendar month, with a warning at 80% of what each license grants.
+slug, number, sum := "monthly-orders", sdk.EntitlementType("NUMBER"), sdk.EntitlementAggregationMethod("SUM")
+month, calendar, warning := sdk.EntitlementResetPeriodMonth, sdk.EntitlementResetAnchorCalendar, int32(80)
+if _, err := client.Entitlements.Create(ctx, sdk.EntitlementInput{
+	Name:                    "Monthly orders",
+	Slug:                    &slug,
+	Type:                    &number,
+	AggregationMethod:       &sum,
+	ResetPeriod:             &month,
+	ResetAnchor:             &calendar,
+	WarningThresholdPercent: &warning,
+}); err != nil {
+	return err
+}
+
+// 1000 orders a month, refused past 1200: a soft limit with a 20% allowance.
+orders, err := sdk.NumberLicenseValue(1000)
+if err != nil {
+	return err
+}
+err = client.Licenses.AssociateEntitlement(ctx, "team-v1", slug, orders, sdk.WithOveragePercent(20))
+```
+
+`Entitlements.Update` and `Licenses.UpdateEntitlement` replace rather than patch. A
+field left out is reset -- a warning threshold to 0, a grant's allowance to a hard
+limit -- and a periodic entitlement's reset period and anchor have to be sent back as
+they are, or the update is refused. Read the resource first and carry back what should
+stay.
+
 ### Usage metering
 
 ```go
