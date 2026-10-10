@@ -149,13 +149,18 @@ func (s *Licenses) ListEntitlements(ctx context.Context, licenseSlug string) ([]
 }
 
 // AssociateEntitlement grants the entitlement identified by entitlementSlug to the license identified by licenseSlug with the given value.
-func (s *Licenses) AssociateEntitlement(ctx context.Context, licenseSlug, entitlementSlug string, value LicenseEntitlementValue) error {
-	body, err := jsonBody(struct {
-		EntitlementSlug *string                 `json:"entitlementSlug,omitempty"`
-		Value           LicenseEntitlementValue `json:"value"`
-	}{
-		EntitlementSlug: &entitlementSlug,
-		Value:           value,
+//
+// A numeric grant enforces its value as a hard limit unless WithOveragePercent gives it
+// an allowance; an unlimited value is never enforced. A license grants an entitlement
+// once: a second grant is a 409, AssociateEntitlementToLicense.AlreadyAssociated, and
+// UpdateEntitlement is how a grant changes.
+func (s *Licenses) AssociateEntitlement(ctx context.Context, licenseSlug, entitlementSlug string, value LicenseEntitlementValue, opts ...LicenseEntitlementOption) error {
+	options := newLicenseEntitlementOptions(opts)
+
+	body, err := jsonBody(licenseEntitlementCreatePayload{
+		EntitlementSlug:                entitlementSlug,
+		Value:                          value,
+		LimitCapExceededOveragePercent: options.overagePercent,
 	})
 	if err != nil {
 		return fmt.Errorf("encode license entitlement request: %w", err)
@@ -181,11 +186,18 @@ func (s *Licenses) GetEntitlement(ctx context.Context, licenseSlug, entitlementS
 }
 
 // UpdateEntitlement updates the value of the entitlement identified by entitlementSlug granted by the license identified by licenseSlug.
-func (s *Licenses) UpdateEntitlement(ctx context.Context, licenseSlug, entitlementSlug string, value LicenseEntitlementValue) error {
-	body, err := jsonBody(struct {
-		Value LicenseEntitlementValue `json:"value"`
-	}{
-		Value: value,
+//
+// It replaces the grant rather than patching it. A numeric grant written without
+// WithOveragePercent gets the allowance the server derives from the value -- none, for a
+// finite one -- so changing only the value of a soft limit makes it a hard one. To keep
+// the allowance, pass back the LimitCapExceededOveragePercent that GetEntitlement reads,
+// unless the new value is unlimited, which takes -1.
+func (s *Licenses) UpdateEntitlement(ctx context.Context, licenseSlug, entitlementSlug string, value LicenseEntitlementValue, opts ...LicenseEntitlementOption) error {
+	options := newLicenseEntitlementOptions(opts)
+
+	body, err := jsonBody(licenseEntitlementUpdatePayload{
+		Value:                          value,
+		LimitCapExceededOveragePercent: options.overagePercent,
 	})
 	if err != nil {
 		return fmt.Errorf("encode license entitlement request: %w", err)

@@ -69,6 +69,30 @@ type EntitlementGroupRef = gen.EntitlementGroupSummary
 // for the same reason as EntitlementGroupRef above.
 type EntitlementGroupUsageItem = gen.EntitlementGroupUsage
 
+// EntitlementResetPeriod is how often a NUMBER entitlement's usage starts again from
+// zero. An entitlement without one counts for its whole lifetime.
+type EntitlementResetPeriod = gen.EntitlementResetPeriod
+
+// Periods a NUMBER entitlement's usage can reset on.
+const (
+	EntitlementResetPeriodHour  EntitlementResetPeriod = "HOUR"
+	EntitlementResetPeriodDay   EntitlementResetPeriod = "DAY"
+	EntitlementResetPeriodWeek  EntitlementResetPeriod = "WEEK"
+	EntitlementResetPeriodMonth EntitlementResetPeriod = "MONTH"
+	EntitlementResetPeriodYear  EntitlementResetPeriod = "YEAR"
+)
+
+// EntitlementResetAnchor is what a periodic entitlement's windows align on.
+type EntitlementResetAnchor = gen.EntitlementResetAnchor
+
+// Anchors a periodic entitlement's windows can align on: the UTC calendar, so a
+// monthly window runs from the first of the month, or each instance's license start
+// date.
+const (
+	EntitlementResetAnchorCalendar     EntitlementResetAnchor = "CALENDAR"
+	EntitlementResetAnchorLicenseStart EntitlementResetAnchor = "LICENSE_START"
+)
+
 // EntitlementType describes the value type of an entitlement.
 type EntitlementType = gen.EntitlementType
 
