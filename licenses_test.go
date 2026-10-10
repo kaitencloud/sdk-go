@@ -310,3 +310,99 @@ func TestLifecycleTransitionsPostToTheirOwnOperation(t *testing.T) {
 		})
 	}
 }
+
+// TestGrantWritesRenderTheOveragePercentOnlyWhenSet pins the allowance on both grant
+// bodies. Without WithOveragePercent the bytes are the ones the two methods sent before
+// the option existed, so the server keeps deriving the allowance from the value. With it,
+// the percentage reaches the wire whatever it is: 0, a hard limit and what the server
+// would have derived for a finite value, as much as -1, which an unlimited value requires.
+func TestGrantWritesRenderTheOveragePercentOnlyWhenSet(t *testing.T) {
+	t.Parallel()
+
+	finite, err := NumberLicenseValue(1000)
+	if err != nil {
+		t.Fatalf("NumberLicenseValue() error = %v", err)
+	}
+	unlimited, err := NumberLicenseValue(-1)
+	if err != nil {
+		t.Fatalf("NumberLicenseValue() error = %v", err)
+	}
+
+	tests := []struct {
+		name          string
+		value         LicenseEntitlementValue
+		opts          []LicenseEntitlementOption
+		associateBody string
+		updateBody    string
+	}{
+		{
+			name:          "no option leaves the allowance to the server",
+			value:         finite,
+			associateBody: `{"entitlementSlug":"monthly-orders","value":{"type":"number","value":1000}}`,
+			updateBody:    `{"value":{"type":"number","value":1000}}`,
+		},
+		{
+			name:          "a soft limit",
+			value:         finite,
+			opts:          []LicenseEntitlementOption{WithOveragePercent(20)},
+			associateBody: `{"entitlementSlug":"monthly-orders","value":{"type":"number","value":1000},"limitCapExceededOveragePercent":20}`,
+			updateBody:    `{"value":{"type":"number","value":1000},"limitCapExceededOveragePercent":20}`,
+		},
+		{
+			name:          "a hard limit is sent, not dropped",
+			value:         finite,
+			opts:          []LicenseEntitlementOption{WithOveragePercent(0)},
+			associateBody: `{"entitlementSlug":"monthly-orders","value":{"type":"number","value":1000},"limitCapExceededOveragePercent":0}`,
+			updateBody:    `{"value":{"type":"number","value":1000},"limitCapExceededOveragePercent":0}`,
+		},
+		{
+			name:          "unlimited",
+			value:         unlimited,
+			opts:          []LicenseEntitlementOption{WithOveragePercent(-1)},
+			associateBody: `{"entitlementSlug":"monthly-orders","value":{"type":"number","value":-1},"limitCapExceededOveragePercent":-1}`,
+			updateBody:    `{"value":{"type":"number","value":-1},"limitCapExceededOveragePercent":-1}`,
+		},
+		{
+			name:          "a nil option is skipped",
+			value:         finite,
+			opts:          []LicenseEntitlementOption{nil},
+			associateBody: `{"entitlementSlug":"monthly-orders","value":{"type":"number","value":1000}}`,
+			updateBody:    `{"value":{"type":"number","value":1000}}`,
+		},
+		{
+			name:          "the last option wins",
+			value:         finite,
+			opts:          []LicenseEntitlementOption{WithOveragePercent(10), WithOveragePercent(20)},
+			associateBody: `{"entitlementSlug":"monthly-orders","value":{"type":"number","value":1000},"limitCapExceededOveragePercent":20}`,
+			updateBody:    `{"value":{"type":"number","value":1000},"limitCapExceededOveragePercent":20}`,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+
+			client, sent := givenClient(t, respondNoContent())
+
+			if err := client.Licenses.AssociateEntitlement(t.Context(), "premium", "monthly-orders", test.value, test.opts...); err != nil {
+				t.Fatalf("AssociateEntitlement() error = %v", err)
+			}
+			if err := client.Licenses.UpdateEntitlement(t.Context(), "premium", "monthly-orders", test.value, test.opts...); err != nil {
+				t.Fatalf("UpdateEntitlement() error = %v", err)
+			}
+
+			for i, want := range []struct{ method, path, body string }{
+				{http.MethodPost, "/api/licenses/premium/entitlements", test.associateBody},
+				{http.MethodPut, "/api/licenses/premium/entitlements/monthly-orders", test.updateBody},
+			} {
+				request := sent.at(t, i)
+				if request.method != want.method || request.path != want.path {
+					t.Errorf("request %d = %s %s, want %s %s", i, request.method, request.path, want.method, want.path)
+				}
+				if got := string(request.body); got != want.body {
+					t.Errorf("%s body = %s, want %s", want.method, got, want.body)
+				}
+			}
+		})
+	}
+}
