@@ -30,11 +30,14 @@ jobs:
       # its final patch would fail the scan on every run whatever the change.
       # A consumer builds with its own toolchain, so the scan has to run on one
       # that is still patched. go.mod stays the language-version contract, and
-      # the build and test jobs keep proving that floor.
+      # the build and test jobs keep proving that floor. check-latest, because
+      # without it setup-go takes the newest 1.26 the runner already caches,
+      # which can be a patch behind the one that fixes what the scan reports.
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
           go-version: "1.26.x"
+          check-latest: true
           cache-dependency-path: go.sum
 
       - name: golangci-lint
