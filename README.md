@@ -315,6 +315,40 @@ for _, flag := range flags {
 `sdk.BasicDefaultVariant` and `sdk.BasicVariantTargeting` build the default variant
 and the targeting rules a `FeatureFlag` carries on create and update.
 
+### Billing
+
+`client.Billing` holds the billing settings and provider (`Settings`,
+`UpdateSettings`, `Capabilities`, `Health`, `Sync`, `ClosePeriods`) and a
+namespace per resource:
+
+| Namespace           | Covers                                                                  |
+| ------------------- | ----------------------------------------------------------------------- |
+| `Subscriptions`     | an instance's subscription: subscribe, change, cancel, reactivate, scheduled plan change, upcoming invoice, its invoices |
+| `Invoices`          | list, get, export, void, recompose, mark paid, write off, release a hold, retry a push, sync, a line's usage reports |
+| `Handoff`           | the accounting handoff: claim a leased batch, acknowledge each invoice  |
+| `LicensePrices`     | a licence version's prices and the invoice preview                      |
+| `Addons`            | the add-on catalogue: versions, grants, prices, compatibility, families |
+| `InstanceAddons`    | attach, set the quantity of, detach an add-on                           |
+| `Vouchers`, `InstanceVouchers` | vouchers, their redemptions, redeem and revoke on an instance |
+| `PublishableKeys`, `CustomerSessions` | the `pk_` keys and `kst_` sessions a customer's page uses |
+| `Customers`         | a customer's billing, payment method and provider portal                |
+| `Public`, `Session` | what a `pk_` key and a `kst_` session reach: build the client with that token |
+
+```go
+claim, err := client.Billing.Handoff.Claim(ctx, sdk.HandoffClaimSize{})
+for _, invoice := range claim.Invoices {
+	reference := book(invoice) // your accounting system
+	_, err = client.Billing.Handoff.Ack(ctx, invoice.Id, sdk.HandoffBooking{
+		LeaseId:           &claim.LeaseId,
+		ExternalReference: &reference,
+	})
+}
+```
+
+The list methods walk every page. Each paginated one (`Invoices.List`,
+`Handoff.List`, `Vouchers.ListRedemptions`, ...) also has a `...Page` variant that
+returns one page and its cursor.
+
 ## Platform API
 
 `PlatformClient` reaches the Platform API with a platform credential and exposes
@@ -442,6 +476,7 @@ if err != nil {
 | `Problem`    | The decoded problem-details body (`title`, `detail`, `errors`, ...).  |
 | `ErrorID`    | Correlation id for the server-side log entry, when given.             |
 | `Body`       | The raw response body.                                                |
+| `RetryAfter` | How long to wait before retrying, when the API said (429, 503).       |
 
 The usage report methods also return sentinels for `errors.Is`, alongside the
 `*sdk.Error`:

@@ -101,7 +101,7 @@ func (s *Instances) Delete(ctx context.Context, instanceSlug string) error {
 		return fmt.Errorf("delete instance: %w", err)
 	}
 
-	return expectNoContent(newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500))
+	return expectNoContent(newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON409, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500))
 }
 
 // ListAuditTrails returns the audit trail entries for the instance identified by instanceSlug.

@@ -57,6 +57,8 @@ type Client struct {
 	// transaction IDs: from then on reports go out without them.
 	transactionIDsUnsupported atomic.Bool
 
+	// Billing is the billing API, a namespace per resource below it.
+	Billing           *Billing
 	Components        *Components
 	Customers         *Customers
 	DeploymentZones   *DeploymentZones
@@ -107,6 +109,7 @@ func newClient(raw *gen.ClientWithResponses, list listTransport) *Client {
 	client.Licenses = &Licenses{client: client}
 	client.MetadataFields = &MetadataFields{client: client}
 	client.Releases = &Releases{client: client}
+	client.Billing = newBilling(client)
 	client.ServiceAccounts = &ServiceAccounts{client: client}
 
 	return client
