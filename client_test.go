@@ -2,6 +2,7 @@ package sdk
 
 import (
 	"context"
+	"maps"
 	"net/http"
 	"reflect"
 	"testing"
@@ -86,7 +87,7 @@ func TestClientExposesOnlyTheReviewedPublicSurface(t *testing.T) {
 		t.Fatalf("NewClient() error = %v", err)
 	}
 
-	assertServiceCoverage(t, map[string]serviceCoverage{
+	services := map[string]serviceCoverage{
 		"Components": {
 			service: client.Components,
 			methods: []string{"List", "Get", "Create", "Update", "Delete"},
@@ -117,7 +118,7 @@ func TestClientExposesOnlyTheReviewedPublicSurface(t *testing.T) {
 		},
 		"LicenseFamilies": {
 			service: client.LicenseFamilies,
-			methods: []string{"List", "Get"},
+			methods: []string{"List", "Get", "Update"},
 		},
 		"Licenses": {
 			service: client.Licenses,
@@ -135,7 +136,9 @@ func TestClientExposesOnlyTheReviewedPublicSurface(t *testing.T) {
 			service: client.ServiceAccounts,
 			methods: []string{"List", "Get", "Create", "Update", "ListTokens", "CreateToken", "DeleteToken"},
 		},
-	})
+	}
+	maps.Copy(services, billingServiceCoverage(client))
+	assertServiceCoverage(t, services)
 }
 
 func httpClientTimeout(t *testing.T, client *Client) time.Duration {
@@ -182,7 +185,7 @@ func TestClientWrappersReportEveryDeclaredProblem(t *testing.T) {
 		return client
 	}
 
-	assertProblemCoverage(t, given, map[string]problemCoverage[*Client]{
+	wrappers := map[string]problemCoverage[*Client]{
 		"Components.Get": {
 			response: gen.GetComponentResponse{},
 			call:     func(ctx context.Context, c *Client) error { _, err := c.Components.Get(ctx, "web"); return err },
@@ -542,5 +545,7 @@ func TestClientWrappersReportEveryDeclaredProblem(t *testing.T) {
 			response: gen.DeleteServiceAccountTokenResponse{},
 			call:     func(ctx context.Context, c *Client) error { return c.ServiceAccounts.DeleteToken(ctx, "ci", "deploy") },
 		},
-	})
+	}
+	maps.Copy(wrappers, billingProblemCoverage())
+	assertProblemCoverage(t, given, wrappers)
 }
