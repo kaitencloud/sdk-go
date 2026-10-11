@@ -18,9 +18,11 @@ package sdk
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"strings"
+	"sync/atomic"
 	"time"
 
 	"github.com/kaitencloud/sdk-go/internal/gen"
@@ -48,6 +50,15 @@ type Client struct {
 	// request editors the generated client was handed.
 	list listTransport
 
+	// log is where the client reports what an operator should know; nil means
+	// slog.Default().
+	log *slog.Logger
+	// transactionIDsUnsupported is set once a server refuses usage report
+	// transaction IDs: from then on reports go out without them.
+	transactionIDsUnsupported atomic.Bool
+
+	// Billing is the billing API, a namespace per resource below it.
+	Billing           *Billing
 	Components        *Components
 	Customers         *Customers
 	DeploymentZones   *DeploymentZones
@@ -75,7 +86,10 @@ func NewClient(baseURL string, opts ...Option) (*Client, error) {
 		return nil, fmt.Errorf("create SDK client: %w", err)
 	}
 
-	return newClient(raw, resolved.listTransport()), nil
+	client := newClient(raw, resolved.listTransport())
+	client.log = resolved.logger
+
+	return client, nil
 }
 
 func newClient(raw *gen.ClientWithResponses, list listTransport) *Client {
@@ -95,6 +109,7 @@ func newClient(raw *gen.ClientWithResponses, list listTransport) *Client {
 	client.Licenses = &Licenses{client: client}
 	client.MetadataFields = &MetadataFields{client: client}
 	client.Releases = &Releases{client: client}
+	client.Billing = newBilling(client)
 	client.ServiceAccounts = &ServiceAccounts{client: client}
 
 	return client
@@ -141,4 +156,11 @@ func (t listTransport) resolve(path string, query url.Values) (string, error) {
 // Raw returns the underlying generated Core API client for low-level access.
 func (c *Client) Raw() *gen.ClientWithResponses {
 	return c.raw
+}
+
+func (c *Client) logger() *slog.Logger {
+	if c.log != nil {
+		return c.log
+	}
+	return slog.Default()
 }

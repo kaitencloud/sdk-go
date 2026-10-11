@@ -9,3 +9,5 @@ output: internal/gen/client.gen.go
 # and the generated package does not compile.
 output-options:
   skip-prune: true
+  overlay:
+    path: oapi-codegen.overlay.yaml

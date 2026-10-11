@@ -355,7 +355,17 @@ type RegisterConnectorInput struct {
 type UsageReportInput struct {
 	Value    float64
 	Behavior EntitlementUsageBehavior
+	// Metadata is stored with the report in the usage history when its compact
+	// JSON encoding is at most 4 KiB; above that the report still counts and
+	// UsageReportResult.MetadataDropped is set. It must contain no personal data.
 	Metadata map[string]any
+	// TransactionID makes the report idempotent: Kaiten applies a report at
+	// most once per key, instance and entitlement within its idempotency window
+	// (35 days by default), and answers a repeat with the original result. Use a
+	// UUID, or a business event ID plus the meter ("llm-call:9f2c:tokens"). A
+	// report with a key is retried on transient failures; one without is never
+	// retried. 1 to 128 characters of letters, digits, '.', '_', ':' and '-'.
+	TransactionID string
 }
 
 type componentCreatePayload struct {

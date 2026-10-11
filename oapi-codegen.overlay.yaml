@@ -1,0 +1,10 @@
+overlay: 1.0.0
+info:
+  title: Go names for the Core API's inline schemas
+  version: 1.0.0
+actions:
+  # Invoice.handoffStatus and InvoiceHandoff.status both default to
+  # InvoiceHandoffStatus.
+  - target: $.components.schemas.InvoiceHandoff.properties.status
+    update:
+      x-go-type-name: InvoiceHandoffState
