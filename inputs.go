@@ -150,6 +150,20 @@ type EntitlementInput struct {
 
 	// DisplayOrder sorts the entitlement within customer-facing components, ascending.
 	DisplayOrder *int32
+
+	// WarningThresholdPercent is the share of a NUMBER entitlement's cap at which an
+	// early-warning event fires, before the cap itself is reached. Nil leaves the API's
+	// default, 0, which disables the warning.
+	WarningThresholdPercent *int32
+
+	// ResetPeriod makes a NUMBER entitlement a windowed counter that resets on this
+	// cadence. Nil is a lifetime counter. The API treats it as immutable once set: an
+	// update must send back the stored value, and changing it means a new entitlement.
+	ResetPeriod *EntitlementResetPeriod
+
+	// ResetAnchor phases the ResetPeriod window. Sent only alongside ResetPeriod; the
+	// API defaults it to CALENDAR and holds it immutable the same way.
+	ResetAnchor *EntitlementResetAnchor
 }
 
 // InstanceInput is the input for creating or updating an instance.
@@ -484,6 +498,10 @@ type entitlementPayload struct {
 	UnitPlural        *string                       `json:"unitPlural,omitempty"`
 	UserFacing        *bool                         `json:"userFacing,omitempty"`
 	DisplayOrder      *int32                        `json:"displayOrder,omitempty"`
+
+	WarningThresholdPercent *int32                  `json:"warningThresholdPercent,omitempty"`
+	ResetPeriod             *EntitlementResetPeriod `json:"resetPeriod,omitempty"`
+	ResetAnchor             *EntitlementResetAnchor `json:"resetAnchor,omitempty"`
 }
 
 func (in EntitlementInput) createPayload() entitlementPayload {
@@ -499,6 +517,10 @@ func (in EntitlementInput) createPayload() entitlementPayload {
 		UnitPlural:        in.UnitPlural,
 		UserFacing:        in.UserFacing,
 		DisplayOrder:      in.DisplayOrder,
+
+		WarningThresholdPercent: in.WarningThresholdPercent,
+		ResetPeriod:             in.ResetPeriod,
+		ResetAnchor:             in.ResetAnchor,
 	}
 }
 
@@ -514,6 +536,10 @@ type entitlementUpdatePayload struct {
 	UnitPlural        *string                       `json:"unitPlural,omitempty"`
 	UserFacing        *bool                         `json:"userFacing,omitempty"`
 	DisplayOrder      *int32                        `json:"displayOrder,omitempty"`
+
+	WarningThresholdPercent *int32                  `json:"warningThresholdPercent,omitempty"`
+	ResetPeriod             *EntitlementResetPeriod `json:"resetPeriod,omitempty"`
+	ResetAnchor             *EntitlementResetAnchor `json:"resetAnchor,omitempty"`
 }
 
 func (in EntitlementInput) updatePayload() entitlementUpdatePayload {
@@ -529,6 +555,10 @@ func (in EntitlementInput) updatePayload() entitlementUpdatePayload {
 		UnitPlural:        in.UnitPlural,
 		UserFacing:        in.UserFacing,
 		DisplayOrder:      in.DisplayOrder,
+
+		WarningThresholdPercent: in.WarningThresholdPercent,
+		ResetPeriod:             in.ResetPeriod,
+		ResetAnchor:             in.ResetAnchor,
 	}
 }
 

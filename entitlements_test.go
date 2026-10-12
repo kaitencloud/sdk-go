@@ -88,3 +88,59 @@ func TestCreateEntitlementOmitsUnsetPresentationFields(t *testing.T) {
 		t.Error(`request body carries "meterType", which the Core API rejects outright`)
 	}
 }
+
+// TestEntitlementInputSendsWindowAndWarning pins the metering half of EntitlementInput:
+// the warning threshold and the reset window. Both are decided when a catalog is written
+// and the window is immutable once the entitlement exists, so a field dropped on the way
+// to the body is a monthly counter created as a lifetime one, with no way to fix it short
+// of deleting the entitlement.
+func TestEntitlementInputSendsWindowAndWarning(t *testing.T) {
+	t.Parallel()
+
+	warning := int32(80)
+	resetPeriod := EntitlementResetPeriod("MONTH")
+	resetAnchor := EntitlementResetAnchor("CALENDAR")
+	input := EntitlementInput{
+		Name:                    "Flag evaluations",
+		WarningThresholdPercent: &warning,
+		ResetPeriod:             &resetPeriod,
+		ResetAnchor:             &resetAnchor,
+	}
+
+	expected := map[string]any{
+		"warningThresholdPercent": float64(80),
+		"resetPeriod":             "MONTH",
+		"resetAnchor":             "CALENDAR",
+	}
+
+	for name, call := range map[string]func(c *Client) error{
+		"create": func(c *Client) error {
+			_, err := c.Entitlements.Create(t.Context(), input)
+			return err
+		},
+		"update": func(c *Client) error {
+			return c.Entitlements.Update(t.Context(), "feature-flags-evaluated", input)
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			status, response := http.StatusCreated, `{"id":"e1","name":"Flag evaluations","slug":"feature-flags-evaluated"}`
+			if name == "update" {
+				status, response = http.StatusNoContent, ``
+			}
+			client, sent := givenClient(t, respondJSON(status, response))
+
+			if err := call(client); err != nil {
+				t.Fatalf("%s error = %v", name, err)
+			}
+
+			body := sent.only(t).decodeBody(t)
+			for key, want := range expected {
+				if got := body[key]; got != want {
+					t.Errorf("%s = %v, want %v", key, got, want)
+				}
+			}
+		})
+	}
+}

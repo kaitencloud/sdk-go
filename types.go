@@ -53,6 +53,14 @@ type Entitlement = gen.Entitlement
 // EntitlementAggregationMethod describes how usage of an entitlement is aggregated.
 type EntitlementAggregationMethod = gen.EntitlementAggregationMethod
 
+// EntitlementResetPeriod is the cadence at which a windowed NUMBER entitlement's usage
+// resets: HOUR, DAY, WEEK, MONTH or YEAR.
+type EntitlementResetPeriod = gen.EntitlementResetPeriod
+
+// EntitlementResetAnchor phases a windowed entitlement's reset: CALENDAR, aligned on
+// UTC calendar boundaries, or LICENSE_START, phased off the instance's licence start.
+type EntitlementResetAnchor = gen.EntitlementResetAnchor
+
 // EntitlementGroup is a named collection of entitlements.
 type EntitlementGroup = gen.EntitlementGroup
 
