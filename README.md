@@ -65,9 +65,11 @@ func main() {
 }
 ```
 
-The base URL includes the API's path prefix. Every Kaiten deployment serves its own
-OpenAPI document at `/api/docs`; the [Kaiten documentation](https://docs.kaiten.sh)
-describes the resources and fields.
+The base URL includes the API's path prefix: `https://app.kaiten.sh/api` on Kaiten
+Cloud, `http://localhost:6060/api` on a local Community Edition stack. The API serves
+its own OpenAPI document at `/api/openapi.json` and a reference rendered from it at
+`/api/docs`; the [Kaiten documentation](https://docs.kaiten.sh) describes the resources
+and fields.
 
 ## Two APIs, two clients
 
@@ -76,9 +78,13 @@ Kaiten exposes two contracts on two listeners, and this package mirrors that spl
 |                | `sdk.NewClient`                                                         | `sdk.NewPlatformClient`                                                 |
 | -------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------- |
 | Contract       | Core API                                                                | Platform API                                                            |
-| Default port   | 3000                                                                    | 3001                                                                    |
+| Local stack    | `http://localhost:6060/api`                                             | `http://localhost:6001/api`                                             |
 | Credential     | organization-scoped token (`ksh_...`)                                   | platform credential (`ksm_...`)                                         |
 | Resources      | customers, instances, licenses, entitlements, feature flags, components | organizations, users, organization tokens, connector registry           |
+
+The Platform API is an internal listener, for the operator of a self-hosted Kaiten: it
+is on port 3001 unless configured otherwise, and the local Community Edition stack
+publishes it on 6001.
 
 Each listener refuses the other's credential, so a process that needs both builds
 both, against different base URLs. `Option` values are shared between the two
@@ -219,7 +225,7 @@ stay.
 // Report a delta against a metered entitlement.
 err := client.Instances.ReportUsage(ctx, "acme-production", "api-calls", 1)
 if errors.Is(err, sdk.ErrThresholdExceeded) {
-	// The instance has reached its limit for this entitlement.
+	// Refused: usage would pass what the license grants, allowance included.
 }
 
 // Or set the absolute value and get the resulting metric back.
@@ -318,21 +324,24 @@ connector, err := platform.Connectors.Register(ctx, sdk.RegisterConnectorInput{
 Every list method returns the whole collection: the SDK walks the API's cursor pages
 itself, and a caller never sees a cursor.
 
-The one exception is `Instances.ListAuditTrails`, whose collection grows without
-bound. `AuditTrailsOptions.Limit` caps how many entries are fetched, and
+`Instances.ListAuditTrails` is the one list that takes a ceiling, because its
+collection grows without bound. `AuditTrailsOptions.Limit` caps how many entries are
+fetched -- without one the whole trail is walked, like any other list -- and
 `EventName`, `After` and `Before` filter them.
 
 ```go
 limit := int32(100)
 trails, err := client.Instances.ListAuditTrails(ctx, "acme-production", &sdk.AuditTrailsOptions{
-	EventName: "instance.updated",
+	EventName: "FEATURE_FLAG_EVALUATED",
 	After:     &since,
 	Limit:     &limit,
 })
 ```
 
-`InstancesListOptions.IncludeDeleted` and `AuditTrailsOptions.Offset` are still sent
-but ignored by current Kaiten versions; their doc comments say why they remain.
+Two options remain only so that callers still compile, and their doc comments say
+why: `InstancesListOptions.IncludeDeleted` is still sent, and ignored by current Kaiten
+versions; `AuditTrailsOptions.Offset` is deprecated and never sent, since the API
+paginates by cursor only.
 
 ## Error handling
 
@@ -344,7 +353,7 @@ if err != nil {
 	var apiErr *sdk.Error
 	if errors.As(err, &apiErr) {
 		switch {
-		case apiErr.Code == "Instance.NotFound":
+		case apiErr.Code == "GetInstance.NotFound":
 			// Branch on Code: it is stable and distinguishes, for example,
 			// the two different 404s a family endpoint can answer.
 		case apiErr.StatusCode == http.StatusForbidden:
@@ -363,7 +372,7 @@ if err != nil {
 | Field        | Contents                                                              |
 | ------------ | --------------------------------------------------------------------- |
 | `StatusCode` | HTTP status code.                                                     |
-| `Code`       | Stable, machine-readable code such as `License.NotFound`, when given. |
+| `Code`       | Stable, machine-readable code such as `GetLicense.NotFound`, if any.  |
 | `Problem`    | The decoded problem-details body (`title`, `detail`, `errors`, ...).  |
 | `ErrorID`    | Correlation id for the server-side log entry, when given.             |
 | `Body`       | The raw response body.                                                |
