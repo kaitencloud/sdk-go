@@ -42,19 +42,21 @@ type AuditTrailsOptions struct {
 	After     *time.Time
 	Before    *time.Time
 
-	// Limit caps how many entries are returned. Unlike every other list in
-	// this package, audit trails are not walked to completion: the collection
-	// grows without bound, so "all of them" is not a useful default and a
-	// caller's ceiling is honoured as one.
+	// Limit caps how many entries are returned. Audit trails are the one list
+	// in this package that takes a ceiling: the collection grows without
+	// bound, so a caller's ceiling is honoured as one. Nil or zero sets none,
+	// and the whole trail is then walked, like every other list.
 	Limit *int32
 
-	// Offset is dead. Audit trails moved from offset/limit to cursor
-	// pagination, so the Core API no longer declares this parameter and
-	// ignores it -- an offset that used to skip entries now returns the newest
+	// Offset is dead and never sent. Audit trails moved from offset/limit to
+	// cursor pagination, so the Core API no longer declares this parameter and
+	// would ignore it -- an offset that used to skip entries now returns the newest
 	// ones. Left in place so callers still compile. Use Limit instead: it
 	// walks as many pages as it takes to reach the count asked for, which
 	// covers what offset was reached for in practice, and only resuming from
 	// where a previous call stopped is no longer expressible.
+	//
+	// Deprecated: Offset has no effect. Use Limit.
 	Offset *int32
 }
 
