@@ -128,19 +128,21 @@ operations below.
 
 ```go
 customer, err := client.Customers.Create(ctx, sdk.CustomerInput{
-	Name: "Acme Corp",
+	Name: "Sakura Tokyo",
 })
 if err != nil {
 	return err
 }
 
+slug := "sakura-tokyo-prod"
 instance, err := client.Instances.Create(ctx, sdk.InstanceInput{
-	Name:             "acme-production",
+	Name:             "Sakura Tokyo Production",
+	Slug:             &slug,
 	CustomerID:       *customer.Id,
 	LicenseID:        licenseID,
 	StartLicenseDate: time.Now(),
 	EndLicenseDate:   time.Now().AddDate(1, 0, 0),
-	Metadata:         map[string]any{"region": "eu-west-1"},
+	Metadata:         map[string]any{"environment": "production"},
 })
 if err != nil {
 	return err
@@ -164,16 +166,16 @@ A license is one version of a family; `LicenseFamilies` reads the family with it
 current version, `Licenses` writes individual versions.
 
 ```go
-// Grant 25 seats to the license, then make it available to instances.
-seats, err := sdk.NumberLicenseValue(25)
+// Grant 10 delivery drivers to the draft license, then make it available to instances.
+drivers, err := sdk.NumberLicenseValue(10)
 if err != nil {
 	return err
 }
-if err := client.Licenses.AssociateEntitlement(ctx, "team-v1", "seats", seats); err != nil {
+if err := client.Licenses.AssociateEntitlement(ctx, "premium-v3", "delivery-drivers", drivers); err != nil {
 	return err
 }
 
-license, err := client.Licenses.Publish(ctx, "team-v1")
+license, err := client.Licenses.Publish(ctx, "premium-v3")
 if err != nil {
 	return err
 }
@@ -194,7 +196,7 @@ usage past its value:
 slug, number, sum := "monthly-orders", sdk.EntitlementType("NUMBER"), sdk.EntitlementAggregationMethod("SUM")
 month, calendar, warning := sdk.EntitlementResetPeriodMonth, sdk.EntitlementResetAnchorCalendar, int32(80)
 if _, err := client.Entitlements.Create(ctx, sdk.EntitlementInput{
-	Name:                    "Monthly orders",
+	Name:                    "Monthly Orders",
 	Slug:                    &slug,
 	Type:                    &number,
 	AggregationMethod:       &sum,
@@ -210,7 +212,7 @@ orders, err := sdk.NumberLicenseValue(1000)
 if err != nil {
 	return err
 }
-err = client.Licenses.AssociateEntitlement(ctx, "team-v1", slug, orders, sdk.WithOveragePercent(20))
+err = client.Licenses.AssociateEntitlement(ctx, "premium-v2", slug, orders, sdk.WithOveragePercent(20))
 ```
 
 `Entitlements.Update` and `Licenses.UpdateEntitlement` replace rather than patch. A
@@ -223,14 +225,14 @@ stay.
 
 ```go
 // Report a delta against a metered entitlement.
-err := client.Instances.ReportUsage(ctx, "acme-production", "api-calls", 1)
+err := client.Instances.ReportUsage(ctx, "sakura-tokyo-prod", "monthly-orders", 1)
 if errors.Is(err, sdk.ErrThresholdExceeded) {
 	// Refused: usage would pass what the license grants, allowance included.
 }
 
 // Or set the absolute value and get the resulting metric back.
-usage, err := client.Instances.ReportEntitlementUsageMetric(ctx, "acme-production", "seats",
-	sdk.UsageReportInput{Value: 18, Behavior: sdk.Set},
+usage, err := client.Instances.ReportEntitlementUsageMetric(ctx, "sakura-tokyo-prod", "delivery-drivers",
+	sdk.UsageReportInput{Value: 8, Behavior: sdk.Set},
 )
 ```
 
@@ -331,7 +333,7 @@ fetched -- without one the whole trail is walked, like any other list -- and
 
 ```go
 limit := int32(100)
-trails, err := client.Instances.ListAuditTrails(ctx, "acme-production", &sdk.AuditTrailsOptions{
+trails, err := client.Instances.ListAuditTrails(ctx, "sakura-tokyo-prod", &sdk.AuditTrailsOptions{
 	EventName: "FEATURE_FLAG_EVALUATED",
 	After:     &since,
 	Limit:     &limit,
@@ -348,7 +350,7 @@ paginates by cursor only.
 Every non-2xx response is returned as an `*sdk.Error`.
 
 ```go
-instance, err := client.Instances.Get(ctx, "acme-production")
+instance, err := client.Instances.Get(ctx, "sakura-tokyo-prod")
 if err != nil {
 	var apiErr *sdk.Error
 	if errors.As(err, &apiErr) {
