@@ -334,7 +334,7 @@ fetched -- without one the whole trail is walked, like any other list -- and
 ```go
 limit := int32(100)
 trails, err := client.Instances.ListAuditTrails(ctx, "sakura-tokyo-prod", &sdk.AuditTrailsOptions{
-	EventName: "FEATURE_FLAG_EVALUATED",
+	EventName: "INSTANCE_UPDATED",
 	After:     &since,
 	Limit:     &limit,
 })
