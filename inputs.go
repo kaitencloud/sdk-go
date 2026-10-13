@@ -61,6 +61,11 @@ type AuditTrailsOptions struct {
 }
 
 // ComponentInput is the input for creating or updating a component.
+//
+// PreviousComponentID names the component this one is the next version of, and is
+// create-only. Update never sends it: the link is set once, at creation, and the API
+// refuses an update that carries one, whatever its value, with a 422,
+// UpdateComponent.PreviousComponentNotSettable.
 type ComponentInput struct {
 	Name                string
 	Version             string
@@ -235,7 +240,7 @@ type InstanceInput struct {
 // bodies are not either:
 //
 //   - Version is read-only. A family's first version is 1 and the server assigns the
-//     next number from there, so the create body declares no such field at all.
+//     next number from there, so Create never sends it and a value set there is lost.
 //     Update sends it only as an echo of what was read, since a version's slug is
 //     built from its number.
 //   - Slug is chosen on create and never changed. Update sends it for the API to check
@@ -256,7 +261,9 @@ type LicenseInput struct {
 	Type        LicenseType
 
 	// Version is the license's version within its family, assigned by the server
-	// and never changed. Create ignores it. Update sends it, and the API accepts it
+	// and never changed. It cannot be chosen. Create never sends it, so a value set
+	// there is dropped without an error: the API would refuse it with a 422,
+	// CreateLicense.VersionNotSettable. Update sends it, and the API accepts it
 	// empty or equal to the stored number -- so a License read back can be written
 	// back as it is -- and refuses any other value with a 422,
 	// UpdateLicense.VersionNotSettable.
@@ -455,7 +462,7 @@ func (in ComponentInput) createPayload() componentCreatePayload {
 }
 
 // componentUpdatePayload drops PreviousComponentID: the predecessor link is established
-// when a component is created and UpdateComponentBody does not publish it.
+// when a component is created, and the update refuses the field rather than ignore it.
 type componentUpdatePayload struct {
 	Name        string  `json:"name"`
 	Version     string  `json:"version"`
