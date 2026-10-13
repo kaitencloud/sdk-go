@@ -8,8 +8,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"maps"
 	"net/http"
+	"slices"
 	"testing"
+	"time"
 )
 
 // pagedRows answers with the envelope Core actually sends, cutting rows into pages of
@@ -176,6 +179,47 @@ func TestListAuditTrailsHonoursLimit(t *testing.T) {
 	}
 	if got := sent.at(t, 1).query.Get("limit"); got != "50" {
 		t.Errorf("second request limit = %q, want %q", got, "50")
+	}
+}
+
+// TestListAuditTrailsSendsOnlyWhatTheEndpointDeclares pins what AuditTrailsOptions
+// promises beyond its Limit. Without one the trail is walked to its end, like
+// any other list. And Offset never reaches the wire: the endpoint paginates by
+// cursor and declares no such parameter, so the query carries the three filters
+// and the paging pair the walk sets, under the endpoint's own names.
+func TestListAuditTrailsSendsOnlyWhatTheEndpointDeclares(t *testing.T) {
+	t.Parallel()
+
+	client, sent := givenClient(t, pagedRows(flagRows(300)))
+
+	since := time.Date(2026, time.July, 1, 0, 0, 0, 0, time.UTC)
+	until := since.AddDate(0, 1, 0)
+	offset := int32(50)
+	entries, err := client.Instances.ListAuditTrails(t.Context(), "instance-slug", &AuditTrailsOptions{
+		EventName: "INSTANCE_CREATED",
+		After:     &since,
+		Before:    &until,
+		Offset:    &offset,
+	})
+	if err != nil {
+		t.Fatalf("ListAuditTrails() error = %v", err)
+	}
+
+	if len(entries) != 300 {
+		t.Fatalf("len(entries) = %d, want 300", len(entries))
+	}
+
+	want := [][]string{
+		{"after", "before", "event_name", "limit"},
+		{"after", "before", "cursor", "event_name", "limit"},
+	}
+	if sent.count() != len(want) {
+		t.Fatalf("requests = %d, want %d", sent.count(), len(want))
+	}
+	for i, keys := range want {
+		if got := slices.Sorted(maps.Keys(sent.at(t, i).query)); !slices.Equal(got, keys) {
+			t.Errorf("request %d query keys = %v, want %v", i, got, keys)
+		}
 	}
 }
 
