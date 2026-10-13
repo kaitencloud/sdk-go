@@ -30,7 +30,7 @@ type Error struct {
 	Problem    *ErrorModel
 	Body       []byte
 
-	// Code is the stable, machine-readable error code (e.g. "License.NotFound"),
+	// Code is the stable, machine-readable error code (e.g. "GetLicense.NotFound"),
 	// when the API supplied one. Branch on this rather than on Problem.Title or the
 	// status code alone: a 409 from an entitlement limit and a 409 from a slug
 	// collision are the same status but not the same thing, and the license family
