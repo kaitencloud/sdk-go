@@ -46,8 +46,28 @@ jobs:
           version: v2.12.2
           args: --timeout=5m ./...
 
+      # The AI usage normalisers are modules of their own, so that the root module
+      # never depends on a provider SDK, and ./... stops at a nested module.
+      - name: golangci-lint (ai/openai)
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: v2.12.2
+          working-directory: ai/openai
+          args: --timeout=5m ./...
+
+      - name: golangci-lint (ai/anthropic)
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: v2.12.2
+          working-directory: ai/anthropic
+          args: --timeout=5m ./...
+
       - name: Verify module metadata
-        run: go mod tidy && git diff --exit-code -- go.mod go.sum
+        run: |
+          for module in . ai/openai ai/anthropic; do
+            (cd "$module" && go mod tidy)
+          done
+          git diff --exit-code -- go.mod go.sum ai/openai/go.mod ai/openai/go.sum ai/anthropic/go.mod ai/anthropic/go.sum
 
       # This module is published, so a vulnerable dependency ships to every
       # consumer. govulncheck reports only the advisories whose vulnerable
@@ -71,7 +91,10 @@ jobs:
           cache-dependency-path: go.sum
 
       - name: Build
-        run: go build -v ./...
+        run: |
+          go build -v ./...
+          (cd ai/openai && go build -v ./...)
+          (cd ai/anthropic && go build -v ./...)
 
   test:
     name: test
@@ -88,4 +111,16 @@ jobs:
           cache-dependency-path: go.sum
 
       - name: Test
-        run: go test -race -shuffle=on -cover ./...
+        run: |
+          go test -race -shuffle=on -cover ./...
+          (cd ai/openai && go test -race -shuffle=on -cover ./...)
+          (cd ai/anthropic && go test -race -shuffle=on -cover ./...)
+
+      # Each normaliser declares the oldest provider SDK of its major version that it
+      # supports, and the step above tests that floor. This one tests the newest
+      # release of the same major, so a provider renaming a usage field is caught
+      # here rather than by a consumer. The go.mod changes it makes are not kept.
+      - name: Test the AI normalisers against the newest provider SDKs
+        run: |
+          (cd ai/openai && go get github.com/openai/openai-go/v3@latest && go test -race ./...)
+          (cd ai/anthropic && go get github.com/anthropics/anthropic-sdk-go@latest && go test -race ./...)

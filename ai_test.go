@@ -12,6 +12,9 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"slices"
+	"strings"
 	"sync"
 	"testing"
 	"time"
@@ -605,4 +608,42 @@ func requestPhase(t *testing.T, req *http.Request) string {
 	}
 
 	return decoded.Value.Phase
+}
+
+// TestRootModuleRequiresNoProviderSDK holds the line the ai/ modules exist for: a
+// program that meters AI credits through this module must not pull in an LLM
+// provider's SDK it does not use. A provider-aware dependency belongs in a module of
+// its own under ai/.
+func TestRootModuleRequiresNoProviderSDK(t *testing.T) {
+	t.Parallel()
+
+	goMod, err := os.ReadFile("go.mod")
+	if err != nil {
+		t.Fatalf("read go.mod: %v", err)
+	}
+
+	allowed := []string{"github.com/google/uuid", "github.com/oapi-codegen/runtime", "github.com/apapsch/go-jsonmerge/v2"}
+
+	inRequire := false
+	for line := range strings.Lines(string(goMod)) {
+		fields := strings.Fields(line)
+		switch {
+		case len(fields) == 0:
+			continue
+		case fields[0] == "require" && len(fields) > 1 && fields[1] == "(":
+			inRequire = true
+			continue
+		case fields[0] == ")":
+			inRequire = false
+			continue
+		case fields[0] == "require":
+			fields = fields[1:]
+		case !inRequire:
+			continue
+		}
+
+		if !slices.Contains(allowed, fields[0]) {
+			t.Errorf("go.mod requires %s: the root module's only dependencies are %v", fields[0], allowed)
+		}
+	}
 }
