@@ -239,6 +239,48 @@ usage, err := client.Instances.ReportEntitlementUsageMetric(ctx, "sakura-tokyo-p
 `Instances.ListEntitlementUsageMetrics` and `EntitlementGroups.GetUsage` read the
 current position of an instance against its limits.
 
+### AI credits
+
+An AI credit pool is metered in two phases: `AI.Reserve` sets credits aside on an
+estimate before the provider is called, and `AI.Commit` charges what the call actually
+consumed. The server prices both from the license's conversion rules; the SDK carries
+no pricing. `AI.Run` brackets one call between the two:
+
+```go
+var answer string
+_, err := client.AI.Run(ctx, "sakura-tokyo-prod", "chat-credits", sdk.AIReserveInput{
+	Model:       "gpt-4o",
+	RequestType: sdk.AIRequestTypeCompletion,
+	Estimate:    sdk.AIUsage{InputTokens: 1000, OutputTokens: 800},
+}, func(ctx context.Context) (sdk.AICall, error) {
+	// Call the provider here. Report sdk.AIRequestStatusNotSent when it was never
+	// reached, and the usage known so far when it failed.
+	answer = "..."
+	return sdk.AICall{Usage: sdk.AIUsage{InputTokens: 1000, OutputTokens: 412}}, nil
+})
+switch {
+case errors.Is(err, sdk.ErrInsufficientCredits):
+	// Refused before the provider was called: the estimate does not fit the pool.
+case errors.Is(err, sdk.ErrAICommitFailed):
+	// The call succeeded and answer is good; only the accounting failed.
+}
+```
+
+A refused reserve is one of `sdk.ErrInsufficientCredits`, `sdk.ErrModelNotAuthorized`,
+`sdk.ErrUnknownModel`, `sdk.ErrTransactionIDReused` or `sdk.ErrAIUsageUnsupported` (the
+pool is not an AI credit pool, or the server predates AI reports). The transaction id
+defaults to a UUIDv7. Both phases retry a network error or a 500, 502, 503 or 504 up to
+three times under the same transaction id and `Idempotency-Key`; a 4xx is never retried.
+
+The provider SDKs count tokens their own way. The `ai/openai` and `ai/anthropic`
+modules convert their usage structs into an `sdk.AIUsage`, and are separate modules so
+this one never depends on a provider SDK:
+
+```shell
+go get github.com/kaitencloud/sdk-go/ai/openai
+go get github.com/kaitencloud/sdk-go/ai/anthropic
+```
+
 ### Feature flags
 
 ```go
@@ -380,7 +422,8 @@ if err != nil {
 | `Body`       | The raw response body.                                                |
 
 `Instances.ReportUsage` additionally returns `sdk.ErrThresholdExceeded` when a report
-would cross the entitlement's limit.
+would cross the entitlement's limit. The `AI` reports return the typed errors listed
+under [AI credits](#ai-credits), each wrapping the `*sdk.Error` as well.
 
 ## Low-level access
 

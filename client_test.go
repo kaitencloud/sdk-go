@@ -32,6 +32,7 @@ func TestNewClientInitializesEveryResourceNamespace(t *testing.T) {
 	// A Client's zero value leaves these nil and calling through one panics, so
 	// "the constructor populated all of them" is the type's whole usability contract.
 	namespaces := map[string]any{
+		"AI":                client.AI,
 		"Components":        client.Components,
 		"Customers":         client.Customers,
 		"DeploymentZones":   client.DeploymentZones,
@@ -90,6 +91,10 @@ func TestClientExposesOnlyTheReviewedPublicSurface(t *testing.T) {
 	}
 
 	assertServiceCoverage(t, map[string]serviceCoverage{
+		"AI": {
+			service: client.AI,
+			methods: []string{"Reserve", "Commit", "Run"},
+		},
 		"Components": {
 			service: client.Components,
 			methods: []string{"List", "Get", "Create", "Update", "Delete"},
@@ -186,6 +191,16 @@ func TestClientWrappersReportEveryDeclaredProblem(t *testing.T) {
 	}
 
 	assertProblemCoverage(t, given, map[string]problemCoverage[*Client]{
+		// Reserve and Commit both send through report. Its 500 is retried, so the
+		// backoff is shortened to keep the three retries out of the test's runtime.
+		"AI.report": {
+			response: gen.ReportEntitlementUsageMetricResponse{},
+			call: func(ctx context.Context, c *Client) error {
+				c.AI.retryBase = time.Microsecond
+				_, err := c.AI.Commit(ctx, "acme-prod", "chat-credits", AICommitInput{TransactionID: "tx-1"})
+				return err
+			},
+		},
 		"Components.Get": {
 			response: gen.GetComponentResponse{},
 			call:     func(ctx context.Context, c *Client) error { _, err := c.Components.Get(ctx, "web"); return err },
