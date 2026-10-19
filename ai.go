@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/kaitencloud/sdk-go/internal/gen"
 )
 
 // The typed errors of an AI report. Each is returned wrapped together with the *Error
@@ -187,9 +188,15 @@ func (s *AI) report(ctx context.Context, instanceSlug, entitlementSlug string, p
 	}
 
 	for attempt := 0; ; attempt++ {
-		resp, err := s.client.raw.ReportEntitlementUsageMetricWithBodyWithResponse(ctx, instanceSlug, entitlementSlug, contentTypeJSON, bytes.NewReader(body), withKey)
+		httpResp, err := s.client.raw.ReportEntitlementUsageMetricWithBody(ctx, instanceSlug, entitlementSlug, contentTypeJSON, bytes.NewReader(body), withKey)
+		resp := &gen.ReportEntitlementUsageMetricResponse{HTTPResponse: httpResp}
 
+		// Decide retries from transport errors and status before decoding JSON:
+		// a malformed 4xx (or 200) body is not a network failure.
 		if attempt < aiMaxRetries && retryableAIReport(ctx, resp, err) {
+			if httpResp != nil {
+				_ = httpResp.Body.Close()
+			}
 			if waitErr := s.backoff(ctx, attempt); waitErr != nil {
 				return AIReport{}, fmt.Errorf("report AI usage: %w", errors.Join(retryCause(resp, err), waitErr))
 			}
@@ -198,6 +205,11 @@ func (s *AI) report(ctx context.Context, instanceSlug, entitlementSlug string, p
 
 		if err != nil {
 			return AIReport{}, fmt.Errorf("report AI usage: %w", err)
+		}
+
+		resp, err = gen.ParseReportEntitlementUsageMetricResponse(httpResp)
+		if err != nil {
+			return AIReport{}, fmt.Errorf("decode AI usage report response: %w", err)
 		}
 
 		converted := newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON409, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500)

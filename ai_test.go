@@ -647,3 +647,20 @@ func TestRootModuleRequiresNoProviderSDK(t *testing.T) {
 		}
 	}
 }
+
+func TestAIReportsDoNotRetryMalformedResponses(t *testing.T) {
+	for _, status := range []int{http.StatusUnauthorized, http.StatusConflict, http.StatusUnprocessableEntity, http.StatusOK} {
+		t.Run(http.StatusText(status), func(t *testing.T) {
+			client, sent := givenAIClient(t, respondJSON(status, `{`))
+			_, err := client.AI.Reserve(t.Context(), "instance", "pool", AIReserveInput{
+				TransactionID: "tx-malformed", Model: "model", RequestType: AIRequestTypeCompletion,
+			})
+			if err == nil {
+				t.Fatal("malformed response must return an error")
+			}
+			if sent.count() != 1 {
+				t.Fatalf("requests = %d, want 1: response decoding is not a transport failure", sent.count())
+			}
+		})
+	}
+}
