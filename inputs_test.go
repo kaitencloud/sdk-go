@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"maps"
 	"net/http"
 	"path"
 	"reflect"
@@ -586,4 +587,144 @@ func respondToWrite(req *http.Request) (*http.Response, error) {
 	}
 
 	return jsonResponse(req, status, `{"id":"1","name":"pinned","slug":"pinned","token":"ksh_x"}`), nil
+}
+
+// TestAIReportBodiesMatchTheContract is TestRequestBodiesMatchTheirSpecBodies for the
+// ai_usage arm of ReportEntitlementUsageBody, one level deeper: the value object and its
+// usage are where the AI report's keys live. The sets are transcribed from the AI
+// credits contract (AiUsageValue, AiUsage), also covered by generated union round trips. What is
+// pinned is as much what stays out as what goes in: a commit repeats nothing the
+// reservation knows, a reserve never sends requestStatus, and behavior is left out on
+// both, since the API refuses set on the variant.
+func TestAIReportBodiesMatchTheContract(t *testing.T) {
+	t.Parallel()
+
+	everything := AIUsage{
+		InputTokens:           1,
+		CacheReadInputTokens:  2,
+		CacheWriteInputTokens: 3,
+		OutputTokens:          4,
+		Units:                 "1.5",
+		UnitType:              AIUnitTypeSecond,
+		Duration:              1500 * time.Millisecond,
+	}
+	metadata := map[string]any{"feature": "summaries"}
+
+	tests := []struct {
+		name  string
+		call  func(context.Context, *Client) error
+		body  []string
+		value []string
+		usage []string
+	}{
+		{
+			name: "reserve",
+			call: func(ctx context.Context, c *Client) error {
+				_, err := c.AI.Reserve(ctx, "acme-prod", "chat-credits", AIReserveInput{TransactionID: "tx", Model: "gpt-4o", RequestType: AIRequestTypeCompletion, Estimate: everything, TTL: time.Minute, Metadata: metadata})
+				return err
+			},
+			body:  []string{"metadata", "value"},
+			value: []string{"model", "phase", "requestType", "transactionId", "ttlSeconds", "type", "usage"},
+			usage: []string{"cacheReadInputTokens", "cacheWriteInputTokens", "durationMs", "inputTokens", "outputTokens", "unitType", "units"},
+		},
+		{
+			name: "reserve without an estimate or a ttl",
+			call: func(ctx context.Context, c *Client) error {
+				_, err := c.AI.Reserve(ctx, "acme-prod", "chat-credits", AIReserveInput{Model: "gpt-4o", RequestType: AIRequestTypeCompletion})
+				return err
+			},
+			body:  []string{"value"},
+			value: []string{"model", "phase", "requestType", "transactionId", "type"},
+		},
+		{
+			name: "commit on another model",
+			call: func(ctx context.Context, c *Client) error {
+				_, err := c.AI.Commit(ctx, "acme-prod", "chat-credits", AICommitInput{TransactionID: "tx", RequestStatus: AIRequestStatusProviderError, Model: "gpt-4o-mini", RequestType: AIRequestTypeCompletion, Usage: everything, Metadata: metadata})
+				return err
+			},
+			body:  []string{"metadata", "value"},
+			value: []string{"model", "phase", "requestStatus", "requestType", "transactionId", "type", "usage"},
+			usage: []string{"cacheReadInputTokens", "cacheWriteInputTokens", "durationMs", "inputTokens", "outputTokens", "unitType", "units"},
+		},
+		{
+			name: "commit inheriting from its reservation",
+			call: func(ctx context.Context, c *Client) error {
+				_, err := c.AI.Commit(ctx, "acme-prod", "chat-credits", AICommitInput{TransactionID: "tx", Usage: AIUsage{OutputTokens: 4}})
+				return err
+			},
+			body:  []string{"value"},
+			value: []string{"phase", "requestStatus", "transactionId", "type", "usage"},
+			usage: []string{"outputTokens"},
+		},
+	}
+
+	keys := func(object map[string]any) []string {
+		return slices.Sorted(maps.Keys(object))
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+
+			client, sent := givenClient(t, respondJSON(http.StatusOK, `{"ai":{"transactionId":"tx"}}`))
+
+			if err := test.call(t.Context(), client); err != nil {
+				t.Fatalf("call() error = %v", err)
+			}
+
+			body := sent.only(t).decodeBody(t)
+			value, _ := body["value"].(map[string]any)
+			usage, _ := value["usage"].(map[string]any)
+
+			if got := keys(body); !slices.Equal(got, test.body) {
+				t.Errorf("body keys = %v, want %v", got, test.body)
+			}
+			if got := keys(value); !slices.Equal(got, test.value) {
+				t.Errorf("value keys = %v, want %v", got, test.value)
+			}
+			if got := keys(usage); !slices.Equal(got, test.usage) {
+				t.Errorf("usage keys = %v, want %v", got, test.usage)
+			}
+		})
+	}
+}
+
+func TestGeneratedAIWriteUnionAndReadGauge(t *testing.T) {
+	for _, body := range []string{
+		`{"type":"number","value":1}`,
+		`{"type":"ai_usage","phase":"reserve","transactionId":"tx","model":"model","requestType":"COMPLETION"}`,
+	} {
+		var value gen.ReportEntitlementUsageBody_Value
+		if err := json.Unmarshal([]byte(body), &value); err != nil {
+			t.Fatal(err)
+		}
+		encoded, err := json.Marshal(value)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var original, decoded map[string]any
+		if err := json.Unmarshal([]byte(body), &original); err != nil {
+			t.Fatal(err)
+		}
+		if err := json.Unmarshal(encoded, &decoded); err != nil {
+			t.Fatal(err)
+		}
+		if !reflect.DeepEqual(original, decoded) {
+			t.Fatalf("union round trip = %s, want %s", encoded, body)
+		}
+	}
+	var gauge gen.EntitlementUsage
+	if err := json.Unmarshal([]byte(`{"entitlementId":"e","entitlementSlug":"pool","licenseId":"l","licenseSlug":"license","value":{"type":"number","value":1},"reserved":"0.2"}`), &gauge); err != nil {
+		t.Fatal(err)
+	}
+	if gauge.Reserved == nil || *gauge.Reserved != "0.2" {
+		t.Fatalf("reserved gauge lost: %+v", gauge)
+	}
+	variant, err := gauge.Value.Discriminator()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if variant != "number" {
+		t.Fatalf("read value discriminator=%s", variant)
+	}
 }

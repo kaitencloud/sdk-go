@@ -3,6 +3,8 @@
 
 package sdk
 
+import "time"
+
 // Components provides access to the components API.
 type Components struct{ client *Client }
 
@@ -61,3 +63,13 @@ type PlatformTokens struct{ client *PlatformClient }
 // JIT-provisioned from JWT claims, not created or updated through this API -- Delete is
 // the only operation, for privileged (delete:users) callers.
 type PlatformUsers struct{ client *PlatformClient }
+
+// AI provides access to AI credit metering: the reserve and commit phases of the usage
+// report, and Run, which brackets one provider call between the two.
+type AI struct {
+	client *Client
+
+	// retryBase is the first backoff of the keyed retry; each retry doubles it. Zero
+	// means aiRetryBase. Tests shorten it so a retried status does not cost seconds.
+	retryBase time.Duration
+}

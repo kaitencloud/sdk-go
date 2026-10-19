@@ -427,6 +427,10 @@ func scanProblemSites(t *testing.T) map[string]problemSite {
 				case *ast.SelectorExpr:
 					if operation, ok := strings.CutSuffix(fun.Sel.Name, "WithResponse"); ok {
 						responses = append(responses, strings.TrimSuffix(operation, "WithBody")+"Response")
+					} else if response, ok := strings.CutPrefix(fun.Sel.Name, "Parse"); ok && strings.HasSuffix(response, "Response") {
+						// Keyed retries may inspect HTTP status before calling the
+						// generated parser explicitly rather than WithResponse.
+						responses = append(responses, response)
 					}
 				}
 

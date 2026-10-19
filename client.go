@@ -48,6 +48,7 @@ type Client struct {
 	// request editors the generated client was handed.
 	list listTransport
 
+	AI                *AI
 	Components        *Components
 	Customers         *Customers
 	DeploymentZones   *DeploymentZones
@@ -84,6 +85,7 @@ func newClient(raw *gen.ClientWithResponses, list listTransport) *Client {
 		list: list,
 	}
 
+	client.AI = &AI{client: client}
 	client.Components = &Components{client: client}
 	client.Customers = &Customers{client: client}
 	client.DeploymentZones = &DeploymentZones{client: client}
