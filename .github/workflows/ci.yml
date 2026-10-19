@@ -120,6 +120,17 @@ jobs:
       # supports, and the step above tests that floor. This one tests the newest
       # release of the same major, so a provider renaming a usage field is caught
       # here rather than by a consumer. The go.mod changes it makes are not kept.
+      # Latest providers may raise their Go minimum independently of our
+      # supported floor. The tests above still prove Go 1.25 compatibility
+      # with the declared dependency floor; latest-provider compatibility uses
+      # the supported toolchain already used by lint, without raising go.mod.
+      - name: Set up Go for newest provider SDK compatibility
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.26.x"
+          check-latest: true
+          cache: false
+
       - name: Test the AI normalisers against the newest provider SDKs
         run: |
           (cd ai/openai && go get github.com/openai/openai-go/v3@latest && go test -race ./...)
