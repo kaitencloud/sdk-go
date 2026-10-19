@@ -3,15 +3,18 @@
 
 package sdk
 
-import "time"
+import (
+	"time"
 
-// The types in this file are written by hand against the AI credits contract, because
-// internal/gen predates it. Once the Core OpenAPI document carries AiUsageValue and
-// AiUsageOutcome, the enums become aliases of the generated ones, as in types.go, and
-// the response members decode from the generated EntitlementUsage.
+	"github.com/kaitencloud/sdk-go/internal/gen"
+)
+
+// Enum types follow the generated Core contract. Public outcome bridge structs
+// preserve the SDK's established field types while EntitlementUsage also exposes
+// the complete generated ai/reserved response.
 
 // AIRequestType is the kind of provider call an AI usage report meters.
-type AIRequestType string
+type AIRequestType = gen.AiUsageValueRequestType
 
 // AI request types.
 const (
@@ -25,7 +28,7 @@ const (
 // AIRequestStatus is how the provider call a commit closes ended. It decides what the
 // pool's conversion rule charges: NOT_SENT is never charged, and the two error statuses
 // are charged as the rule's chargeOnError says.
-type AIRequestStatus string
+type AIRequestStatus = gen.AiUsageValueRequestStatus
 
 // AI request statuses.
 const (
@@ -42,7 +45,7 @@ const (
 )
 
 // AIUnitType is what AIUsage.Units counts.
-type AIUnitType string
+type AIUnitType = gen.AiUsageUnitType
 
 // AI unit types.
 const (
@@ -52,7 +55,7 @@ const (
 )
 
 // AIPhase is the phase of an AI usage report.
-type AIPhase string
+type AIPhase = gen.AiUsageOutcomePhase
 
 // AI usage report phases.
 const (
@@ -61,7 +64,7 @@ const (
 )
 
 // AIOperationStatus is the state of an AI operation after the report that answered it.
-type AIOperationStatus string
+type AIOperationStatus = gen.AiUsageOutcomeStatus
 
 // AI operation statuses.
 const (
