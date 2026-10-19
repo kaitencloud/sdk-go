@@ -346,51 +346,51 @@ func (e ConversionRuleStatus) Valid() bool {
 	}
 }
 
-// Defines values for CreateConversionRuleBodyChargeOnError.
+// Defines values for CreateConversionRuleChargeOnError.
 const (
-	CreateConversionRuleBodyChargeOnErrorALWAYS            CreateConversionRuleBodyChargeOnError = "ALWAYS"
-	CreateConversionRuleBodyChargeOnErrorNEVER             CreateConversionRuleBodyChargeOnError = "NEVER"
-	CreateConversionRuleBodyChargeOnErrorPROVIDERERRORONLY CreateConversionRuleBodyChargeOnError = "PROVIDER_ERROR_ONLY"
+	CreateConversionRuleChargeOnErrorALWAYS            CreateConversionRuleChargeOnError = "ALWAYS"
+	CreateConversionRuleChargeOnErrorNEVER             CreateConversionRuleChargeOnError = "NEVER"
+	CreateConversionRuleChargeOnErrorPROVIDERERRORONLY CreateConversionRuleChargeOnError = "PROVIDER_ERROR_ONLY"
 )
 
-// Valid indicates whether the value is a known member of the CreateConversionRuleBodyChargeOnError enum.
-func (e CreateConversionRuleBodyChargeOnError) Valid() bool {
+// Valid indicates whether the value is a known member of the CreateConversionRuleChargeOnError enum.
+func (e CreateConversionRuleChargeOnError) Valid() bool {
 	switch e {
-	case CreateConversionRuleBodyChargeOnErrorALWAYS:
+	case CreateConversionRuleChargeOnErrorALWAYS:
 		return true
-	case CreateConversionRuleBodyChargeOnErrorNEVER:
+	case CreateConversionRuleChargeOnErrorNEVER:
 		return true
-	case CreateConversionRuleBodyChargeOnErrorPROVIDERERRORONLY:
+	case CreateConversionRuleChargeOnErrorPROVIDERERRORONLY:
 		return true
 	default:
 		return false
 	}
 }
 
-// Defines values for CreateConversionRuleBodyRequestType.
+// Defines values for CreateConversionRuleRequestType.
 const (
-	CreateConversionRuleBodyRequestTypeAUDIO           CreateConversionRuleBodyRequestType = "AUDIO"
-	CreateConversionRuleBodyRequestTypeCOMPLETION      CreateConversionRuleBodyRequestType = "COMPLETION"
-	CreateConversionRuleBodyRequestTypeEMBEDDING       CreateConversionRuleBodyRequestType = "EMBEDDING"
-	CreateConversionRuleBodyRequestTypeIMAGEGENERATION CreateConversionRuleBodyRequestType = "IMAGE_GENERATION"
-	CreateConversionRuleBodyRequestTypeLessThannil     CreateConversionRuleBodyRequestType = "<nil>"
-	CreateConversionRuleBodyRequestTypeVIDEO           CreateConversionRuleBodyRequestType = "VIDEO"
+	CreateConversionRuleRequestTypeAUDIO           CreateConversionRuleRequestType = "AUDIO"
+	CreateConversionRuleRequestTypeCOMPLETION      CreateConversionRuleRequestType = "COMPLETION"
+	CreateConversionRuleRequestTypeEMBEDDING       CreateConversionRuleRequestType = "EMBEDDING"
+	CreateConversionRuleRequestTypeIMAGEGENERATION CreateConversionRuleRequestType = "IMAGE_GENERATION"
+	CreateConversionRuleRequestTypeLessThannil     CreateConversionRuleRequestType = "<nil>"
+	CreateConversionRuleRequestTypeVIDEO           CreateConversionRuleRequestType = "VIDEO"
 )
 
-// Valid indicates whether the value is a known member of the CreateConversionRuleBodyRequestType enum.
-func (e CreateConversionRuleBodyRequestType) Valid() bool {
+// Valid indicates whether the value is a known member of the CreateConversionRuleRequestType enum.
+func (e CreateConversionRuleRequestType) Valid() bool {
 	switch e {
-	case CreateConversionRuleBodyRequestTypeAUDIO:
+	case CreateConversionRuleRequestTypeAUDIO:
 		return true
-	case CreateConversionRuleBodyRequestTypeCOMPLETION:
+	case CreateConversionRuleRequestTypeCOMPLETION:
 		return true
-	case CreateConversionRuleBodyRequestTypeEMBEDDING:
+	case CreateConversionRuleRequestTypeEMBEDDING:
 		return true
-	case CreateConversionRuleBodyRequestTypeIMAGEGENERATION:
+	case CreateConversionRuleRequestTypeIMAGEGENERATION:
 		return true
-	case CreateConversionRuleBodyRequestTypeLessThannil:
+	case CreateConversionRuleRequestTypeLessThannil:
 		return true
-	case CreateConversionRuleBodyRequestTypeVIDEO:
+	case CreateConversionRuleRequestTypeVIDEO:
 		return true
 	default:
 		return false
@@ -910,21 +910,21 @@ func (e TargetingContextNodeType) Valid() bool {
 	}
 }
 
-// Defines values for UpdateConversionRuleBodyChargeOnError.
+// Defines values for UpdateConversionRuleChargeOnError.
 const (
-	UpdateConversionRuleBodyChargeOnErrorALWAYS            UpdateConversionRuleBodyChargeOnError = "ALWAYS"
-	UpdateConversionRuleBodyChargeOnErrorNEVER             UpdateConversionRuleBodyChargeOnError = "NEVER"
-	UpdateConversionRuleBodyChargeOnErrorPROVIDERERRORONLY UpdateConversionRuleBodyChargeOnError = "PROVIDER_ERROR_ONLY"
+	UpdateConversionRuleChargeOnErrorALWAYS            UpdateConversionRuleChargeOnError = "ALWAYS"
+	UpdateConversionRuleChargeOnErrorNEVER             UpdateConversionRuleChargeOnError = "NEVER"
+	UpdateConversionRuleChargeOnErrorPROVIDERERRORONLY UpdateConversionRuleChargeOnError = "PROVIDER_ERROR_ONLY"
 )
 
-// Valid indicates whether the value is a known member of the UpdateConversionRuleBodyChargeOnError enum.
-func (e UpdateConversionRuleBodyChargeOnError) Valid() bool {
+// Valid indicates whether the value is a known member of the UpdateConversionRuleChargeOnError enum.
+func (e UpdateConversionRuleChargeOnError) Valid() bool {
 	switch e {
-	case UpdateConversionRuleBodyChargeOnErrorALWAYS:
+	case UpdateConversionRuleChargeOnErrorALWAYS:
 		return true
-	case UpdateConversionRuleBodyChargeOnErrorNEVER:
+	case UpdateConversionRuleChargeOnErrorNEVER:
 		return true
-	case UpdateConversionRuleBodyChargeOnErrorPROVIDERERRORONLY:
+	case UpdateConversionRuleChargeOnErrorPROVIDERERRORONLY:
 		return true
 	default:
 		return false
@@ -3350,30 +3350,47 @@ type ConnectorState struct {
 
 // ConversionRates defines model for ConversionRates.
 type ConversionRates struct {
-	PerCacheWriteToken  *string `json:"perCacheWriteToken,omitempty"`
+	// PerCacheWriteToken Examples: 0.001
+	PerCacheWriteToken *string `json:"perCacheWriteToken,omitempty"`
+
+	// PerCachedInputToken Examples: 0.001
 	PerCachedInputToken *string `json:"perCachedInputToken,omitempty"`
-	PerInputToken       *string `json:"perInputToken,omitempty"`
-	PerOutputToken      *string `json:"perOutputToken,omitempty"`
-	PerRequest          *string `json:"perRequest,omitempty"`
-	PerSecond           *string `json:"perSecond,omitempty"`
-	PerUnit             *string `json:"perUnit,omitempty"`
+
+	// PerInputToken Examples: 0.001
+	PerInputToken *string `json:"perInputToken,omitempty"`
+
+	// PerOutputToken Examples: 0.001
+	PerOutputToken *string `json:"perOutputToken,omitempty"`
+
+	// PerRequest Examples: 0.001
+	PerRequest *string `json:"perRequest,omitempty"`
+
+	// PerSecond Examples: 0.001
+	PerSecond *string `json:"perSecond,omitempty"`
+
+	// PerUnit Examples: 0.001
+	PerUnit *string `json:"perUnit,omitempty"`
 }
 
 // ConversionRule defines model for ConversionRule.
 type ConversionRule struct {
-	ChargeOnError            ConversionRuleChargeOnError `json:"chargeOnError"`
-	CreatedAt                time.Time                   `json:"createdAt"`
-	EntitlementSlug          string                      `json:"entitlementSlug"`
-	GrantedByLicense         bool                        `json:"grantedByLicense"`
-	Id                       openapi_types.UUID          `json:"id"`
-	LicenseSlug              string                      `json:"licenseSlug"`
-	MaximumCreditsPerRequest *string                     `json:"maximumCreditsPerRequest"`
-	MinimumCreditsPerRequest string                      `json:"minimumCreditsPerRequest"`
-	ModelSlug                *string                     `json:"modelSlug"`
-	Rates                    ConversionRates             `json:"rates"`
-	RequestType              *ConversionRuleRequestType  `json:"requestType"`
-	Status                   ConversionRuleStatus        `json:"status"`
-	UpdatedAt                time.Time                   `json:"updatedAt"`
+	ChargeOnError    ConversionRuleChargeOnError `json:"chargeOnError"`
+	CreatedAt        time.Time                   `json:"createdAt"`
+	EntitlementSlug  string                      `json:"entitlementSlug"`
+	GrantedByLicense bool                        `json:"grantedByLicense"`
+	Id               openapi_types.UUID          `json:"id"`
+	LicenseSlug      string                      `json:"licenseSlug"`
+
+	// MaximumCreditsPerRequest Examples: 0.001
+	MaximumCreditsPerRequest *string `json:"maximumCreditsPerRequest"`
+
+	// MinimumCreditsPerRequest Examples: 0.001
+	MinimumCreditsPerRequest string                     `json:"minimumCreditsPerRequest"`
+	ModelSlug                *string                    `json:"modelSlug"`
+	Rates                    ConversionRates            `json:"rates"`
+	RequestType              *ConversionRuleRequestType `json:"requestType"`
+	Status                   ConversionRuleStatus       `json:"status"`
+	UpdatedAt                time.Time                  `json:"updatedAt"`
 }
 
 // ConversionRuleChargeOnError defines model for ConversionRule.ChargeOnError.
@@ -3391,22 +3408,22 @@ type ConversionRuleUpdated struct {
 	Before ConversionRule `json:"before"`
 }
 
-// CreateConversionRuleBody defines model for CreateConversionRuleBody.
-type CreateConversionRuleBody struct {
-	ChargeOnError            *CreateConversionRuleBodyChargeOnError `json:"chargeOnError,omitempty"`
-	EntitlementSlug          string                                 `json:"entitlementSlug"`
-	MaximumCreditsPerRequest *string                                `json:"maximumCreditsPerRequest,omitempty"`
-	MinimumCreditsPerRequest *string                                `json:"minimumCreditsPerRequest,omitempty"`
-	ModelSlug                *string                                `json:"modelSlug,omitempty"`
-	Rates                    ConversionRates                        `json:"rates"`
-	RequestType              *CreateConversionRuleBodyRequestType   `json:"requestType,omitempty"`
+// CreateConversionRule defines model for CreateConversionRule.
+type CreateConversionRule struct {
+	ChargeOnError            *CreateConversionRuleChargeOnError `json:"chargeOnError,omitempty"`
+	EntitlementSlug          string                             `json:"entitlementSlug"`
+	MaximumCreditsPerRequest *string                            `json:"maximumCreditsPerRequest,omitempty"`
+	MinimumCreditsPerRequest *string                            `json:"minimumCreditsPerRequest,omitempty"`
+	ModelSlug                *string                            `json:"modelSlug,omitempty"`
+	Rates                    ConversionRates                    `json:"rates"`
+	RequestType              *CreateConversionRuleRequestType   `json:"requestType,omitempty"`
 }
 
-// CreateConversionRuleBodyChargeOnError defines model for CreateConversionRuleBody.ChargeOnError.
-type CreateConversionRuleBodyChargeOnError string
+// CreateConversionRuleChargeOnError defines model for CreateConversionRule.ChargeOnError.
+type CreateConversionRuleChargeOnError string
 
-// CreateConversionRuleBodyRequestType defines model for CreateConversionRuleBody.RequestType.
-type CreateConversionRuleBodyRequestType string
+// CreateConversionRuleRequestType defines model for CreateConversionRule.RequestType.
+type CreateConversionRuleRequestType string
 
 // Customer defines model for Customer.
 type Customer struct {
@@ -4135,7 +4152,7 @@ type InstanceAIModelUsageUnauthorized struct {
 	EntitlementSlug string `json:"entitlement_slug"`
 	Model           string `json:"model"`
 	Reason          string `json:"reason"`
-	RequestType     string `json:"request_type"`
+	RequestType     string `json:"requestType"`
 }
 
 // InstanceBody defines model for InstanceBody.
@@ -4682,6 +4699,8 @@ type Model struct {
 	Name        string                  `json:"name"`
 
 	// Slug Immutable URL-friendly identifier, unique per organization
+	//
+	// Examples: sample-model
 	Slug string `json:"slug"`
 
 	// Status ACTIVE authorizes usage; DEPRECATED keeps existing rules; ARCHIVED authorizes none. Reversible.
@@ -5357,19 +5376,19 @@ type Token struct {
 	Slug *string `json:"slug,omitempty"`
 }
 
-// UpdateConversionRuleBody defines model for UpdateConversionRuleBody.
-type UpdateConversionRuleBody struct {
-	ChargeOnError            *UpdateConversionRuleBodyChargeOnError `json:"chargeOnError,omitempty"`
-	EntitlementSlug          *string                                `json:"entitlementSlug,omitempty"`
-	MaximumCreditsPerRequest *string                                `json:"maximumCreditsPerRequest,omitempty"`
-	MinimumCreditsPerRequest *string                                `json:"minimumCreditsPerRequest,omitempty"`
-	ModelSlug                *string                                `json:"modelSlug,omitempty"`
-	Rates                    ConversionRates                        `json:"rates"`
-	RequestType              *string                                `json:"requestType,omitempty"`
+// UpdateConversionRule defines model for UpdateConversionRule.
+type UpdateConversionRule struct {
+	ChargeOnError            *UpdateConversionRuleChargeOnError `json:"chargeOnError,omitempty"`
+	EntitlementSlug          *string                            `json:"entitlementSlug,omitempty"`
+	MaximumCreditsPerRequest *string                            `json:"maximumCreditsPerRequest,omitempty"`
+	MinimumCreditsPerRequest *string                            `json:"minimumCreditsPerRequest,omitempty"`
+	ModelSlug                *string                            `json:"modelSlug,omitempty"`
+	Rates                    ConversionRates                    `json:"rates"`
+	RequestType              *string                            `json:"requestType,omitempty"`
 }
 
-// UpdateConversionRuleBodyChargeOnError defines model for UpdateConversionRuleBody.ChargeOnError.
-type UpdateConversionRuleBodyChargeOnError string
+// UpdateConversionRuleChargeOnError defines model for UpdateConversionRule.ChargeOnError.
+type UpdateConversionRuleChargeOnError string
 
 // User defines model for User.
 type User struct {
@@ -5393,13 +5412,25 @@ type Variant struct {
 
 // VendorCosts defines model for VendorCosts.
 type VendorCosts struct {
-	Currency            VendorCostsCurrency `json:"currency"`
-	PerCacheWriteToken  *string             `json:"perCacheWriteToken,omitempty"`
-	PerCachedInputToken *string             `json:"perCachedInputToken,omitempty"`
-	PerInputToken       *string             `json:"perInputToken,omitempty"`
-	PerOutputToken      *string             `json:"perOutputToken,omitempty"`
-	PerRequest          *string             `json:"perRequest,omitempty"`
-	PerUnit             *string             `json:"perUnit,omitempty"`
+	Currency VendorCostsCurrency `json:"currency"`
+
+	// PerCacheWriteToken Examples: 0.001
+	PerCacheWriteToken *string `json:"perCacheWriteToken,omitempty"`
+
+	// PerCachedInputToken Examples: 0.001
+	PerCachedInputToken *string `json:"perCachedInputToken,omitempty"`
+
+	// PerInputToken Examples: 0.001
+	PerInputToken *string `json:"perInputToken,omitempty"`
+
+	// PerOutputToken Examples: 0.001
+	PerOutputToken *string `json:"perOutputToken,omitempty"`
+
+	// PerRequest Examples: 0.001
+	PerRequest *string `json:"perRequest,omitempty"`
+
+	// PerUnit Examples: 0.001
+	PerUnit *string `json:"perUnit,omitempty"`
 }
 
 // VendorCostsCurrency defines model for VendorCosts.Currency.
@@ -7129,10 +7160,10 @@ type CreateLicenseJSONRequestBody = License
 type UpdateLicenseJSONRequestBody = License
 
 // CreateConversionRuleJSONRequestBody defines body for CreateConversionRule for application/json ContentType.
-type CreateConversionRuleJSONRequestBody = CreateConversionRuleBody
+type CreateConversionRuleJSONRequestBody = CreateConversionRule
 
 // UpdateConversionRuleJSONRequestBody defines body for UpdateConversionRule for application/json ContentType.
-type UpdateConversionRuleJSONRequestBody = UpdateConversionRuleBody
+type UpdateConversionRuleJSONRequestBody = UpdateConversionRule
 
 // AssociateEntitlementWithLicenseJSONRequestBody defines body for AssociateEntitlementWithLicense for application/json ContentType.
 type AssociateEntitlementWithLicenseJSONRequestBody = LicenseEntitlement
