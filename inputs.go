@@ -941,3 +941,173 @@ func (in RegisterConnectorInput) payload() registerConnectorPayload {
 
 	return payload
 }
+
+// AIUsage is what a provider call consumed, or is estimated to consume. Every field is
+// optional and a zero field is not sent, which the API reads as nothing of that kind.
+//
+// The token fields are disjoint: total input is InputTokens + CacheReadInputTokens +
+// CacheWriteInputTokens. Providers do not all count that way -- OpenAI's prompt tokens
+// include the cached ones -- which is what the normaliser modules under ai/ are for.
+type AIUsage struct {
+	// InputTokens are the input tokens neither read from nor written to a cache.
+	InputTokens int64
+	// CacheReadInputTokens are the input tokens served from the provider's cache.
+	CacheReadInputTokens int64
+	// CacheWriteInputTokens are the input tokens written to the provider's cache.
+	CacheWriteInputTokens int64
+	// OutputTokens are the output tokens, reasoning included.
+	OutputTokens int64
+	// Units is a count of generated units -- images, seconds, frames -- as a decimal
+	// string, with UnitType saying which.
+	Units    string
+	UnitType AIUnitType
+	// Duration is the billable duration. It is sent in milliseconds and priced per second.
+	Duration time.Duration
+}
+
+// AIReserveInput is the input for AI.Reserve.
+type AIReserveInput struct {
+	// TransactionID pairs the reservation with its commit. Empty generates a UUIDv7;
+	// read it back from AIReport.Outcome.TransactionID to commit. A caller-chosen id
+	// must match ^[A-Za-z0-9._:-]{1,128}$.
+	TransactionID string
+
+	// Model is the model's catalogue slug or one of its provider ids, e.g. "gpt-4o".
+	Model string
+
+	// RequestType is the kind of call being reserved for.
+	RequestType AIRequestType
+
+	// Estimate is the usage the reservation is priced on. The commit settles the
+	// difference, so an over-estimate only holds credits for the call's duration.
+	Estimate AIUsage
+
+	// TTL is how long the reservation holds when no commit closes it. It is sent in
+	// whole seconds, rounded up. Zero or less leaves the server's default, ten minutes
+	// unless the deployment changed it; the server refuses more than its maximum.
+	TTL time.Duration
+
+	// Metadata is accepted and not stored.
+	Metadata map[string]any
+}
+
+// AICommitInput is the input for AI.Commit.
+type AICommitInput struct {
+	// TransactionID is the reservation's. Empty generates a UUIDv7: a commit no
+	// reservation precedes, which then needs Model and RequestType.
+	TransactionID string
+
+	// RequestStatus is how the provider call ended. Empty sends SUCCESS.
+	RequestStatus AIRequestStatus
+
+	// Model and RequestType are inherited from the reservation when empty. Set, they
+	// win: the model a call actually used is what gets priced.
+	Model       string
+	RequestType AIRequestType
+
+	// Usage is what the call consumed. Zero still commits: the rule's minimum is
+	// charged and the answer carries CONVERSION_INPUT_MISSING.
+	Usage AIUsage
+
+	// Metadata is accepted and not stored.
+	Metadata map[string]any
+}
+
+// AICall is what the function given to AI.Run reports about the provider call it made.
+type AICall struct {
+	// Status is how the call ended. Empty is SUCCESS when the function returned no
+	// error and PROVIDER_ERROR when it did; set AIRequestStatusNotSent when the provider
+	// was never reached, so nothing is charged.
+	Status AIRequestStatus
+
+	// Usage is what the call consumed, as far as it is known.
+	Usage AIUsage
+
+	// Model is the model the call actually used, when it differs from the reserved one.
+	Model string
+}
+
+// aiReportPayload is ReportEntitlementUsageBody with an AiUsageValue. behavior is left
+// out: the AI variant is append by definition, and the API refuses set on it.
+type aiReportPayload struct {
+	Metadata *map[string]any     `json:"metadata,omitempty"`
+	Value    aiUsageValuePayload `json:"value"`
+}
+
+type aiUsageValuePayload struct {
+	Type          string          `json:"type"`
+	Phase         AIPhase         `json:"phase"`
+	TransactionID string          `json:"transactionId"`
+	Model         string          `json:"model,omitempty"`
+	RequestType   AIRequestType   `json:"requestType,omitempty"`
+	RequestStatus AIRequestStatus `json:"requestStatus,omitempty"`
+	Usage         *aiUsagePayload `json:"usage,omitempty"`
+	TTLSeconds    *int64          `json:"ttlSeconds,omitempty"`
+}
+
+type aiUsagePayload struct {
+	InputTokens           int64      `json:"inputTokens,omitempty"`
+	CacheReadInputTokens  int64      `json:"cacheReadInputTokens,omitempty"`
+	CacheWriteInputTokens int64      `json:"cacheWriteInputTokens,omitempty"`
+	OutputTokens          int64      `json:"outputTokens,omitempty"`
+	Units                 string     `json:"units,omitempty"`
+	UnitType              AIUnitType `json:"unitType,omitempty"`
+	DurationMs            int64      `json:"durationMs,omitempty"`
+}
+
+// aiUsageValueType is the discriminator of the write-only AiUsageValue arm.
+const aiUsageValueType = "ai_usage"
+
+func (in AIUsage) payload() *aiUsagePayload {
+	if in == (AIUsage{}) {
+		return nil
+	}
+
+	return &aiUsagePayload{
+		InputTokens:           in.InputTokens,
+		CacheReadInputTokens:  in.CacheReadInputTokens,
+		CacheWriteInputTokens: in.CacheWriteInputTokens,
+		OutputTokens:          in.OutputTokens,
+		Units:                 in.Units,
+		UnitType:              in.UnitType,
+		DurationMs:            in.Duration.Milliseconds(),
+	}
+}
+
+func (in AIReserveInput) payload() aiReportPayload {
+	value := aiUsageValuePayload{
+		Type:          aiUsageValueType,
+		Phase:         AIPhaseReserve,
+		TransactionID: in.TransactionID,
+		Model:         in.Model,
+		RequestType:   in.RequestType,
+		Usage:         in.Estimate.payload(),
+	}
+
+	if in.TTL > 0 {
+		seconds := int64((in.TTL + time.Second - 1) / time.Second)
+		value.TTLSeconds = &seconds
+	}
+
+	return aiReportPayload{Metadata: cloneMapPtr(in.Metadata), Value: value}
+}
+
+func (in AICommitInput) payload() aiReportPayload {
+	status := in.RequestStatus
+	if status == "" {
+		status = AIRequestStatusSuccess
+	}
+
+	return aiReportPayload{
+		Metadata: cloneMapPtr(in.Metadata),
+		Value: aiUsageValuePayload{
+			Type:          aiUsageValueType,
+			Phase:         AIPhaseCommit,
+			TransactionID: in.TransactionID,
+			Model:         in.Model,
+			RequestType:   in.RequestType,
+			RequestStatus: status,
+			Usage:         in.Usage.payload(),
+		},
+	}
+}

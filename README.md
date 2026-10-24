@@ -239,6 +239,97 @@ usage, err := client.Instances.ReportEntitlementUsageMetric(ctx, "sakura-tokyo-p
 `Instances.ListEntitlementUsageMetrics` and `EntitlementGroups.GetUsage` read the
 current position of an instance against its limits.
 
+### AI credits
+
+An AI credit pool is metered in two phases: `AI.Reserve` sets credits aside on an
+estimate before the provider is called, and `AI.Commit` charges what the call actually
+consumed. The server prices both from the license version's current conversion rules (a
+reservation does not lock rates); the SDK carries no pricing. `AI.Run` brackets one call between the two:
+
+```go
+var answer string
+_, err := client.AI.Run(ctx, "sakura-tokyo-prod", "chat-credits", sdk.AIReserveInput{
+	Model:       "gpt-4o",
+	RequestType: sdk.AIRequestTypeCompletion,
+	Estimate:    sdk.AIUsage{InputTokens: 1000, OutputTokens: 800},
+}, func(ctx context.Context) (sdk.AICall, error) {
+	// Call the provider here. Report sdk.AIRequestStatusNotSent when it was never
+	// reached, and the usage known so far when it failed.
+	answer = "..."
+	return sdk.AICall{Usage: sdk.AIUsage{InputTokens: 1000, OutputTokens: 412}}, nil
+})
+switch {
+case errors.Is(err, sdk.ErrInsufficientCredits):
+	// Refused before the provider was called: the estimate does not fit the pool.
+case errors.Is(err, sdk.ErrAICommitFailed):
+	// The call succeeded and answer is good; only the accounting failed.
+}
+```
+
+A refused reserve is one of `sdk.ErrInsufficientCredits`, `sdk.ErrModelNotAuthorized`,
+`sdk.ErrUnknownModel`, `sdk.ErrTransactionIDReused` or `sdk.ErrAIUsageUnsupported` (the
+pool is not an AI credit pool, or the server predates AI reports). The transaction id
+defaults to a UUIDv7. Both phases retry a network error or a 500, 502, 503 or 504 up to
+three times under the identical phase/body and transaction id; a 4xx is never retried.
+AI helpers remove even inherited `Idempotency-Key` headers: that header is for numeric
+adjustments only and is rejected for `ai_usage`. Unknown problem codes remain `*sdk.Error`, not a
+guessed unsupported-capability error.
+`ErrAICommitFailed` means settlement could not be confirmed, not that nothing was
+charged: a lost response may hide a successful commit. Reconcile inference history
+or retry the identical commit body under the same transaction id.
+
+The provider SDKs count tokens their own way. The `ai/openai` and `ai/anthropic`
+modules convert their usage structs into an `sdk.AIUsage`, and are separate modules so
+this one never depends on a provider SDK:
+
+```shell
+go get github.com/kaitencloud/sdk-go/ai/openai
+go get github.com/kaitencloud/sdk-go/ai/anthropic
+```
+
+### Generated AI management and history
+
+The generated operations on `client.Raw()` cover model list/get/create/full-replace
+update/delete, version-scoped conversion-rule list/get/create/update/archive, and AI
+reservation/inference reads. Their input and query types are exported by this package:
+
+```go
+// Catalogue vendor costs are informational USD strings, not credit prices.
+models, err := client.Raw().ListModelsWithResponse(ctx, &sdk.ListModelsParams{})
+
+// This slug identifies a LICENSE VERSION, not its family. Rates are exact strings;
+// nil is unpriced, while a pointer to "0" is explicitly zero-priced. Missing cache
+// rates fall back to the input-token rate. Update replaces the rate vector.
+rate := "0.0000000001"
+rule, err := client.Raw().CreateConversionRuleWithResponse(ctx, "pro-v3", sdk.CreateConversionRule{
+    EntitlementSlug: "chat-credits",
+    Rates: sdk.ConversionRates{PerInputToken: &rate},
+})
+
+history, err := client.Raw().ListAiInferencesWithResponse(ctx, "sakura-tokyo-prod", "chat-credits", &sdk.ListAIInferencesParams{})
+reservations, err := client.Raw().ListAiReservationsWithResponse(ctx, "sakura-tokyo-prod", "chat-credits")
+```
+
+Raw responses expose status codes and problem details; callers must check them as well
+as transport errors. Inference credits, rates, vendor costs and generated units stay
+strings without float conversion. `AIUsageQuantities` uses pointers: absent dimensions
+are unknown, not known zero. The convenience `AIUsage` omits zero fields; use
+`AIUsageValue` with `ReportEntitlementUsageValue.FromAiUsageValue` and the raw report
+operation when an explicit zero matters. Unsupported provider dimensions must remain
+absent; do not invent quantities. OpenAI input tokens include cache reads, so the
+normalizer subtracts them; Anthropic's input/cache dimensions are already disjoint.
+
+An entitlement of type `NUMBER_AI_CREDIT` uses `SUM` aggregation and numeric allowances
+and read counters (`type: "number"`). `ai_usage` is only a calculation input: read the
+counter through `Instances.GetEntitlementUsageMetric`, not from reservation/history totals.
+Numeric adjustments/refunds use the ordinary number report with append behavior.
+
+Model and conversion-rule webhook payload aliases are also exported, together with
+`OnInstanceAIModelUsageUnauthorizedJSONBody` and
+`OnInstanceEntitlementUsageReportAcceptedJSONBody`. Unauthorized commits are accounted
+with their authorization/warning outcome; accepted usage hooks still carry numeric
+credit values rather than the write-only `ai_usage` payload.
+
 ### Feature flags
 
 ```go
@@ -380,7 +471,8 @@ if err != nil {
 | `Body`       | The raw response body.                                                |
 
 `Instances.ReportUsage` additionally returns `sdk.ErrThresholdExceeded` when a report
-would cross the entitlement's limit.
+would cross the entitlement's limit. The `AI` reports return the typed errors listed
+under [AI credits](#ai-credits), each wrapping the `*sdk.Error` as well.
 
 ## Low-level access
 

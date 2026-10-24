@@ -22,6 +22,201 @@ import (
 	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
+// Defines values for AiInferenceRequestType.
+const (
+	AiInferenceRequestTypeAUDIO           AiInferenceRequestType = "AUDIO"
+	AiInferenceRequestTypeCOMPLETION      AiInferenceRequestType = "COMPLETION"
+	AiInferenceRequestTypeEMBEDDING       AiInferenceRequestType = "EMBEDDING"
+	AiInferenceRequestTypeIMAGEGENERATION AiInferenceRequestType = "IMAGE_GENERATION"
+	AiInferenceRequestTypeVIDEO           AiInferenceRequestType = "VIDEO"
+)
+
+// Valid indicates whether the value is a known member of the AiInferenceRequestType enum.
+func (e AiInferenceRequestType) Valid() bool {
+	switch e {
+	case AiInferenceRequestTypeAUDIO:
+		return true
+	case AiInferenceRequestTypeCOMPLETION:
+		return true
+	case AiInferenceRequestTypeEMBEDDING:
+		return true
+	case AiInferenceRequestTypeIMAGEGENERATION:
+		return true
+	case AiInferenceRequestTypeVIDEO:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for AiInferenceStatus.
+const (
+	AiInferenceStatusCOMMITTED AiInferenceStatus = "COMMITTED"
+	AiInferenceStatusEXPIRED   AiInferenceStatus = "EXPIRED"
+	AiInferenceStatusRELEASED  AiInferenceStatus = "RELEASED"
+	AiInferenceStatusRESERVED  AiInferenceStatus = "RESERVED"
+)
+
+// Valid indicates whether the value is a known member of the AiInferenceStatus enum.
+func (e AiInferenceStatus) Valid() bool {
+	switch e {
+	case AiInferenceStatusCOMMITTED:
+		return true
+	case AiInferenceStatusEXPIRED:
+		return true
+	case AiInferenceStatusRELEASED:
+		return true
+	case AiInferenceStatusRESERVED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for AiUsageUnitType.
+const (
+	Frame  AiUsageUnitType = "frame"
+	Image  AiUsageUnitType = "image"
+	Second AiUsageUnitType = "second"
+)
+
+// Valid indicates whether the value is a known member of the AiUsageUnitType enum.
+func (e AiUsageUnitType) Valid() bool {
+	switch e {
+	case Frame:
+		return true
+	case Image:
+		return true
+	case Second:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for AiUsageOutcomePhase.
+const (
+	AiUsageOutcomePhaseCommit  AiUsageOutcomePhase = "commit"
+	AiUsageOutcomePhaseReserve AiUsageOutcomePhase = "reserve"
+)
+
+// Valid indicates whether the value is a known member of the AiUsageOutcomePhase enum.
+func (e AiUsageOutcomePhase) Valid() bool {
+	switch e {
+	case AiUsageOutcomePhaseCommit:
+		return true
+	case AiUsageOutcomePhaseReserve:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for AiUsageOutcomeStatus.
+const (
+	AiUsageOutcomeStatusCOMMITTED AiUsageOutcomeStatus = "COMMITTED"
+	AiUsageOutcomeStatusRELEASED  AiUsageOutcomeStatus = "RELEASED"
+	AiUsageOutcomeStatusRESERVED  AiUsageOutcomeStatus = "RESERVED"
+)
+
+// Valid indicates whether the value is a known member of the AiUsageOutcomeStatus enum.
+func (e AiUsageOutcomeStatus) Valid() bool {
+	switch e {
+	case AiUsageOutcomeStatusCOMMITTED:
+		return true
+	case AiUsageOutcomeStatusRELEASED:
+		return true
+	case AiUsageOutcomeStatusRESERVED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for AiUsageValuePhase.
+const (
+	AiUsageValuePhaseCommit  AiUsageValuePhase = "commit"
+	AiUsageValuePhaseReserve AiUsageValuePhase = "reserve"
+)
+
+// Valid indicates whether the value is a known member of the AiUsageValuePhase enum.
+func (e AiUsageValuePhase) Valid() bool {
+	switch e {
+	case AiUsageValuePhaseCommit:
+		return true
+	case AiUsageValuePhaseReserve:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for AiUsageValueRequestStatus.
+const (
+	CUSTOMERERROR AiUsageValueRequestStatus = "CUSTOMER_ERROR"
+	NOTSENT       AiUsageValueRequestStatus = "NOT_SENT"
+	PROVIDERERROR AiUsageValueRequestStatus = "PROVIDER_ERROR"
+	SUCCESS       AiUsageValueRequestStatus = "SUCCESS"
+)
+
+// Valid indicates whether the value is a known member of the AiUsageValueRequestStatus enum.
+func (e AiUsageValueRequestStatus) Valid() bool {
+	switch e {
+	case CUSTOMERERROR:
+		return true
+	case NOTSENT:
+		return true
+	case PROVIDERERROR:
+		return true
+	case SUCCESS:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for AiUsageValueRequestType.
+const (
+	AiUsageValueRequestTypeAUDIO           AiUsageValueRequestType = "AUDIO"
+	AiUsageValueRequestTypeCOMPLETION      AiUsageValueRequestType = "COMPLETION"
+	AiUsageValueRequestTypeEMBEDDING       AiUsageValueRequestType = "EMBEDDING"
+	AiUsageValueRequestTypeIMAGEGENERATION AiUsageValueRequestType = "IMAGE_GENERATION"
+	AiUsageValueRequestTypeVIDEO           AiUsageValueRequestType = "VIDEO"
+)
+
+// Valid indicates whether the value is a known member of the AiUsageValueRequestType enum.
+func (e AiUsageValueRequestType) Valid() bool {
+	switch e {
+	case AiUsageValueRequestTypeAUDIO:
+		return true
+	case AiUsageValueRequestTypeCOMPLETION:
+		return true
+	case AiUsageValueRequestTypeEMBEDDING:
+		return true
+	case AiUsageValueRequestTypeIMAGEGENERATION:
+		return true
+	case AiUsageValueRequestTypeVIDEO:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for AiUsageValueType.
+const (
+	AiUsageValueTypeAiUsage AiUsageValueType = "ai_usage"
+)
+
+// Valid indicates whether the value is a known member of the AiUsageValueType enum.
+func (e AiUsageValueType) Valid() bool {
+	switch e {
+	case AiUsageValueTypeAiUsage:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for BasicType.
 const (
 	BasicTypeBasic BasicType = "basic"
@@ -76,6 +271,126 @@ const (
 func (e ConfigEntitlementValueType) Valid() bool {
 	switch e {
 	case ConfigEntitlementValueTypeObject:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ConversionRuleChargeOnError.
+const (
+	ConversionRuleChargeOnErrorALWAYS            ConversionRuleChargeOnError = "ALWAYS"
+	ConversionRuleChargeOnErrorNEVER             ConversionRuleChargeOnError = "NEVER"
+	ConversionRuleChargeOnErrorPROVIDERERRORONLY ConversionRuleChargeOnError = "PROVIDER_ERROR_ONLY"
+)
+
+// Valid indicates whether the value is a known member of the ConversionRuleChargeOnError enum.
+func (e ConversionRuleChargeOnError) Valid() bool {
+	switch e {
+	case ConversionRuleChargeOnErrorALWAYS:
+		return true
+	case ConversionRuleChargeOnErrorNEVER:
+		return true
+	case ConversionRuleChargeOnErrorPROVIDERERRORONLY:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ConversionRuleRequestType.
+const (
+	ConversionRuleRequestTypeAUDIO           ConversionRuleRequestType = "AUDIO"
+	ConversionRuleRequestTypeCOMPLETION      ConversionRuleRequestType = "COMPLETION"
+	ConversionRuleRequestTypeEMBEDDING       ConversionRuleRequestType = "EMBEDDING"
+	ConversionRuleRequestTypeIMAGEGENERATION ConversionRuleRequestType = "IMAGE_GENERATION"
+	ConversionRuleRequestTypeLessThannil     ConversionRuleRequestType = "<nil>"
+	ConversionRuleRequestTypeVIDEO           ConversionRuleRequestType = "VIDEO"
+)
+
+// Valid indicates whether the value is a known member of the ConversionRuleRequestType enum.
+func (e ConversionRuleRequestType) Valid() bool {
+	switch e {
+	case ConversionRuleRequestTypeAUDIO:
+		return true
+	case ConversionRuleRequestTypeCOMPLETION:
+		return true
+	case ConversionRuleRequestTypeEMBEDDING:
+		return true
+	case ConversionRuleRequestTypeIMAGEGENERATION:
+		return true
+	case ConversionRuleRequestTypeLessThannil:
+		return true
+	case ConversionRuleRequestTypeVIDEO:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ConversionRuleStatus.
+const (
+	ConversionRuleStatusACTIVE   ConversionRuleStatus = "ACTIVE"
+	ConversionRuleStatusARCHIVED ConversionRuleStatus = "ARCHIVED"
+)
+
+// Valid indicates whether the value is a known member of the ConversionRuleStatus enum.
+func (e ConversionRuleStatus) Valid() bool {
+	switch e {
+	case ConversionRuleStatusACTIVE:
+		return true
+	case ConversionRuleStatusARCHIVED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for CreateConversionRuleChargeOnError.
+const (
+	CreateConversionRuleChargeOnErrorALWAYS            CreateConversionRuleChargeOnError = "ALWAYS"
+	CreateConversionRuleChargeOnErrorNEVER             CreateConversionRuleChargeOnError = "NEVER"
+	CreateConversionRuleChargeOnErrorPROVIDERERRORONLY CreateConversionRuleChargeOnError = "PROVIDER_ERROR_ONLY"
+)
+
+// Valid indicates whether the value is a known member of the CreateConversionRuleChargeOnError enum.
+func (e CreateConversionRuleChargeOnError) Valid() bool {
+	switch e {
+	case CreateConversionRuleChargeOnErrorALWAYS:
+		return true
+	case CreateConversionRuleChargeOnErrorNEVER:
+		return true
+	case CreateConversionRuleChargeOnErrorPROVIDERERRORONLY:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for CreateConversionRuleRequestType.
+const (
+	CreateConversionRuleRequestTypeAUDIO           CreateConversionRuleRequestType = "AUDIO"
+	CreateConversionRuleRequestTypeCOMPLETION      CreateConversionRuleRequestType = "COMPLETION"
+	CreateConversionRuleRequestTypeEMBEDDING       CreateConversionRuleRequestType = "EMBEDDING"
+	CreateConversionRuleRequestTypeIMAGEGENERATION CreateConversionRuleRequestType = "IMAGE_GENERATION"
+	CreateConversionRuleRequestTypeLessThannil     CreateConversionRuleRequestType = "<nil>"
+	CreateConversionRuleRequestTypeVIDEO           CreateConversionRuleRequestType = "VIDEO"
+)
+
+// Valid indicates whether the value is a known member of the CreateConversionRuleRequestType enum.
+func (e CreateConversionRuleRequestType) Valid() bool {
+	switch e {
+	case CreateConversionRuleRequestTypeAUDIO:
+		return true
+	case CreateConversionRuleRequestTypeCOMPLETION:
+		return true
+	case CreateConversionRuleRequestTypeEMBEDDING:
+		return true
+	case CreateConversionRuleRequestTypeIMAGEGENERATION:
+		return true
+	case CreateConversionRuleRequestTypeLessThannil:
+		return true
+	case CreateConversionRuleRequestTypeVIDEO:
 		return true
 	default:
 		return false
@@ -315,19 +630,19 @@ func (e InstanceStatusChangedPreviousStatus) Valid() bool {
 
 // Defines values for LicenseLifecycleState.
 const (
-	ARCHIVED  LicenseLifecycleState = "ARCHIVED"
-	DRAFT     LicenseLifecycleState = "DRAFT"
-	PUBLISHED LicenseLifecycleState = "PUBLISHED"
+	LicenseLifecycleStateARCHIVED  LicenseLifecycleState = "ARCHIVED"
+	LicenseLifecycleStateDRAFT     LicenseLifecycleState = "DRAFT"
+	LicenseLifecycleStatePUBLISHED LicenseLifecycleState = "PUBLISHED"
 )
 
 // Valid indicates whether the value is a known member of the LicenseLifecycleState enum.
 func (e LicenseLifecycleState) Valid() bool {
 	switch e {
-	case ARCHIVED:
+	case LicenseLifecycleStateARCHIVED:
 		return true
-	case DRAFT:
+	case LicenseLifecycleStateDRAFT:
 		return true
-	case PUBLISHED:
+	case LicenseLifecycleStatePUBLISHED:
 		return true
 	default:
 		return false
@@ -391,6 +706,57 @@ func (e MetadataFieldResourceType) Valid() bool {
 	case MetadataFieldResourceTypeDEPLOYMENTZONE:
 		return true
 	case MetadataFieldResourceTypeINSTANCE:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ModelModality.
+const (
+	ModelModalityAUDIO      ModelModality = "AUDIO"
+	ModelModalityEMBEDDING  ModelModality = "EMBEDDING"
+	ModelModalityIMAGE      ModelModality = "IMAGE"
+	ModelModalityMULTIMODAL ModelModality = "MULTIMODAL"
+	ModelModalityTEXT       ModelModality = "TEXT"
+	ModelModalityVIDEO      ModelModality = "VIDEO"
+)
+
+// Valid indicates whether the value is a known member of the ModelModality enum.
+func (e ModelModality) Valid() bool {
+	switch e {
+	case ModelModalityAUDIO:
+		return true
+	case ModelModalityEMBEDDING:
+		return true
+	case ModelModalityIMAGE:
+		return true
+	case ModelModalityMULTIMODAL:
+		return true
+	case ModelModalityTEXT:
+		return true
+	case ModelModalityVIDEO:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ModelStatus.
+const (
+	ModelStatusACTIVE     ModelStatus = "ACTIVE"
+	ModelStatusARCHIVED   ModelStatus = "ARCHIVED"
+	ModelStatusDEPRECATED ModelStatus = "DEPRECATED"
+)
+
+// Valid indicates whether the value is a known member of the ModelStatus enum.
+func (e ModelStatus) Valid() bool {
+	switch e {
+	case ModelStatusACTIVE:
+		return true
+	case ModelStatusARCHIVED:
+		return true
+	case ModelStatusDEPRECATED:
 		return true
 	default:
 		return false
@@ -544,6 +910,66 @@ func (e TargetingContextNodeType) Valid() bool {
 	}
 }
 
+// Defines values for UpdateConversionRuleChargeOnError.
+const (
+	UpdateConversionRuleChargeOnErrorALWAYS            UpdateConversionRuleChargeOnError = "ALWAYS"
+	UpdateConversionRuleChargeOnErrorNEVER             UpdateConversionRuleChargeOnError = "NEVER"
+	UpdateConversionRuleChargeOnErrorPROVIDERERRORONLY UpdateConversionRuleChargeOnError = "PROVIDER_ERROR_ONLY"
+)
+
+// Valid indicates whether the value is a known member of the UpdateConversionRuleChargeOnError enum.
+func (e UpdateConversionRuleChargeOnError) Valid() bool {
+	switch e {
+	case UpdateConversionRuleChargeOnErrorALWAYS:
+		return true
+	case UpdateConversionRuleChargeOnErrorNEVER:
+		return true
+	case UpdateConversionRuleChargeOnErrorPROVIDERERRORONLY:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for VendorCostsCurrency.
+const (
+	USD VendorCostsCurrency = "USD"
+)
+
+// Valid indicates whether the value is a known member of the VendorCostsCurrency enum.
+func (e VendorCostsCurrency) Valid() bool {
+	switch e {
+	case USD:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ListAiInferencesParamsStatus.
+const (
+	ListAiInferencesParamsStatusCOMMITTED ListAiInferencesParamsStatus = "COMMITTED"
+	ListAiInferencesParamsStatusEXPIRED   ListAiInferencesParamsStatus = "EXPIRED"
+	ListAiInferencesParamsStatusRELEASED  ListAiInferencesParamsStatus = "RELEASED"
+	ListAiInferencesParamsStatusRESERVED  ListAiInferencesParamsStatus = "RESERVED"
+)
+
+// Valid indicates whether the value is a known member of the ListAiInferencesParamsStatus enum.
+func (e ListAiInferencesParamsStatus) Valid() bool {
+	switch e {
+	case ListAiInferencesParamsStatusCOMMITTED:
+		return true
+	case ListAiInferencesParamsStatusEXPIRED:
+		return true
+	case ListAiInferencesParamsStatusRELEASED:
+		return true
+	case ListAiInferencesParamsStatusRESERVED:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for GetLicenseFamilyParamsInclude.
 const (
 	Versions GetLicenseFamilyParamsInclude = "versions"
@@ -553,6 +979,24 @@ const (
 func (e GetLicenseFamilyParamsInclude) Valid() bool {
 	switch e {
 	case Versions:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ListConversionRulesParamsStatus.
+const (
+	ListConversionRulesParamsStatusACTIVE   ListConversionRulesParamsStatus = "ACTIVE"
+	ListConversionRulesParamsStatusARCHIVED ListConversionRulesParamsStatus = "ARCHIVED"
+)
+
+// Valid indicates whether the value is a known member of the ListConversionRulesParamsStatus enum.
+func (e ListConversionRulesParamsStatus) Valid() bool {
+	switch e {
+	case ListConversionRulesParamsStatusACTIVE:
+		return true
+	case ListConversionRulesParamsStatusARCHIVED:
 		return true
 	default:
 		return false
@@ -571,6 +1015,108 @@ func (e ListMetadataFieldsParamsResourceType) Valid() bool {
 	case ListMetadataFieldsParamsResourceTypeDEPLOYMENTZONE:
 		return true
 	case ListMetadataFieldsParamsResourceTypeINSTANCE:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ListModelsParamsStatus.
+const (
+	ListModelsParamsStatusACTIVE     ListModelsParamsStatus = "ACTIVE"
+	ListModelsParamsStatusARCHIVED   ListModelsParamsStatus = "ARCHIVED"
+	ListModelsParamsStatusDEPRECATED ListModelsParamsStatus = "DEPRECATED"
+)
+
+// Valid indicates whether the value is a known member of the ListModelsParamsStatus enum.
+func (e ListModelsParamsStatus) Valid() bool {
+	switch e {
+	case ListModelsParamsStatusACTIVE:
+		return true
+	case ListModelsParamsStatusARCHIVED:
+		return true
+	case ListModelsParamsStatusDEPRECATED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ListModelsParamsModality.
+const (
+	ListModelsParamsModalityAUDIO      ListModelsParamsModality = "AUDIO"
+	ListModelsParamsModalityEMBEDDING  ListModelsParamsModality = "EMBEDDING"
+	ListModelsParamsModalityIMAGE      ListModelsParamsModality = "IMAGE"
+	ListModelsParamsModalityMULTIMODAL ListModelsParamsModality = "MULTIMODAL"
+	ListModelsParamsModalityTEXT       ListModelsParamsModality = "TEXT"
+	ListModelsParamsModalityVIDEO      ListModelsParamsModality = "VIDEO"
+)
+
+// Valid indicates whether the value is a known member of the ListModelsParamsModality enum.
+func (e ListModelsParamsModality) Valid() bool {
+	switch e {
+	case ListModelsParamsModalityAUDIO:
+		return true
+	case ListModelsParamsModalityEMBEDDING:
+		return true
+	case ListModelsParamsModalityIMAGE:
+		return true
+	case ListModelsParamsModalityMULTIMODAL:
+		return true
+	case ListModelsParamsModalityTEXT:
+		return true
+	case ListModelsParamsModalityVIDEO:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ListNotificationsParamsStatus.
+const (
+	All    ListNotificationsParamsStatus = "all"
+	Unread ListNotificationsParamsStatus = "unread"
+)
+
+// Valid indicates whether the value is a known member of the ListNotificationsParamsStatus enum.
+func (e ListNotificationsParamsStatus) Valid() bool {
+	switch e {
+	case All:
+		return true
+	case Unread:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ListNotificationsParamsObjectType.
+const (
+	ListNotificationsParamsObjectTypeComponent      ListNotificationsParamsObjectType = "component"
+	ListNotificationsParamsObjectTypeCustomer       ListNotificationsParamsObjectType = "customer"
+	ListNotificationsParamsObjectTypeDeploymentZone ListNotificationsParamsObjectType = "deployment_zone"
+	ListNotificationsParamsObjectTypeInstance       ListNotificationsParamsObjectType = "instance"
+	ListNotificationsParamsObjectTypeLicense        ListNotificationsParamsObjectType = "license"
+	ListNotificationsParamsObjectTypeRelease        ListNotificationsParamsObjectType = "release"
+	ListNotificationsParamsObjectTypeToken          ListNotificationsParamsObjectType = "token"
+)
+
+// Valid indicates whether the value is a known member of the ListNotificationsParamsObjectType enum.
+func (e ListNotificationsParamsObjectType) Valid() bool {
+	switch e {
+	case ListNotificationsParamsObjectTypeComponent:
+		return true
+	case ListNotificationsParamsObjectTypeCustomer:
+		return true
+	case ListNotificationsParamsObjectTypeDeploymentZone:
+		return true
+	case ListNotificationsParamsObjectTypeInstance:
+		return true
+	case ListNotificationsParamsObjectTypeLicense:
+		return true
+	case ListNotificationsParamsObjectTypeRelease:
+		return true
+	case ListNotificationsParamsObjectTypeToken:
 		return true
 	default:
 		return false
@@ -1237,6 +1783,36 @@ func (e OnSystemOrganizationTokenIssuedJSONBodyType) Valid() bool {
 	}
 }
 
+// Defines values for OnInstanceAIModelUsageUnauthorizedJSONBodyName.
+const (
+	INSTANCEAIMODELUSAGEUNAUTHORIZED OnInstanceAIModelUsageUnauthorizedJSONBodyName = "INSTANCE_AI_MODEL_USAGE_UNAUTHORIZED"
+)
+
+// Valid indicates whether the value is a known member of the OnInstanceAIModelUsageUnauthorizedJSONBodyName enum.
+func (e OnInstanceAIModelUsageUnauthorizedJSONBodyName) Valid() bool {
+	switch e {
+	case INSTANCEAIMODELUSAGEUNAUTHORIZED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnInstanceAIModelUsageUnauthorizedJSONBodyType.
+const (
+	ComKaitenInstanceAiV1ModelUsageUnauthorized OnInstanceAIModelUsageUnauthorizedJSONBodyType = "com.kaiten.instance.ai.v1.model_usage_unauthorized"
+)
+
+// Valid indicates whether the value is a known member of the OnInstanceAIModelUsageUnauthorizedJSONBodyType enum.
+func (e OnInstanceAIModelUsageUnauthorizedJSONBodyType) Valid() bool {
+	switch e {
+	case ComKaitenInstanceAiV1ModelUsageUnauthorized:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for OnInstanceEntitlementCapExceededJSONBodyName.
 const (
 	INSTANCEENTITLEMENTCAPEXCEEDED OnInstanceEntitlementCapExceededJSONBodyName = "INSTANCE_ENTITLEMENT_CAP_EXCEEDED"
@@ -1261,6 +1837,36 @@ const (
 func (e OnInstanceEntitlementCapExceededJSONBodyType) Valid() bool {
 	switch e {
 	case ComKaitenInstanceEntitlementV1CapExceeded:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnInstanceEntitlementMaximumExceededJSONBodyName.
+const (
+	INSTANCEENTITLEMENTMAXIMUMEXCEEDED OnInstanceEntitlementMaximumExceededJSONBodyName = "INSTANCE_ENTITLEMENT_MAXIMUM_EXCEEDED"
+)
+
+// Valid indicates whether the value is a known member of the OnInstanceEntitlementMaximumExceededJSONBodyName enum.
+func (e OnInstanceEntitlementMaximumExceededJSONBodyName) Valid() bool {
+	switch e {
+	case INSTANCEENTITLEMENTMAXIMUMEXCEEDED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnInstanceEntitlementMaximumExceededJSONBodyType.
+const (
+	ComKaitenInstanceEntitlementV1MaximumExceeded OnInstanceEntitlementMaximumExceededJSONBodyType = "com.kaiten.instance.entitlement.v1.maximum_exceeded"
+)
+
+// Valid indicates whether the value is a known member of the OnInstanceEntitlementMaximumExceededJSONBodyType enum.
+func (e OnInstanceEntitlementMaximumExceededJSONBodyType) Valid() bool {
+	switch e {
+	case ComKaitenInstanceEntitlementV1MaximumExceeded:
 		return true
 	default:
 		return false
@@ -1657,6 +2263,96 @@ func (e OnInstanceUpdatedJSONBodyType) Valid() bool {
 	}
 }
 
+// Defines values for OnArchiveConversionRuleJSONBodyName.
+const (
+	LICENSECONVERSIONRULEARCHIVED OnArchiveConversionRuleJSONBodyName = "LICENSE_CONVERSION_RULE_ARCHIVED"
+)
+
+// Valid indicates whether the value is a known member of the OnArchiveConversionRuleJSONBodyName enum.
+func (e OnArchiveConversionRuleJSONBodyName) Valid() bool {
+	switch e {
+	case LICENSECONVERSIONRULEARCHIVED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnArchiveConversionRuleJSONBodyType.
+const (
+	ComKaitenLicenseConversionRuleV1Archived OnArchiveConversionRuleJSONBodyType = "com.kaiten.license.conversion_rule.v1.archived"
+)
+
+// Valid indicates whether the value is a known member of the OnArchiveConversionRuleJSONBodyType enum.
+func (e OnArchiveConversionRuleJSONBodyType) Valid() bool {
+	switch e {
+	case ComKaitenLicenseConversionRuleV1Archived:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnCreateConversionRuleJSONBodyName.
+const (
+	LICENSECONVERSIONRULECREATED OnCreateConversionRuleJSONBodyName = "LICENSE_CONVERSION_RULE_CREATED"
+)
+
+// Valid indicates whether the value is a known member of the OnCreateConversionRuleJSONBodyName enum.
+func (e OnCreateConversionRuleJSONBodyName) Valid() bool {
+	switch e {
+	case LICENSECONVERSIONRULECREATED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnCreateConversionRuleJSONBodyType.
+const (
+	ComKaitenLicenseConversionRuleV1Created OnCreateConversionRuleJSONBodyType = "com.kaiten.license.conversion_rule.v1.created"
+)
+
+// Valid indicates whether the value is a known member of the OnCreateConversionRuleJSONBodyType enum.
+func (e OnCreateConversionRuleJSONBodyType) Valid() bool {
+	switch e {
+	case ComKaitenLicenseConversionRuleV1Created:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnUpdateConversionRuleJSONBodyName.
+const (
+	LICENSECONVERSIONRULEUPDATED OnUpdateConversionRuleJSONBodyName = "LICENSE_CONVERSION_RULE_UPDATED"
+)
+
+// Valid indicates whether the value is a known member of the OnUpdateConversionRuleJSONBodyName enum.
+func (e OnUpdateConversionRuleJSONBodyName) Valid() bool {
+	switch e {
+	case LICENSECONVERSIONRULEUPDATED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnUpdateConversionRuleJSONBodyType.
+const (
+	ComKaitenLicenseConversionRuleV1Updated OnUpdateConversionRuleJSONBodyType = "com.kaiten.license.conversion_rule.v1.updated"
+)
+
+// Valid indicates whether the value is a known member of the OnUpdateConversionRuleJSONBodyType enum.
+func (e OnUpdateConversionRuleJSONBodyType) Valid() bool {
+	switch e {
+	case ComKaitenLicenseConversionRuleV1Updated:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for OnLicenseEntitlementAssignedJSONBodyName.
 const (
 	LICENSEENTITLEMENTASSIGNED OnLicenseEntitlementAssignedJSONBodyName = "LICENSE_ENTITLEMENT_ASSIGNED"
@@ -1927,6 +2623,96 @@ func (e OnLicenseUpdatedJSONBodyType) Valid() bool {
 	}
 }
 
+// Defines values for OnLicenseFamilyCreatedJSONBodyName.
+const (
+	LICENSEFAMILYCREATED OnLicenseFamilyCreatedJSONBodyName = "LICENSE_FAMILY_CREATED"
+)
+
+// Valid indicates whether the value is a known member of the OnLicenseFamilyCreatedJSONBodyName enum.
+func (e OnLicenseFamilyCreatedJSONBodyName) Valid() bool {
+	switch e {
+	case LICENSEFAMILYCREATED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnLicenseFamilyCreatedJSONBodyType.
+const (
+	ComKaitenLicenseFamilyV1Created OnLicenseFamilyCreatedJSONBodyType = "com.kaiten.license_family.v1.created"
+)
+
+// Valid indicates whether the value is a known member of the OnLicenseFamilyCreatedJSONBodyType enum.
+func (e OnLicenseFamilyCreatedJSONBodyType) Valid() bool {
+	switch e {
+	case ComKaitenLicenseFamilyV1Created:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnLicenseFamilyDeletedJSONBodyName.
+const (
+	LICENSEFAMILYDELETED OnLicenseFamilyDeletedJSONBodyName = "LICENSE_FAMILY_DELETED"
+)
+
+// Valid indicates whether the value is a known member of the OnLicenseFamilyDeletedJSONBodyName enum.
+func (e OnLicenseFamilyDeletedJSONBodyName) Valid() bool {
+	switch e {
+	case LICENSEFAMILYDELETED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnLicenseFamilyDeletedJSONBodyType.
+const (
+	ComKaitenLicenseFamilyV1Deleted OnLicenseFamilyDeletedJSONBodyType = "com.kaiten.license_family.v1.deleted"
+)
+
+// Valid indicates whether the value is a known member of the OnLicenseFamilyDeletedJSONBodyType enum.
+func (e OnLicenseFamilyDeletedJSONBodyType) Valid() bool {
+	switch e {
+	case ComKaitenLicenseFamilyV1Deleted:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnLicenseFamilyUpdatedJSONBodyName.
+const (
+	LICENSEFAMILYUPDATED OnLicenseFamilyUpdatedJSONBodyName = "LICENSE_FAMILY_UPDATED"
+)
+
+// Valid indicates whether the value is a known member of the OnLicenseFamilyUpdatedJSONBodyName enum.
+func (e OnLicenseFamilyUpdatedJSONBodyName) Valid() bool {
+	switch e {
+	case LICENSEFAMILYUPDATED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnLicenseFamilyUpdatedJSONBodyType.
+const (
+	ComKaitenLicenseFamilyV1Updated OnLicenseFamilyUpdatedJSONBodyType = "com.kaiten.license_family.v1.updated"
+)
+
+// Valid indicates whether the value is a known member of the OnLicenseFamilyUpdatedJSONBodyType enum.
+func (e OnLicenseFamilyUpdatedJSONBodyType) Valid() bool {
+	switch e {
+	case ComKaitenLicenseFamilyV1Updated:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for OnMetadataFieldArchivedJSONBodyName.
 const (
 	METADATAFIELDARCHIVED OnMetadataFieldArchivedJSONBodyName = "METADATA_FIELD_ARCHIVED"
@@ -2077,6 +2863,96 @@ func (e OnMetadataFieldUpdatedJSONBodyType) Valid() bool {
 	}
 }
 
+// Defines values for OnModelCreatedJSONBodyName.
+const (
+	MODELCREATED OnModelCreatedJSONBodyName = "MODEL_CREATED"
+)
+
+// Valid indicates whether the value is a known member of the OnModelCreatedJSONBodyName enum.
+func (e OnModelCreatedJSONBodyName) Valid() bool {
+	switch e {
+	case MODELCREATED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnModelCreatedJSONBodyType.
+const (
+	ComKaitenModelV1Created OnModelCreatedJSONBodyType = "com.kaiten.model.v1.created"
+)
+
+// Valid indicates whether the value is a known member of the OnModelCreatedJSONBodyType enum.
+func (e OnModelCreatedJSONBodyType) Valid() bool {
+	switch e {
+	case ComKaitenModelV1Created:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnModelDeletedJSONBodyName.
+const (
+	MODELDELETED OnModelDeletedJSONBodyName = "MODEL_DELETED"
+)
+
+// Valid indicates whether the value is a known member of the OnModelDeletedJSONBodyName enum.
+func (e OnModelDeletedJSONBodyName) Valid() bool {
+	switch e {
+	case MODELDELETED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnModelDeletedJSONBodyType.
+const (
+	ComKaitenModelV1Deleted OnModelDeletedJSONBodyType = "com.kaiten.model.v1.deleted"
+)
+
+// Valid indicates whether the value is a known member of the OnModelDeletedJSONBodyType enum.
+func (e OnModelDeletedJSONBodyType) Valid() bool {
+	switch e {
+	case ComKaitenModelV1Deleted:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnModelUpdatedJSONBodyName.
+const (
+	MODELUPDATED OnModelUpdatedJSONBodyName = "MODEL_UPDATED"
+)
+
+// Valid indicates whether the value is a known member of the OnModelUpdatedJSONBodyName enum.
+func (e OnModelUpdatedJSONBodyName) Valid() bool {
+	switch e {
+	case MODELUPDATED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnModelUpdatedJSONBodyType.
+const (
+	ComKaitenModelV1Updated OnModelUpdatedJSONBodyType = "com.kaiten.model.v1.updated"
+)
+
+// Valid indicates whether the value is a known member of the OnModelUpdatedJSONBodyType enum.
+func (e OnModelUpdatedJSONBodyType) Valid() bool {
+	switch e {
+	case ComKaitenModelV1Updated:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for OnReleaseCreatedJSONBodyName.
 const (
 	RELEASECREATED OnReleaseCreatedJSONBodyName = "RELEASE_CREATED"
@@ -2136,6 +3012,108 @@ func (e OnReleaseDeletedJSONBodyType) Valid() bool {
 		return false
 	}
 }
+
+// AiCredits defines model for AiCredits.
+type AiCredits struct {
+	Charged  *string `json:"charged,omitempty"`
+	Computed *string `json:"computed,omitempty"`
+	Reserved *string `json:"reserved,omitempty"`
+}
+
+// AiInference defines model for AiInference.
+type AiInference struct {
+	Authorized       *bool                  `json:"authorized,omitempty"`
+	CommittedAt      *time.Time             `json:"committedAt,omitempty"`
+	ConversionRuleId *string                `json:"conversionRuleId,omitempty"`
+	Credits          AiCredits              `json:"credits"`
+	DenialReason     *string                `json:"denialReason,omitempty"`
+	ExpiresAt        *time.Time             `json:"expiresAt,omitempty"`
+	Model            string                 `json:"model"`
+	ModelSlug        *string                `json:"modelSlug,omitempty"`
+	ReportedAt       time.Time              `json:"reportedAt"`
+	RequestStatus    *string                `json:"requestStatus,omitempty"`
+	RequestType      AiInferenceRequestType `json:"requestType"`
+	Status           AiInferenceStatus      `json:"status"`
+	TransactionId    string                 `json:"transactionId"`
+	Usage            AiUsage                `json:"usage"`
+	ValueAfter       *float64               `json:"valueAfter,omitempty"`
+	ValueBefore      *float64               `json:"valueBefore,omitempty"`
+	WindowStart      *time.Time             `json:"windowStart,omitempty"`
+}
+
+// AiInferenceRequestType defines model for AiInference.RequestType.
+type AiInferenceRequestType string
+
+// AiInferenceStatus defines model for AiInference.Status.
+type AiInferenceStatus string
+
+// AiInferencePage defines model for AiInferencePage.
+type AiInferencePage struct {
+	HasMore    bool           `json:"hasMore"`
+	Items      *[]AiInference `json:"items"`
+	NextCursor *string        `json:"nextCursor,omitempty"`
+}
+
+// AiReservations defines model for AiReservations.
+type AiReservations struct {
+	Items *[]AiInference `json:"items"`
+}
+
+// AiUsage defines model for AiUsage.
+type AiUsage struct {
+	CacheReadInputTokens  *int64           `json:"cacheReadInputTokens,omitempty"`
+	CacheWriteInputTokens *int64           `json:"cacheWriteInputTokens,omitempty"`
+	DurationMs            *int64           `json:"durationMs,omitempty"`
+	InputTokens           *int64           `json:"inputTokens,omitempty"`
+	OutputTokens          *int64           `json:"outputTokens,omitempty"`
+	UnitType              *AiUsageUnitType `json:"unitType,omitempty"`
+	Units                 *string          `json:"units,omitempty"`
+}
+
+// AiUsageUnitType defines model for AiUsage.UnitType.
+type AiUsageUnitType string
+
+// AiUsageOutcome defines model for AiUsageOutcome.
+type AiUsageOutcome struct {
+	Authorized    *bool                `json:"authorized,omitempty"`
+	Credits       AiCredits            `json:"credits"`
+	ExpiresAt     *time.Time           `json:"expiresAt,omitempty"`
+	Phase         AiUsageOutcomePhase  `json:"phase"`
+	Remaining     *string              `json:"remaining"`
+	Status        AiUsageOutcomeStatus `json:"status"`
+	TransactionId string               `json:"transactionId"`
+	Warnings      []string             `json:"warnings"`
+}
+
+// AiUsageOutcomePhase defines model for AiUsageOutcome.Phase.
+type AiUsageOutcomePhase string
+
+// AiUsageOutcomeStatus defines model for AiUsageOutcome.Status.
+type AiUsageOutcomeStatus string
+
+// AiUsageValue defines model for AiUsageValue.
+type AiUsageValue struct {
+	Model         *string                    `json:"model,omitempty"`
+	Phase         AiUsageValuePhase          `json:"phase"`
+	RequestStatus *AiUsageValueRequestStatus `json:"requestStatus,omitempty"`
+	RequestType   *AiUsageValueRequestType   `json:"requestType,omitempty"`
+	TransactionId *string                    `json:"transactionId,omitempty"`
+	TtlSeconds    *int64                     `json:"ttlSeconds,omitempty"`
+	Type          AiUsageValueType           `json:"type"`
+	Usage         *AiUsage                   `json:"usage,omitempty"`
+}
+
+// AiUsageValuePhase defines model for AiUsageValue.Phase.
+type AiUsageValuePhase string
+
+// AiUsageValueRequestStatus defines model for AiUsageValue.RequestStatus.
+type AiUsageValueRequestStatus string
+
+// AiUsageValueRequestType defines model for AiUsageValue.RequestType.
+type AiUsageValueRequestType string
+
+// AiUsageValueType defines model for AiUsageValue.Type.
+type AiUsageValueType string
 
 // AuditTrail defines model for AuditTrail.
 type AuditTrail struct {
@@ -2353,7 +3331,7 @@ type ConnectorState struct {
 	// ActivatedAt When this organization activated the connector. Absent when it has not.
 	ActivatedAt *time.Time `json:"activatedAt,omitempty"`
 
-	// Available Whether this deployment has the connector registered
+	// Available Whether this installation has the connector registered
 	Available bool `json:"available"`
 
 	// ConnectorName Stable connector identifier
@@ -2361,7 +3339,7 @@ type ConnectorState struct {
 	// Examples: kaiten.integration.crm.attio
 	ConnectorName string `json:"connectorName"`
 
-	// Entitled Whether this organization's licence includes the connector. True for an ungated connector.
+	// Entitled Whether this organization's license includes the connector. True for an ungated connector.
 	Entitled bool `json:"entitled"`
 
 	// Version Registered connector version. Absent when the connector is not available.
@@ -2369,6 +3347,83 @@ type ConnectorState struct {
 	// Examples: 1.0.0
 	Version *string `json:"version,omitempty"`
 }
+
+// ConversionRates defines model for ConversionRates.
+type ConversionRates struct {
+	// PerCacheWriteToken Examples: 0.001
+	PerCacheWriteToken *string `json:"perCacheWriteToken,omitempty"`
+
+	// PerCachedInputToken Examples: 0.001
+	PerCachedInputToken *string `json:"perCachedInputToken,omitempty"`
+
+	// PerInputToken Examples: 0.001
+	PerInputToken *string `json:"perInputToken,omitempty"`
+
+	// PerOutputToken Examples: 0.001
+	PerOutputToken *string `json:"perOutputToken,omitempty"`
+
+	// PerRequest Examples: 0.001
+	PerRequest *string `json:"perRequest,omitempty"`
+
+	// PerSecond Examples: 0.001
+	PerSecond *string `json:"perSecond,omitempty"`
+
+	// PerUnit Examples: 0.001
+	PerUnit *string `json:"perUnit,omitempty"`
+}
+
+// ConversionRule defines model for ConversionRule.
+type ConversionRule struct {
+	ChargeOnError    ConversionRuleChargeOnError `json:"chargeOnError"`
+	CreatedAt        time.Time                   `json:"createdAt"`
+	EntitlementSlug  string                      `json:"entitlementSlug"`
+	GrantedByLicense bool                        `json:"grantedByLicense"`
+	Id               openapi_types.UUID          `json:"id"`
+	LicenseSlug      string                      `json:"licenseSlug"`
+
+	// MaximumCreditsPerRequest Examples: 0.001
+	MaximumCreditsPerRequest *string `json:"maximumCreditsPerRequest"`
+
+	// MinimumCreditsPerRequest Examples: 0.001
+	MinimumCreditsPerRequest string                     `json:"minimumCreditsPerRequest"`
+	ModelSlug                *string                    `json:"modelSlug"`
+	Rates                    ConversionRates            `json:"rates"`
+	RequestType              *ConversionRuleRequestType `json:"requestType"`
+	Status                   ConversionRuleStatus       `json:"status"`
+	UpdatedAt                time.Time                  `json:"updatedAt"`
+}
+
+// ConversionRuleChargeOnError defines model for ConversionRule.ChargeOnError.
+type ConversionRuleChargeOnError string
+
+// ConversionRuleRequestType defines model for ConversionRule.RequestType.
+type ConversionRuleRequestType string
+
+// ConversionRuleStatus defines model for ConversionRule.Status.
+type ConversionRuleStatus string
+
+// ConversionRuleUpdated defines model for ConversionRuleUpdated.
+type ConversionRuleUpdated struct {
+	After  ConversionRule `json:"after"`
+	Before ConversionRule `json:"before"`
+}
+
+// CreateConversionRule defines model for CreateConversionRule.
+type CreateConversionRule struct {
+	ChargeOnError            *CreateConversionRuleChargeOnError `json:"chargeOnError,omitempty"`
+	EntitlementSlug          string                             `json:"entitlementSlug"`
+	MaximumCreditsPerRequest *string                            `json:"maximumCreditsPerRequest,omitempty"`
+	MinimumCreditsPerRequest *string                            `json:"minimumCreditsPerRequest,omitempty"`
+	ModelSlug                *string                            `json:"modelSlug,omitempty"`
+	Rates                    ConversionRates                    `json:"rates"`
+	RequestType              *CreateConversionRuleRequestType   `json:"requestType,omitempty"`
+}
+
+// CreateConversionRuleChargeOnError defines model for CreateConversionRule.ChargeOnError.
+type CreateConversionRuleChargeOnError string
+
+// CreateConversionRuleRequestType defines model for CreateConversionRule.RequestType.
+type CreateConversionRuleRequestType string
 
 // Customer defines model for Customer.
 type Customer struct {
@@ -2793,6 +3848,9 @@ type EntitlementGroupUsage_UsageValue struct {
 
 // EntitlementUsage defines model for EntitlementUsage.
 type EntitlementUsage struct {
+	// Ai Outcome of this AI report; absent on ordinary reads
+	Ai *AiUsageOutcome `json:"ai,omitempty"`
+
 	// CurrentPeriodEnd End of the current usage window (exclusive). Null for a lifetime entitlement (no configured reset period).
 	//
 	// Examples: 2026-04-01T00:00:00Z
@@ -2825,6 +3883,9 @@ type EntitlementUsage struct {
 
 	// Limit License grant this usage is measured against, discriminated by the 'type' field. Null when the license grants no value; -1 means unlimited for a NUMBER entitlement.
 	Limit *EntitlementUsage_Limit `json:"limit,omitempty"`
+
+	// Reserved Open, unexpired reserved credits; present only on AI credit pools
+	Reserved *string `json:"reserved,omitempty"`
 
 	// Value Resolved entitlement value, discriminated by the 'type' field
 	Value EntitlementUsage_Value `json:"value"`
@@ -2890,6 +3951,22 @@ type EvaluationSuccess struct {
 
 	// Variant string of the evaluated flag value
 	Variant *string `json:"variant,omitempty"`
+}
+
+// EventHeaders defines model for EventHeaders.
+type EventHeaders struct {
+	// Baggage W3C baggage of that request, when it carried any
+	Baggage *string `json:"baggage,omitempty"`
+
+	// InstanceId The instance the event concerns, set on the events of one instance. The usage events' payloads do not name it.
+	InstanceId *openapi_types.UUID `json:"instance_id,omitempty"`
+
+	// Traceparent W3C trace context of the request that produced the event
+	Traceparent *string `json:"traceparent,omitempty"`
+
+	// Tracestate W3C trace state of that request, when it carried one
+	Tracestate           *string                `json:"tracestate,omitempty"`
+	AdditionalProperties map[string]interface{} `json:"-"`
 }
 
 // FeatureFlag defines model for FeatureFlag.
@@ -3069,6 +4146,14 @@ type Instance struct {
 //
 // Examples: HEALTHY
 type InstanceStatus string
+
+// InstanceAIModelUsageUnauthorized defines model for InstanceAIModelUsageUnauthorized.
+type InstanceAIModelUsageUnauthorized struct {
+	EntitlementSlug string `json:"entitlement_slug"`
+	Model           string `json:"model"`
+	Reason          string `json:"reason"`
+	RequestType     string `json:"requestType"`
+}
 
 // InstanceBody defines model for InstanceBody.
 type InstanceBody struct {
@@ -3503,6 +4588,18 @@ type LicenseFamilyView struct {
 	Versions *[]License `json:"versions,omitempty"`
 }
 
+// List defines model for List.
+type List struct {
+	// Data The page, newest first
+	Data []Notification `json:"data"`
+
+	// NextCursor Opaque cursor for the next page; null on the last page
+	NextCursor *string `json:"nextCursor"`
+
+	// UnreadCount Unread notifications, capped (see MaxUnreadCount)
+	UnreadCount int64 `json:"unreadCount"`
+}
+
 // ManifestEnvelope defines model for ManifestEnvelope.
 type ManifestEnvelope struct {
 	Flags *[]ManifestFlag `json:"flags"`
@@ -3515,6 +4612,15 @@ type ManifestFlag struct {
 	Key          string      `json:"key"`
 	Name         *string     `json:"name,omitempty"`
 	Type         string      `json:"type"`
+}
+
+// MarkReadResult defines model for MarkReadResult.
+type MarkReadResult struct {
+	// UnreadCount Unread notifications after the change
+	UnreadCount int64 `json:"unreadCount"`
+
+	// Updated Notifications newly marked read
+	Updated int64 `json:"updated"`
 }
 
 // MetadataField defines model for MetadataField.
@@ -3578,6 +4684,78 @@ type MetadataFieldReordered struct {
 type MetadataFieldSchemaProposal struct {
 	// JsonSchema Candidate JSON Schema 2020-12 document to evaluate existing values against.
 	JsonSchema map[string]interface{} `json:"jsonSchema"`
+}
+
+// Model defines model for Model.
+type Model struct {
+	CreatedAt   *time.Time `json:"createdAt,omitempty"`
+	Description *string    `json:"description,omitempty"`
+
+	// ExternalIds Exact provider identifiers, unique per organization; cannot shadow another model's slug
+	ExternalIds *[]string               `json:"externalIds,omitempty"`
+	Id          *string                 `json:"id,omitempty"`
+	Metadata    *map[string]interface{} `json:"metadata,omitempty"`
+	Modality    ModelModality           `json:"modality"`
+	Name        string                  `json:"name"`
+
+	// Slug Immutable URL-friendly identifier, unique per organization
+	//
+	// Examples: sample-model
+	Slug string `json:"slug"`
+
+	// Status ACTIVE authorizes usage; DEPRECATED keeps existing rules; ARCHIVED authorizes none. Reversible.
+	Status      ModelStatus  `json:"status"`
+	UpdatedAt   *time.Time   `json:"updatedAt,omitempty"`
+	Vendor      string       `json:"vendor"`
+	VendorCosts *VendorCosts `json:"vendorCosts,omitempty"`
+}
+
+// ModelModality defines model for Model.Modality.
+type ModelModality string
+
+// ModelStatus ACTIVE authorizes usage; DEPRECATED keeps existing rules; ARCHIVED authorizes none. Reversible.
+type ModelStatus string
+
+// ModelUpdated defines model for ModelUpdated.
+type ModelUpdated struct {
+	After  Model `json:"after"`
+	Before Model `json:"before"`
+}
+
+// Notification defines model for Notification.
+type Notification struct {
+	// ActionUrl Where clicking the notification goes
+	ActionUrl *string `json:"actionUrl,omitempty"`
+
+	// Body Rendered detail line, when the event has one
+	Body *string `json:"body,omitempty"`
+
+	// CreatedAt When the event occurred
+	CreatedAt time.Time `json:"createdAt"`
+
+	// EventName Event this notification reports
+	//
+	// Examples: INSTANCE_DEPLOYED
+	EventName string `json:"eventName"`
+
+	// EventType CloudEvents type of the same event -- the key it is published under in this document's webhooks section, so a client can line a notification up with the payload schema and the description already published there
+	//
+	// Examples: com.kaiten.instance.v1.deployed
+	EventType string `json:"eventType"`
+
+	// Id Identifier of the underlying audit trail entry
+	Id string `json:"id"`
+
+	// ObjectType What the notification is about -- the kind of page actionUrl opens, and what the list's objectType filter matches
+	//
+	// Examples: instance
+	ObjectType string `json:"objectType"`
+
+	// ReadAt When this user read it; absent means unread
+	ReadAt *time.Time `json:"readAt,omitempty"`
+
+	// Title Rendered headline
+	Title string `json:"title"`
 }
 
 // NumberEntitlementValue defines model for NumberEntitlementValue.
@@ -3723,6 +4901,16 @@ type PageMetadataField struct {
 	NextCursor *string `json:"nextCursor,omitempty"`
 }
 
+// PageModel defines model for PageModel.
+type PageModel struct {
+	// HasMore Whether more rows exist beyond this page.
+	HasMore bool    `json:"hasMore"`
+	Items   []Model `json:"items"`
+
+	// NextCursor Opaque cursor for the next page. Absent when hasMore is false.
+	NextCursor *string `json:"nextCursor,omitempty"`
+}
+
 // PageRelease defines model for PageRelease.
 type PageRelease struct {
 	// HasMore Whether more rows exist beyond this page.
@@ -3788,6 +4976,49 @@ type PlainToken struct {
 	Token *string `json:"token,omitempty"`
 }
 
+// PreferenceChoices defines model for PreferenceChoices.
+type PreferenceChoices struct {
+	// Events Events to set; events left out keep their current value
+	Events *[]PreferenceUpdate `json:"events"`
+}
+
+// PreferenceEvent defines model for PreferenceEvent.
+type PreferenceEvent struct {
+	// Channels Effective value per channel
+	Channels map[string]bool `json:"channels"`
+
+	// EventName Examples: INSTANCE_DEPLOYED
+	EventName string `json:"eventName"`
+
+	// EventType CloudEvents type of the same event; see Notification.eventType
+	//
+	// Examples: com.kaiten.instance.v1.deployed
+	EventType string `json:"eventType"`
+
+	// Group Catalog group the client renders this under
+	//
+	// Examples: deployments
+	Group string `json:"group"`
+
+	// Label Human-readable event name
+	Label string `json:"label"`
+}
+
+// PreferenceMatrix defines model for PreferenceMatrix.
+type PreferenceMatrix struct {
+	// Channels Channels this installation serves, in display order
+	Channels []string `json:"channels"`
+
+	// Events Every notifiable event
+	Events []PreferenceEvent `json:"events"`
+}
+
+// PreferenceUpdate defines model for PreferenceUpdate.
+type PreferenceUpdate struct {
+	Channels  map[string]bool `json:"channels"`
+	EventName string          `json:"eventName"`
+}
+
 // Problem defines model for Problem.
 type Problem struct {
 	// Code Stable, machine-readable error code.
@@ -3827,6 +5058,15 @@ type Problem struct {
 	//
 	// Examples: https://tools.ietf.org/html/rfc7231#section-6.5.4
 	Type *string `json:"type,omitempty"`
+}
+
+// ReadSelection defines model for ReadSelection.
+type ReadSelection struct {
+	// All Mark every notification read, up to now
+	All *bool `json:"all,omitempty"`
+
+	// Ids Notifications to mark read
+	Ids *[]string `json:"ids,omitempty"`
 }
 
 // Release defines model for Release.
@@ -4022,6 +5262,9 @@ type TargetingContextNode struct {
 	// Description What this value means, shown by the editor
 	Description *string `json:"description,omitempty"`
 
+	// Entries Shape of each known key, for a map whose entries differ. Named after the key
+	Entries *[]TargetingContextNode `json:"entries,omitempty"`
+
 	// Fields Named children, for an object
 	Fields *[]TargetingContextNode `json:"fields,omitempty"`
 
@@ -4133,6 +5376,20 @@ type Token struct {
 	Slug *string `json:"slug,omitempty"`
 }
 
+// UpdateConversionRule defines model for UpdateConversionRule.
+type UpdateConversionRule struct {
+	ChargeOnError            *UpdateConversionRuleChargeOnError `json:"chargeOnError,omitempty"`
+	EntitlementSlug          *string                            `json:"entitlementSlug,omitempty"`
+	MaximumCreditsPerRequest *string                            `json:"maximumCreditsPerRequest,omitempty"`
+	MinimumCreditsPerRequest *string                            `json:"minimumCreditsPerRequest,omitempty"`
+	ModelSlug                *string                            `json:"modelSlug,omitempty"`
+	Rates                    ConversionRates                    `json:"rates"`
+	RequestType              *string                            `json:"requestType,omitempty"`
+}
+
+// UpdateConversionRuleChargeOnError defines model for UpdateConversionRule.ChargeOnError.
+type UpdateConversionRuleChargeOnError string
+
 // User defines model for User.
 type User struct {
 	// Id ID of the user
@@ -4152,6 +5409,32 @@ type Variant struct {
 	Name        string      `json:"name"`
 	Value       interface{} `json:"value"`
 }
+
+// VendorCosts defines model for VendorCosts.
+type VendorCosts struct {
+	Currency VendorCostsCurrency `json:"currency"`
+
+	// PerCacheWriteToken Examples: 0.001
+	PerCacheWriteToken *string `json:"perCacheWriteToken,omitempty"`
+
+	// PerCachedInputToken Examples: 0.001
+	PerCachedInputToken *string `json:"perCachedInputToken,omitempty"`
+
+	// PerInputToken Examples: 0.001
+	PerInputToken *string `json:"perInputToken,omitempty"`
+
+	// PerOutputToken Examples: 0.001
+	PerOutputToken *string `json:"perOutputToken,omitempty"`
+
+	// PerRequest Examples: 0.001
+	PerRequest *string `json:"perRequest,omitempty"`
+
+	// PerUnit Examples: 0.001
+	PerUnit *string `json:"perUnit,omitempty"`
+}
+
+// VendorCostsCurrency defines model for VendorCosts.Currency.
+type VendorCostsCurrency string
 
 // ListComponentsParams defines parameters for ListComponents.
 type ListComponentsParams struct {
@@ -4240,6 +5523,19 @@ type GetAuditTrailsParams struct {
 	Cursor *string `form:"cursor,omitempty" json:"cursor,omitempty"`
 }
 
+// ListAiInferencesParams defines parameters for ListAiInferences.
+type ListAiInferencesParams struct {
+	From          *time.Time                    `form:"from,omitempty" json:"from,omitempty"`
+	To            *time.Time                    `form:"to,omitempty" json:"to,omitempty"`
+	Status        *ListAiInferencesParamsStatus `form:"status,omitempty" json:"status,omitempty"`
+	TransactionId *string                       `form:"transactionId,omitempty" json:"transactionId,omitempty"`
+	Cursor        *string                       `form:"cursor,omitempty" json:"cursor,omitempty"`
+	Limit         *int32                        `form:"limit,omitempty" json:"limit,omitempty"`
+}
+
+// ListAiInferencesParamsStatus defines parameters for ListAiInferences.
+type ListAiInferencesParamsStatus string
+
 // ListLicenseFamiliesParams defines parameters for ListLicenseFamilies.
 type ListLicenseFamiliesParams struct {
 	// Cursor Opaque pagination cursor from a previous response's nextCursor
@@ -4270,6 +5566,16 @@ type GetLicensesParams struct {
 	Limit *int32 `form:"limit,omitempty" json:"limit,omitempty"`
 }
 
+// ListConversionRulesParams defines parameters for ListConversionRules.
+type ListConversionRulesParams struct {
+	Status          *ListConversionRulesParamsStatus `form:"status,omitempty" json:"status,omitempty"`
+	EntitlementSlug *string                          `form:"entitlementSlug,omitempty" json:"entitlementSlug,omitempty"`
+	ModelSlug       *string                          `form:"modelSlug,omitempty" json:"modelSlug,omitempty"`
+}
+
+// ListConversionRulesParamsStatus defines parameters for ListConversionRules.
+type ListConversionRulesParamsStatus string
+
 // GetLicenseEntitlementsParams defines parameters for GetLicenseEntitlements.
 type GetLicenseEntitlementsParams struct {
 	// Cursor Opaque pagination cursor from a previous response's nextCursor
@@ -4283,6 +5589,9 @@ type GetLicenseEntitlementsParams struct {
 type ListMetadataFieldsParams struct {
 	ResourceType ListMetadataFieldsParamsResourceType `form:"resourceType" json:"resourceType"`
 
+	// IncludeArchived Include archived fields too, each with its archivedAt
+	IncludeArchived *bool `form:"includeArchived,omitempty" json:"includeArchived,omitempty"`
+
 	// Cursor Opaque pagination cursor from a previous response's nextCursor
 	Cursor *string `form:"cursor,omitempty" json:"cursor,omitempty"`
 
@@ -4292,6 +5601,23 @@ type ListMetadataFieldsParams struct {
 
 // ListMetadataFieldsParamsResourceType defines parameters for ListMetadataFields.
 type ListMetadataFieldsParamsResourceType string
+
+// ListModelsParams defines parameters for ListModels.
+type ListModelsParams struct {
+	Cursor *string `form:"cursor,omitempty" json:"cursor,omitempty"`
+
+	// Limit Page size (default 50, max 200)
+	Limit    *int32                    `form:"limit,omitempty" json:"limit,omitempty"`
+	Status   *ListModelsParamsStatus   `form:"status,omitempty" json:"status,omitempty"`
+	Vendor   *string                   `form:"vendor,omitempty" json:"vendor,omitempty"`
+	Modality *ListModelsParamsModality `form:"modality,omitempty" json:"modality,omitempty"`
+}
+
+// ListModelsParamsStatus defines parameters for ListModels.
+type ListModelsParamsStatus string
+
+// ListModelsParamsModality defines parameters for ListModels.
+type ListModelsParamsModality string
 
 // EvaluateFlagsBulkParams defines parameters for EvaluateFlagsBulk.
 type EvaluateFlagsBulkParams struct {
@@ -4342,9 +5668,31 @@ type GetServiceAccountTokensParams struct {
 	Limit *int32 `form:"limit,omitempty" json:"limit,omitempty"`
 }
 
+// ListNotificationsParams defines parameters for ListNotifications.
+type ListNotificationsParams struct {
+	// Status Which notifications to return (default all)
+	Status *ListNotificationsParamsStatus `form:"status,omitempty" json:"status,omitempty"`
+
+	// ObjectType Only notifications about these kinds of object; repeat the parameter for several (default: all)
+	ObjectType *[]ListNotificationsParamsObjectType `form:"objectType,omitempty" json:"objectType,omitempty"`
+
+	// Cursor Opaque cursor from a previous response's next_cursor
+	Cursor *string `form:"cursor,omitempty" json:"cursor,omitempty"`
+
+	// Limit Page size (default 20, max 50)
+	Limit *int32 `form:"limit,omitempty" json:"limit,omitempty"`
+}
+
+// ListNotificationsParamsStatus defines parameters for ListNotifications.
+type ListNotificationsParamsStatus string
+
+// ListNotificationsParamsObjectType defines parameters for ListNotifications.
+type ListNotificationsParamsObjectType string
+
 // OnComponentCreatedJSONBody defines parameters for OnComponentCreated.
 type OnComponentCreatedJSONBody struct {
-	Data Component `json:"data"`
+	Data    Component     `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4365,7 +5713,8 @@ type OnComponentCreatedJSONBodyType string
 
 // OnComponentDeletedJSONBody defines parameters for OnComponentDeleted.
 type OnComponentDeletedJSONBody struct {
-	Data Component `json:"data"`
+	Data    Component     `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4386,7 +5735,8 @@ type OnComponentDeletedJSONBodyType string
 
 // OnComponentUpdatedJSONBody defines parameters for OnComponentUpdated.
 type OnComponentUpdatedJSONBody struct {
-	Data Component `json:"data"`
+	Data    Component     `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4407,7 +5757,8 @@ type OnComponentUpdatedJSONBodyType string
 
 // OnCustomerCreatedJSONBody defines parameters for OnCustomerCreated.
 type OnCustomerCreatedJSONBody struct {
-	Data Customer `json:"data"`
+	Data    Customer      `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4428,7 +5779,8 @@ type OnCustomerCreatedJSONBodyType string
 
 // OnCustomerCreationRejectedJSONBody defines parameters for OnCustomerCreationRejected.
 type OnCustomerCreationRejectedJSONBody struct {
-	Data CustomerCreationRejected `json:"data"`
+	Data    CustomerCreationRejected `json:"data"`
+	Headers *EventHeaders            `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4449,7 +5801,8 @@ type OnCustomerCreationRejectedJSONBodyType string
 
 // OnCustomerDeletedJSONBody defines parameters for OnCustomerDeleted.
 type OnCustomerDeletedJSONBody struct {
-	Data Customer `json:"data"`
+	Data    Customer      `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4470,7 +5823,8 @@ type OnCustomerDeletedJSONBodyType string
 
 // OnCustomerUpdatedJSONBody defines parameters for OnCustomerUpdated.
 type OnCustomerUpdatedJSONBody struct {
-	Data Customer `json:"data"`
+	Data    Customer      `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4491,7 +5845,8 @@ type OnCustomerUpdatedJSONBodyType string
 
 // OnDeploymentZoneCreatedJSONBody defines parameters for OnDeploymentZoneCreated.
 type OnDeploymentZoneCreatedJSONBody struct {
-	Data DeploymentZone `json:"data"`
+	Data    DeploymentZone `json:"data"`
+	Headers *EventHeaders  `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4512,7 +5867,8 @@ type OnDeploymentZoneCreatedJSONBodyType string
 
 // OnDeploymentZoneDeletedJSONBody defines parameters for OnDeploymentZoneDeleted.
 type OnDeploymentZoneDeletedJSONBody struct {
-	Data DeploymentZone `json:"data"`
+	Data    DeploymentZone `json:"data"`
+	Headers *EventHeaders  `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4533,7 +5889,8 @@ type OnDeploymentZoneDeletedJSONBodyType string
 
 // OnReleaseDeployedJSONBody defines parameters for OnReleaseDeployed.
 type OnReleaseDeployedJSONBody struct {
-	Data Deployment `json:"data"`
+	Data    Deployment    `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4554,7 +5911,8 @@ type OnReleaseDeployedJSONBodyType string
 
 // OnDeploymentZoneUpdatedJSONBody defines parameters for OnDeploymentZoneUpdated.
 type OnDeploymentZoneUpdatedJSONBody struct {
-	Data DeploymentZone `json:"data"`
+	Data    DeploymentZone `json:"data"`
+	Headers *EventHeaders  `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4575,7 +5933,8 @@ type OnDeploymentZoneUpdatedJSONBodyType string
 
 // OnEntitlementCreatedJSONBody defines parameters for OnEntitlementCreated.
 type OnEntitlementCreatedJSONBody struct {
-	Data Entitlement `json:"data"`
+	Data    Entitlement   `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4596,7 +5955,8 @@ type OnEntitlementCreatedJSONBodyType string
 
 // OnEntitlementDeletedJSONBody defines parameters for OnEntitlementDeleted.
 type OnEntitlementDeletedJSONBody struct {
-	Data Entitlement `json:"data"`
+	Data    Entitlement   `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4617,7 +5977,8 @@ type OnEntitlementDeletedJSONBodyType string
 
 // OnEntitlementUpdatedJSONBody defines parameters for OnEntitlementUpdated.
 type OnEntitlementUpdatedJSONBody struct {
-	Data Entitlement `json:"data"`
+	Data    Entitlement   `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4638,7 +5999,8 @@ type OnEntitlementUpdatedJSONBodyType string
 
 // OnEntitlementGroupCreatedJSONBody defines parameters for OnEntitlementGroupCreated.
 type OnEntitlementGroupCreatedJSONBody struct {
-	Data EntitlementGroup `json:"data"`
+	Data    EntitlementGroup `json:"data"`
+	Headers *EventHeaders    `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4659,7 +6021,8 @@ type OnEntitlementGroupCreatedJSONBodyType string
 
 // OnEntitlementGroupDeletedJSONBody defines parameters for OnEntitlementGroupDeleted.
 type OnEntitlementGroupDeletedJSONBody struct {
-	Data EntitlementGroup `json:"data"`
+	Data    EntitlementGroup `json:"data"`
+	Headers *EventHeaders    `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4680,7 +6043,8 @@ type OnEntitlementGroupDeletedJSONBodyType string
 
 // OnEntitlementGroupUpdatedJSONBody defines parameters for OnEntitlementGroupUpdated.
 type OnEntitlementGroupUpdatedJSONBody struct {
-	Data EntitlementGroup `json:"data"`
+	Data    EntitlementGroup `json:"data"`
+	Headers *EventHeaders    `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4701,7 +6065,8 @@ type OnEntitlementGroupUpdatedJSONBodyType string
 
 // OnFeatureFlagCreatedJSONBody defines parameters for OnFeatureFlagCreated.
 type OnFeatureFlagCreatedJSONBody struct {
-	Data FeatureFlag `json:"data"`
+	Data    FeatureFlag   `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4722,7 +6087,8 @@ type OnFeatureFlagCreatedJSONBodyType string
 
 // OnFeatureFlagDeletedJSONBody defines parameters for OnFeatureFlagDeleted.
 type OnFeatureFlagDeletedJSONBody struct {
-	Data FeatureFlag `json:"data"`
+	Data    FeatureFlag   `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4743,7 +6109,8 @@ type OnFeatureFlagDeletedJSONBodyType string
 
 // OnFeatureFlagEvaluatedJSONBody defines parameters for OnFeatureFlagEvaluated.
 type OnFeatureFlagEvaluatedJSONBody struct {
-	Data FeatureFlagEvaluated `json:"data"`
+	Data    FeatureFlagEvaluated `json:"data"`
+	Headers *EventHeaders        `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4764,7 +6131,8 @@ type OnFeatureFlagEvaluatedJSONBodyType string
 
 // OnFeatureFlagUpdatedJSONBody defines parameters for OnFeatureFlagUpdated.
 type OnFeatureFlagUpdatedJSONBody struct {
-	Data FeatureFlag `json:"data"`
+	Data    FeatureFlag   `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4785,7 +6153,8 @@ type OnFeatureFlagUpdatedJSONBodyType string
 
 // OnSystemOrganizationTokenIssuedJSONBody defines parameters for OnSystemOrganizationTokenIssued.
 type OnSystemOrganizationTokenIssuedJSONBody struct {
-	Data SystemTokenIssuance `json:"data"`
+	Data    SystemTokenIssuance `json:"data"`
+	Headers *EventHeaders       `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4804,9 +6173,32 @@ type OnSystemOrganizationTokenIssuedJSONBodyName string
 // OnSystemOrganizationTokenIssuedJSONBodyType defines parameters for OnSystemOrganizationTokenIssued.
 type OnSystemOrganizationTokenIssuedJSONBodyType string
 
+// OnInstanceAIModelUsageUnauthorizedJSONBody defines parameters for OnInstanceAIModelUsageUnauthorized.
+type OnInstanceAIModelUsageUnauthorizedJSONBody struct {
+	Data    InstanceAIModelUsageUnauthorized `json:"data"`
+	Headers *EventHeaders                    `json:"headers,omitempty"`
+
+	// Name Event name
+	//
+	// Examples: INSTANCE_AI_MODEL_USAGE_UNAUTHORIZED
+	Name OnInstanceAIModelUsageUnauthorizedJSONBodyName `json:"name"`
+
+	// Type Event type
+	//
+	// Examples: com.kaiten.instance.ai.v1.model_usage_unauthorized
+	Type OnInstanceAIModelUsageUnauthorizedJSONBodyType `json:"type"`
+}
+
+// OnInstanceAIModelUsageUnauthorizedJSONBodyName defines parameters for OnInstanceAIModelUsageUnauthorized.
+type OnInstanceAIModelUsageUnauthorizedJSONBodyName string
+
+// OnInstanceAIModelUsageUnauthorizedJSONBodyType defines parameters for OnInstanceAIModelUsageUnauthorized.
+type OnInstanceAIModelUsageUnauthorizedJSONBodyType string
+
 // OnInstanceEntitlementCapExceededJSONBody defines parameters for OnInstanceEntitlementCapExceeded.
 type OnInstanceEntitlementCapExceededJSONBody struct {
-	Data InstanceEntitlementCapExceeded `json:"data"`
+	Data    InstanceEntitlementCapExceeded `json:"data"`
+	Headers *EventHeaders                  `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4825,9 +6217,32 @@ type OnInstanceEntitlementCapExceededJSONBodyName string
 // OnInstanceEntitlementCapExceededJSONBodyType defines parameters for OnInstanceEntitlementCapExceeded.
 type OnInstanceEntitlementCapExceededJSONBodyType string
 
+// OnInstanceEntitlementMaximumExceededJSONBody defines parameters for OnInstanceEntitlementMaximumExceeded.
+type OnInstanceEntitlementMaximumExceededJSONBody struct {
+	Data    InstanceEntitlementCapExceeded `json:"data"`
+	Headers *EventHeaders                  `json:"headers,omitempty"`
+
+	// Name Event name
+	//
+	// Examples: INSTANCE_ENTITLEMENT_MAXIMUM_EXCEEDED
+	Name OnInstanceEntitlementMaximumExceededJSONBodyName `json:"name"`
+
+	// Type Event type
+	//
+	// Examples: com.kaiten.instance.entitlement.v1.maximum_exceeded
+	Type OnInstanceEntitlementMaximumExceededJSONBodyType `json:"type"`
+}
+
+// OnInstanceEntitlementMaximumExceededJSONBodyName defines parameters for OnInstanceEntitlementMaximumExceeded.
+type OnInstanceEntitlementMaximumExceededJSONBodyName string
+
+// OnInstanceEntitlementMaximumExceededJSONBodyType defines parameters for OnInstanceEntitlementMaximumExceeded.
+type OnInstanceEntitlementMaximumExceededJSONBodyType string
+
 // OnInstanceEntitlementUsagePeriodRolledOverJSONBody defines parameters for OnInstanceEntitlementUsagePeriodRolledOver.
 type OnInstanceEntitlementUsagePeriodRolledOverJSONBody struct {
-	Data InstanceEntitlementUsagePeriodRolledOver `json:"data"`
+	Data    InstanceEntitlementUsagePeriodRolledOver `json:"data"`
+	Headers *EventHeaders                            `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4848,7 +6263,8 @@ type OnInstanceEntitlementUsagePeriodRolledOverJSONBodyType string
 
 // OnInstanceEntitlementUsageReachedJSONBody defines parameters for OnInstanceEntitlementUsageReached.
 type OnInstanceEntitlementUsageReachedJSONBody struct {
-	Data EntitlementUsage `json:"data"`
+	Data    EntitlementUsage `json:"data"`
+	Headers *EventHeaders    `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4869,7 +6285,8 @@ type OnInstanceEntitlementUsageReachedJSONBodyType string
 
 // OnInstanceEntitlementUsageReportAcceptedJSONBody defines parameters for OnInstanceEntitlementUsageReportAccepted.
 type OnInstanceEntitlementUsageReportAcceptedJSONBody struct {
-	Data InstanceEntitlementUsageReportAccepted `json:"data"`
+	Data    InstanceEntitlementUsageReportAccepted `json:"data"`
+	Headers *EventHeaders                          `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4890,7 +6307,8 @@ type OnInstanceEntitlementUsageReportAcceptedJSONBodyType string
 
 // OnInstanceEntitlementUsageReportRejectedJSONBody defines parameters for OnInstanceEntitlementUsageReportRejected.
 type OnInstanceEntitlementUsageReportRejectedJSONBody struct {
-	Data InstanceEntitlementUsageReportAccepted `json:"data"`
+	Data    InstanceEntitlementUsageReportAccepted `json:"data"`
+	Headers *EventHeaders                          `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4911,7 +6329,8 @@ type OnInstanceEntitlementUsageReportRejectedJSONBodyType string
 
 // OnInstanceEntitlementUsageWarningThresholdReachedJSONBody defines parameters for OnInstanceEntitlementUsageWarningThresholdReached.
 type OnInstanceEntitlementUsageWarningThresholdReachedJSONBody struct {
-	Data InstanceEntitlementUsageWarningThresholdReached `json:"data"`
+	Data    InstanceEntitlementUsageWarningThresholdReached `json:"data"`
+	Headers *EventHeaders                                   `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4932,7 +6351,8 @@ type OnInstanceEntitlementUsageWarningThresholdReachedJSONBodyType string
 
 // OnInstanceEntitlementValueGetJSONBody defines parameters for OnInstanceEntitlementValueGet.
 type OnInstanceEntitlementValueGetJSONBody struct {
-	Data InstanceEntitlementValueGet `json:"data"`
+	Data    InstanceEntitlementValueGet `json:"data"`
+	Headers *EventHeaders               `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4953,7 +6373,8 @@ type OnInstanceEntitlementValueGetJSONBodyType string
 
 // OnInstanceCreatedJSONBody defines parameters for OnInstanceCreated.
 type OnInstanceCreatedJSONBody struct {
-	Data Instance `json:"data"`
+	Data    Instance      `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4974,7 +6395,8 @@ type OnInstanceCreatedJSONBodyType string
 
 // OnInstanceDeletedJSONBody defines parameters for OnInstanceDeleted.
 type OnInstanceDeletedJSONBody struct {
-	Data Instance `json:"data"`
+	Data    Instance      `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -4995,7 +6417,8 @@ type OnInstanceDeletedJSONBodyType string
 
 // OnInstanceDeployedJSONBody defines parameters for OnInstanceDeployed.
 type OnInstanceDeployedJSONBody struct {
-	Data Instance `json:"data"`
+	Data    Instance      `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -5016,7 +6439,8 @@ type OnInstanceDeployedJSONBodyType string
 
 // OnInstanceLifecycleStageChangedJSONBody defines parameters for OnInstanceLifecycleStageChanged.
 type OnInstanceLifecycleStageChangedJSONBody struct {
-	Data InstanceLifecycleStageChanged `json:"data"`
+	Data    InstanceLifecycleStageChanged `json:"data"`
+	Headers *EventHeaders                 `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -5037,7 +6461,8 @@ type OnInstanceLifecycleStageChangedJSONBodyType string
 
 // OnInstanceMigratedJSONBody defines parameters for OnInstanceMigrated.
 type OnInstanceMigratedJSONBody struct {
-	Data Instance `json:"data"`
+	Data    Instance      `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -5058,7 +6483,8 @@ type OnInstanceMigratedJSONBodyType string
 
 // OnInstanceStatusChangedJSONBody defines parameters for OnInstanceStatusChanged.
 type OnInstanceStatusChangedJSONBody struct {
-	Data InstanceStatusChanged `json:"data"`
+	Data    InstanceStatusChanged `json:"data"`
+	Headers *EventHeaders         `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -5079,7 +6505,8 @@ type OnInstanceStatusChangedJSONBodyType string
 
 // OnInstanceUpdatedJSONBody defines parameters for OnInstanceUpdated.
 type OnInstanceUpdatedJSONBody struct {
-	Data Instance `json:"data"`
+	Data    Instance      `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -5098,9 +6525,76 @@ type OnInstanceUpdatedJSONBodyName string
 // OnInstanceUpdatedJSONBodyType defines parameters for OnInstanceUpdated.
 type OnInstanceUpdatedJSONBodyType string
 
+// OnArchiveConversionRuleJSONBody defines parameters for OnArchiveConversionRule.
+type OnArchiveConversionRuleJSONBody struct {
+	Data    ConversionRule `json:"data"`
+	Headers *EventHeaders  `json:"headers,omitempty"`
+
+	// Name Event name
+	//
+	// Examples: LICENSE_CONVERSION_RULE_ARCHIVED
+	Name OnArchiveConversionRuleJSONBodyName `json:"name"`
+
+	// Type Event type
+	//
+	// Examples: com.kaiten.license.conversion_rule.v1.archived
+	Type OnArchiveConversionRuleJSONBodyType `json:"type"`
+}
+
+// OnArchiveConversionRuleJSONBodyName defines parameters for OnArchiveConversionRule.
+type OnArchiveConversionRuleJSONBodyName string
+
+// OnArchiveConversionRuleJSONBodyType defines parameters for OnArchiveConversionRule.
+type OnArchiveConversionRuleJSONBodyType string
+
+// OnCreateConversionRuleJSONBody defines parameters for OnCreateConversionRule.
+type OnCreateConversionRuleJSONBody struct {
+	Data    ConversionRule `json:"data"`
+	Headers *EventHeaders  `json:"headers,omitempty"`
+
+	// Name Event name
+	//
+	// Examples: LICENSE_CONVERSION_RULE_CREATED
+	Name OnCreateConversionRuleJSONBodyName `json:"name"`
+
+	// Type Event type
+	//
+	// Examples: com.kaiten.license.conversion_rule.v1.created
+	Type OnCreateConversionRuleJSONBodyType `json:"type"`
+}
+
+// OnCreateConversionRuleJSONBodyName defines parameters for OnCreateConversionRule.
+type OnCreateConversionRuleJSONBodyName string
+
+// OnCreateConversionRuleJSONBodyType defines parameters for OnCreateConversionRule.
+type OnCreateConversionRuleJSONBodyType string
+
+// OnUpdateConversionRuleJSONBody defines parameters for OnUpdateConversionRule.
+type OnUpdateConversionRuleJSONBody struct {
+	Data    ConversionRuleUpdated `json:"data"`
+	Headers *EventHeaders         `json:"headers,omitempty"`
+
+	// Name Event name
+	//
+	// Examples: LICENSE_CONVERSION_RULE_UPDATED
+	Name OnUpdateConversionRuleJSONBodyName `json:"name"`
+
+	// Type Event type
+	//
+	// Examples: com.kaiten.license.conversion_rule.v1.updated
+	Type OnUpdateConversionRuleJSONBodyType `json:"type"`
+}
+
+// OnUpdateConversionRuleJSONBodyName defines parameters for OnUpdateConversionRule.
+type OnUpdateConversionRuleJSONBodyName string
+
+// OnUpdateConversionRuleJSONBodyType defines parameters for OnUpdateConversionRule.
+type OnUpdateConversionRuleJSONBodyType string
+
 // OnLicenseEntitlementAssignedJSONBody defines parameters for OnLicenseEntitlementAssigned.
 type OnLicenseEntitlementAssignedJSONBody struct {
-	Data LicenseEntitlement `json:"data"`
+	Data    LicenseEntitlement `json:"data"`
+	Headers *EventHeaders      `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -5121,7 +6615,8 @@ type OnLicenseEntitlementAssignedJSONBodyType string
 
 // OnLicenseEntitlementUnassignedJSONBody defines parameters for OnLicenseEntitlementUnassigned.
 type OnLicenseEntitlementUnassignedJSONBody struct {
-	Data LicenseEntitlement `json:"data"`
+	Data    LicenseEntitlement `json:"data"`
+	Headers *EventHeaders      `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -5142,7 +6637,8 @@ type OnLicenseEntitlementUnassignedJSONBodyType string
 
 // OnLicenseEntitlementUpdatedJSONBody defines parameters for OnLicenseEntitlementUpdated.
 type OnLicenseEntitlementUpdatedJSONBody struct {
-	Data LicenseEntitlement `json:"data"`
+	Data    LicenseEntitlement `json:"data"`
+	Headers *EventHeaders      `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -5163,7 +6659,8 @@ type OnLicenseEntitlementUpdatedJSONBodyType string
 
 // OnLicenseArchivedJSONBody defines parameters for OnLicenseArchived.
 type OnLicenseArchivedJSONBody struct {
-	Data License `json:"data"`
+	Data    License       `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -5184,7 +6681,8 @@ type OnLicenseArchivedJSONBodyType string
 
 // OnLicenseCreatedJSONBody defines parameters for OnLicenseCreated.
 type OnLicenseCreatedJSONBody struct {
-	Data License `json:"data"`
+	Data    License       `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -5205,7 +6703,8 @@ type OnLicenseCreatedJSONBodyType string
 
 // OnLicenseDeletedJSONBody defines parameters for OnLicenseDeleted.
 type OnLicenseDeletedJSONBody struct {
-	Data License `json:"data"`
+	Data    License       `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -5226,7 +6725,8 @@ type OnLicenseDeletedJSONBodyType string
 
 // OnLicensePublishedJSONBody defines parameters for OnLicensePublished.
 type OnLicensePublishedJSONBody struct {
-	Data License `json:"data"`
+	Data    License       `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -5247,7 +6747,8 @@ type OnLicensePublishedJSONBodyType string
 
 // OnLicenseUnarchivedJSONBody defines parameters for OnLicenseUnarchived.
 type OnLicenseUnarchivedJSONBody struct {
-	Data License `json:"data"`
+	Data    License       `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -5268,7 +6769,8 @@ type OnLicenseUnarchivedJSONBodyType string
 
 // OnLicenseUpdatedJSONBody defines parameters for OnLicenseUpdated.
 type OnLicenseUpdatedJSONBody struct {
-	Data License `json:"data"`
+	Data    License       `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -5287,9 +6789,76 @@ type OnLicenseUpdatedJSONBodyName string
 // OnLicenseUpdatedJSONBodyType defines parameters for OnLicenseUpdated.
 type OnLicenseUpdatedJSONBodyType string
 
+// OnLicenseFamilyCreatedJSONBody defines parameters for OnLicenseFamilyCreated.
+type OnLicenseFamilyCreatedJSONBody struct {
+	Data    LicenseFamilyView `json:"data"`
+	Headers *EventHeaders     `json:"headers,omitempty"`
+
+	// Name Event name
+	//
+	// Examples: LICENSE_FAMILY_CREATED
+	Name OnLicenseFamilyCreatedJSONBodyName `json:"name"`
+
+	// Type Event type
+	//
+	// Examples: com.kaiten.license_family.v1.created
+	Type OnLicenseFamilyCreatedJSONBodyType `json:"type"`
+}
+
+// OnLicenseFamilyCreatedJSONBodyName defines parameters for OnLicenseFamilyCreated.
+type OnLicenseFamilyCreatedJSONBodyName string
+
+// OnLicenseFamilyCreatedJSONBodyType defines parameters for OnLicenseFamilyCreated.
+type OnLicenseFamilyCreatedJSONBodyType string
+
+// OnLicenseFamilyDeletedJSONBody defines parameters for OnLicenseFamilyDeleted.
+type OnLicenseFamilyDeletedJSONBody struct {
+	Data    LicenseFamilyView `json:"data"`
+	Headers *EventHeaders     `json:"headers,omitempty"`
+
+	// Name Event name
+	//
+	// Examples: LICENSE_FAMILY_DELETED
+	Name OnLicenseFamilyDeletedJSONBodyName `json:"name"`
+
+	// Type Event type
+	//
+	// Examples: com.kaiten.license_family.v1.deleted
+	Type OnLicenseFamilyDeletedJSONBodyType `json:"type"`
+}
+
+// OnLicenseFamilyDeletedJSONBodyName defines parameters for OnLicenseFamilyDeleted.
+type OnLicenseFamilyDeletedJSONBodyName string
+
+// OnLicenseFamilyDeletedJSONBodyType defines parameters for OnLicenseFamilyDeleted.
+type OnLicenseFamilyDeletedJSONBodyType string
+
+// OnLicenseFamilyUpdatedJSONBody defines parameters for OnLicenseFamilyUpdated.
+type OnLicenseFamilyUpdatedJSONBody struct {
+	Data    LicenseFamilyView `json:"data"`
+	Headers *EventHeaders     `json:"headers,omitempty"`
+
+	// Name Event name
+	//
+	// Examples: LICENSE_FAMILY_UPDATED
+	Name OnLicenseFamilyUpdatedJSONBodyName `json:"name"`
+
+	// Type Event type
+	//
+	// Examples: com.kaiten.license_family.v1.updated
+	Type OnLicenseFamilyUpdatedJSONBodyType `json:"type"`
+}
+
+// OnLicenseFamilyUpdatedJSONBodyName defines parameters for OnLicenseFamilyUpdated.
+type OnLicenseFamilyUpdatedJSONBodyName string
+
+// OnLicenseFamilyUpdatedJSONBodyType defines parameters for OnLicenseFamilyUpdated.
+type OnLicenseFamilyUpdatedJSONBodyType string
+
 // OnMetadataFieldArchivedJSONBody defines parameters for OnMetadataFieldArchived.
 type OnMetadataFieldArchivedJSONBody struct {
-	Data MetadataField `json:"data"`
+	Data    MetadataField `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -5310,7 +6879,8 @@ type OnMetadataFieldArchivedJSONBodyType string
 
 // OnMetadataFieldCreatedJSONBody defines parameters for OnMetadataFieldCreated.
 type OnMetadataFieldCreatedJSONBody struct {
-	Data MetadataField `json:"data"`
+	Data    MetadataField `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -5331,7 +6901,8 @@ type OnMetadataFieldCreatedJSONBodyType string
 
 // OnMetadataFieldReorderedJSONBody defines parameters for OnMetadataFieldReordered.
 type OnMetadataFieldReorderedJSONBody struct {
-	Data MetadataFieldReordered `json:"data"`
+	Data    MetadataFieldReordered `json:"data"`
+	Headers *EventHeaders          `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -5352,7 +6923,8 @@ type OnMetadataFieldReorderedJSONBodyType string
 
 // OnMetadataFieldUnarchivedJSONBody defines parameters for OnMetadataFieldUnarchived.
 type OnMetadataFieldUnarchivedJSONBody struct {
-	Data MetadataField `json:"data"`
+	Data    MetadataField `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -5373,7 +6945,8 @@ type OnMetadataFieldUnarchivedJSONBodyType string
 
 // OnMetadataFieldUpdatedJSONBody defines parameters for OnMetadataFieldUpdated.
 type OnMetadataFieldUpdatedJSONBody struct {
-	Data MetadataField `json:"data"`
+	Data    MetadataField `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -5392,9 +6965,76 @@ type OnMetadataFieldUpdatedJSONBodyName string
 // OnMetadataFieldUpdatedJSONBodyType defines parameters for OnMetadataFieldUpdated.
 type OnMetadataFieldUpdatedJSONBodyType string
 
+// OnModelCreatedJSONBody defines parameters for OnModelCreated.
+type OnModelCreatedJSONBody struct {
+	Data    Model         `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
+
+	// Name Event name
+	//
+	// Examples: MODEL_CREATED
+	Name OnModelCreatedJSONBodyName `json:"name"`
+
+	// Type Event type
+	//
+	// Examples: com.kaiten.model.v1.created
+	Type OnModelCreatedJSONBodyType `json:"type"`
+}
+
+// OnModelCreatedJSONBodyName defines parameters for OnModelCreated.
+type OnModelCreatedJSONBodyName string
+
+// OnModelCreatedJSONBodyType defines parameters for OnModelCreated.
+type OnModelCreatedJSONBodyType string
+
+// OnModelDeletedJSONBody defines parameters for OnModelDeleted.
+type OnModelDeletedJSONBody struct {
+	Data    Model         `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
+
+	// Name Event name
+	//
+	// Examples: MODEL_DELETED
+	Name OnModelDeletedJSONBodyName `json:"name"`
+
+	// Type Event type
+	//
+	// Examples: com.kaiten.model.v1.deleted
+	Type OnModelDeletedJSONBodyType `json:"type"`
+}
+
+// OnModelDeletedJSONBodyName defines parameters for OnModelDeleted.
+type OnModelDeletedJSONBodyName string
+
+// OnModelDeletedJSONBodyType defines parameters for OnModelDeleted.
+type OnModelDeletedJSONBodyType string
+
+// OnModelUpdatedJSONBody defines parameters for OnModelUpdated.
+type OnModelUpdatedJSONBody struct {
+	Data    ModelUpdated  `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
+
+	// Name Event name
+	//
+	// Examples: MODEL_UPDATED
+	Name OnModelUpdatedJSONBodyName `json:"name"`
+
+	// Type Event type
+	//
+	// Examples: com.kaiten.model.v1.updated
+	Type OnModelUpdatedJSONBodyType `json:"type"`
+}
+
+// OnModelUpdatedJSONBodyName defines parameters for OnModelUpdated.
+type OnModelUpdatedJSONBodyName string
+
+// OnModelUpdatedJSONBodyType defines parameters for OnModelUpdated.
+type OnModelUpdatedJSONBodyType string
+
 // OnReleaseCreatedJSONBody defines parameters for OnReleaseCreated.
 type OnReleaseCreatedJSONBody struct {
-	Data Release `json:"data"`
+	Data    Release       `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -5415,7 +7055,8 @@ type OnReleaseCreatedJSONBodyType string
 
 // OnReleaseDeletedJSONBody defines parameters for OnReleaseDeleted.
 type OnReleaseDeletedJSONBody struct {
-	Data Release `json:"data"`
+	Data    Release       `json:"data"`
+	Headers *EventHeaders `json:"headers,omitempty"`
 
 	// Name Event name
 	//
@@ -5518,6 +7159,12 @@ type CreateLicenseJSONRequestBody = License
 // UpdateLicenseJSONRequestBody defines body for UpdateLicense for application/json ContentType.
 type UpdateLicenseJSONRequestBody = License
 
+// CreateConversionRuleJSONRequestBody defines body for CreateConversionRule for application/json ContentType.
+type CreateConversionRuleJSONRequestBody = CreateConversionRule
+
+// UpdateConversionRuleJSONRequestBody defines body for UpdateConversionRule for application/json ContentType.
+type UpdateConversionRuleJSONRequestBody = UpdateConversionRule
+
 // AssociateEntitlementWithLicenseJSONRequestBody defines body for AssociateEntitlementWithLicense for application/json ContentType.
 type AssociateEntitlementWithLicenseJSONRequestBody = LicenseEntitlement
 
@@ -5536,6 +7183,12 @@ type UpdateMetadataFieldJSONRequestBody = MetadataField
 // DryRunMetadataFieldJSONRequestBody defines body for DryRunMetadataField for application/json ContentType.
 type DryRunMetadataFieldJSONRequestBody = MetadataFieldSchemaProposal
 
+// CreateModelJSONRequestBody defines body for CreateModel for application/json ContentType.
+type CreateModelJSONRequestBody = Model
+
+// UpdateModelJSONRequestBody defines body for UpdateModel for application/json ContentType.
+type UpdateModelJSONRequestBody = Model
+
 // EvaluateFlagsBulkJSONRequestBody defines body for EvaluateFlagsBulk for application/json ContentType.
 type EvaluateFlagsBulkJSONRequestBody = BulkEvaluationRequest
 
@@ -5553,6 +7206,12 @@ type UpdateServiceAccountJSONRequestBody = ServiceAccount
 
 // CreateServiceAccountTokenJSONRequestBody defines body for CreateServiceAccountToken for application/json ContentType.
 type CreateServiceAccountTokenJSONRequestBody = PlainToken
+
+// PutNotificationPreferencesJSONRequestBody defines body for PutNotificationPreferences for application/json ContentType.
+type PutNotificationPreferencesJSONRequestBody = PreferenceChoices
+
+// MarkNotificationsReadJSONRequestBody defines body for MarkNotificationsRead for application/json ContentType.
+type MarkNotificationsReadJSONRequestBody = ReadSelection
 
 // OnComponentCreatedJSONRequestBody defines body for OnComponentCreated for application/json ContentType.
 type OnComponentCreatedJSONRequestBody OnComponentCreatedJSONBody
@@ -5620,8 +7279,14 @@ type OnFeatureFlagUpdatedJSONRequestBody OnFeatureFlagUpdatedJSONBody
 // OnSystemOrganizationTokenIssuedJSONRequestBody defines body for OnSystemOrganizationTokenIssued for application/json ContentType.
 type OnSystemOrganizationTokenIssuedJSONRequestBody OnSystemOrganizationTokenIssuedJSONBody
 
+// OnInstanceAIModelUsageUnauthorizedJSONRequestBody defines body for OnInstanceAIModelUsageUnauthorized for application/json ContentType.
+type OnInstanceAIModelUsageUnauthorizedJSONRequestBody OnInstanceAIModelUsageUnauthorizedJSONBody
+
 // OnInstanceEntitlementCapExceededJSONRequestBody defines body for OnInstanceEntitlementCapExceeded for application/json ContentType.
 type OnInstanceEntitlementCapExceededJSONRequestBody OnInstanceEntitlementCapExceededJSONBody
+
+// OnInstanceEntitlementMaximumExceededJSONRequestBody defines body for OnInstanceEntitlementMaximumExceeded for application/json ContentType.
+type OnInstanceEntitlementMaximumExceededJSONRequestBody OnInstanceEntitlementMaximumExceededJSONBody
 
 // OnInstanceEntitlementUsagePeriodRolledOverJSONRequestBody defines body for OnInstanceEntitlementUsagePeriodRolledOver for application/json ContentType.
 type OnInstanceEntitlementUsagePeriodRolledOverJSONRequestBody OnInstanceEntitlementUsagePeriodRolledOverJSONBody
@@ -5662,6 +7327,15 @@ type OnInstanceStatusChangedJSONRequestBody OnInstanceStatusChangedJSONBody
 // OnInstanceUpdatedJSONRequestBody defines body for OnInstanceUpdated for application/json ContentType.
 type OnInstanceUpdatedJSONRequestBody OnInstanceUpdatedJSONBody
 
+// OnArchiveConversionRuleJSONRequestBody defines body for OnArchiveConversionRule for application/json ContentType.
+type OnArchiveConversionRuleJSONRequestBody OnArchiveConversionRuleJSONBody
+
+// OnCreateConversionRuleJSONRequestBody defines body for OnCreateConversionRule for application/json ContentType.
+type OnCreateConversionRuleJSONRequestBody OnCreateConversionRuleJSONBody
+
+// OnUpdateConversionRuleJSONRequestBody defines body for OnUpdateConversionRule for application/json ContentType.
+type OnUpdateConversionRuleJSONRequestBody OnUpdateConversionRuleJSONBody
+
 // OnLicenseEntitlementAssignedJSONRequestBody defines body for OnLicenseEntitlementAssigned for application/json ContentType.
 type OnLicenseEntitlementAssignedJSONRequestBody OnLicenseEntitlementAssignedJSONBody
 
@@ -5689,6 +7363,15 @@ type OnLicenseUnarchivedJSONRequestBody OnLicenseUnarchivedJSONBody
 // OnLicenseUpdatedJSONRequestBody defines body for OnLicenseUpdated for application/json ContentType.
 type OnLicenseUpdatedJSONRequestBody OnLicenseUpdatedJSONBody
 
+// OnLicenseFamilyCreatedJSONRequestBody defines body for OnLicenseFamilyCreated for application/json ContentType.
+type OnLicenseFamilyCreatedJSONRequestBody OnLicenseFamilyCreatedJSONBody
+
+// OnLicenseFamilyDeletedJSONRequestBody defines body for OnLicenseFamilyDeleted for application/json ContentType.
+type OnLicenseFamilyDeletedJSONRequestBody OnLicenseFamilyDeletedJSONBody
+
+// OnLicenseFamilyUpdatedJSONRequestBody defines body for OnLicenseFamilyUpdated for application/json ContentType.
+type OnLicenseFamilyUpdatedJSONRequestBody OnLicenseFamilyUpdatedJSONBody
+
 // OnMetadataFieldArchivedJSONRequestBody defines body for OnMetadataFieldArchived for application/json ContentType.
 type OnMetadataFieldArchivedJSONRequestBody OnMetadataFieldArchivedJSONBody
 
@@ -5704,11 +7387,133 @@ type OnMetadataFieldUnarchivedJSONRequestBody OnMetadataFieldUnarchivedJSONBody
 // OnMetadataFieldUpdatedJSONRequestBody defines body for OnMetadataFieldUpdated for application/json ContentType.
 type OnMetadataFieldUpdatedJSONRequestBody OnMetadataFieldUpdatedJSONBody
 
+// OnModelCreatedJSONRequestBody defines body for OnModelCreated for application/json ContentType.
+type OnModelCreatedJSONRequestBody OnModelCreatedJSONBody
+
+// OnModelDeletedJSONRequestBody defines body for OnModelDeleted for application/json ContentType.
+type OnModelDeletedJSONRequestBody OnModelDeletedJSONBody
+
+// OnModelUpdatedJSONRequestBody defines body for OnModelUpdated for application/json ContentType.
+type OnModelUpdatedJSONRequestBody OnModelUpdatedJSONBody
+
 // OnReleaseCreatedJSONRequestBody defines body for OnReleaseCreated for application/json ContentType.
 type OnReleaseCreatedJSONRequestBody OnReleaseCreatedJSONBody
 
 // OnReleaseDeletedJSONRequestBody defines body for OnReleaseDeleted for application/json ContentType.
 type OnReleaseDeletedJSONRequestBody OnReleaseDeletedJSONBody
+
+// Getter for additional properties for EventHeaders. Returns the specified
+// element and whether it was found
+func (a EventHeaders) Get(fieldName string) (value interface{}, found bool) {
+	if a.AdditionalProperties != nil {
+		value, found = a.AdditionalProperties[fieldName]
+	}
+	return
+}
+
+// Setter for additional properties for EventHeaders
+func (a *EventHeaders) Set(fieldName string, value interface{}) {
+	if a.AdditionalProperties == nil {
+		a.AdditionalProperties = make(map[string]interface{})
+	}
+	a.AdditionalProperties[fieldName] = value
+}
+
+// Override default JSON handling for EventHeaders to handle AdditionalProperties
+func (a *EventHeaders) UnmarshalJSON(b []byte) error {
+	object := make(map[string]json.RawMessage)
+	err := json.Unmarshal(b, &object)
+	if err != nil {
+		return err
+	}
+
+	if raw, found := object["baggage"]; found {
+		err = json.Unmarshal(raw, &a.Baggage)
+		if err != nil {
+			return fmt.Errorf("error reading 'baggage': %w", err)
+		}
+		delete(object, "baggage")
+	}
+
+	if raw, found := object["instance_id"]; found {
+		err = json.Unmarshal(raw, &a.InstanceId)
+		if err != nil {
+			return fmt.Errorf("error reading 'instance_id': %w", err)
+		}
+		delete(object, "instance_id")
+	}
+
+	if raw, found := object["traceparent"]; found {
+		err = json.Unmarshal(raw, &a.Traceparent)
+		if err != nil {
+			return fmt.Errorf("error reading 'traceparent': %w", err)
+		}
+		delete(object, "traceparent")
+	}
+
+	if raw, found := object["tracestate"]; found {
+		err = json.Unmarshal(raw, &a.Tracestate)
+		if err != nil {
+			return fmt.Errorf("error reading 'tracestate': %w", err)
+		}
+		delete(object, "tracestate")
+	}
+
+	if len(object) != 0 {
+		a.AdditionalProperties = make(map[string]interface{})
+		for fieldName, fieldBuf := range object {
+			var fieldVal interface{}
+			err := json.Unmarshal(fieldBuf, &fieldVal)
+			if err != nil {
+				return fmt.Errorf("error unmarshaling field %s: %w", fieldName, err)
+			}
+			a.AdditionalProperties[fieldName] = fieldVal
+		}
+	}
+	return nil
+}
+
+// Override default JSON handling for EventHeaders to handle AdditionalProperties
+func (a EventHeaders) MarshalJSON() ([]byte, error) {
+	var err error
+	object := make(map[string]json.RawMessage)
+
+	if a.Baggage != nil {
+		object["baggage"], err = json.Marshal(a.Baggage)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'baggage': %w", err)
+		}
+	}
+
+	if a.InstanceId != nil {
+		object["instance_id"], err = json.Marshal(a.InstanceId)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'instance_id': %w", err)
+		}
+	}
+
+	if a.Traceparent != nil {
+		object["traceparent"], err = json.Marshal(a.Traceparent)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'traceparent': %w", err)
+		}
+	}
+
+	if a.Tracestate != nil {
+		object["tracestate"], err = json.Marshal(a.Tracestate)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling 'tracestate': %w", err)
+		}
+	}
+
+	for fieldName, field := range a.AdditionalProperties {
+		object[fieldName], err = json.Marshal(field)
+		if err != nil {
+			return nil, fmt.Errorf("error marshaling '%s': %w", fieldName, err)
+		}
+	}
+	return json.Marshal(object)
+}
 
 // AsBasic returns the union data inside the DefaultVariant as a Basic
 func (t DefaultVariant) AsBasic() (Basic, error) {
@@ -6703,65 +8508,31 @@ func (t *ReportEntitlementUsageBody_Value) MergeNumberEntitlementValue(v NumberE
 	return err
 }
 
-// AsBooleanEntitlementValue returns the union data inside the ReportEntitlementUsageBody_Value as a BooleanEntitlementValue
-func (t ReportEntitlementUsageBody_Value) AsBooleanEntitlementValue() (BooleanEntitlementValue, error) {
-	var body BooleanEntitlementValue
+// AsAiUsageValue returns the union data inside the ReportEntitlementUsageBody_Value as a AiUsageValue
+func (t ReportEntitlementUsageBody_Value) AsAiUsageValue() (AiUsageValue, error) {
+	var body AiUsageValue
 	err := json.Unmarshal(t.union, &body)
 	return body, err
 }
 
-// FromBooleanEntitlementValue overwrites any union data inside the ReportEntitlementUsageBody_Value as the provided BooleanEntitlementValue
-func (t *ReportEntitlementUsageBody_Value) FromBooleanEntitlementValue(v BooleanEntitlementValue) error {
+// FromAiUsageValue overwrites any union data inside the ReportEntitlementUsageBody_Value as the provided AiUsageValue
+func (t *ReportEntitlementUsageBody_Value) FromAiUsageValue(v AiUsageValue) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
 	}
-	b, err = runtime.JSONMerge(b, []byte(`{"type":"boolean"}`))
+	b, err = runtime.JSONMerge(b, []byte(`{"type":"ai_usage"}`))
 	t.union = b
 	return err
 }
 
-// MergeBooleanEntitlementValue performs a merge with any union data inside the ReportEntitlementUsageBody_Value, using the provided BooleanEntitlementValue
-func (t *ReportEntitlementUsageBody_Value) MergeBooleanEntitlementValue(v BooleanEntitlementValue) error {
+// MergeAiUsageValue performs a merge with any union data inside the ReportEntitlementUsageBody_Value, using the provided AiUsageValue
+func (t *ReportEntitlementUsageBody_Value) MergeAiUsageValue(v AiUsageValue) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
 	}
-	b, err = runtime.JSONMerge(b, []byte(`{"type":"boolean"}`))
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-// AsConfigEntitlementValue returns the union data inside the ReportEntitlementUsageBody_Value as a ConfigEntitlementValue
-func (t ReportEntitlementUsageBody_Value) AsConfigEntitlementValue() (ConfigEntitlementValue, error) {
-	var body ConfigEntitlementValue
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromConfigEntitlementValue overwrites any union data inside the ReportEntitlementUsageBody_Value as the provided ConfigEntitlementValue
-func (t *ReportEntitlementUsageBody_Value) FromConfigEntitlementValue(v ConfigEntitlementValue) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-	b, err = runtime.JSONMerge(b, []byte(`{"type":"object"}`))
-	t.union = b
-	return err
-}
-
-// MergeConfigEntitlementValue performs a merge with any union data inside the ReportEntitlementUsageBody_Value, using the provided ConfigEntitlementValue
-func (t *ReportEntitlementUsageBody_Value) MergeConfigEntitlementValue(v ConfigEntitlementValue) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-	b, err = runtime.JSONMerge(b, []byte(`{"type":"object"}`))
+	b, err = runtime.JSONMerge(b, []byte(`{"type":"ai_usage"}`))
 	if err != nil {
 		return err
 	}
@@ -6785,12 +8556,10 @@ func (t ReportEntitlementUsageBody_Value) ValueByDiscriminator() (interface{}, e
 		return nil, err
 	}
 	switch discriminator {
-	case "boolean":
-		return t.AsBooleanEntitlementValue()
+	case "ai_usage":
+		return t.AsAiUsageValue()
 	case "number":
 		return t.AsNumberEntitlementValue()
-	case "object":
-		return t.AsConfigEntitlementValue()
 	default:
 		return nil, errors.New("unknown discriminator value: " + discriminator)
 	}
@@ -7172,7 +8941,7 @@ type ClientInterface interface {
 
 	// ActivateConnector Activate connector
 	//
-	// Activates a registered connector for the authenticated organization. Idempotent: activating an already-active connector succeeds without changing when it was first activated. Refused when the organization's licence does not include the connector.
+	// Activates a registered connector for the authenticated organization. Idempotent: activating an already-active connector succeeds without changing when it was first activated. Refused when the organization's license does not include the connector.
 	//
 	// Corresponds with PUT /connectors/{connectorName}/activation (the `ActivateConnector` operationId).
 	ActivateConnector(ctx context.Context, connectorName string, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -7218,7 +8987,7 @@ type ClientInterface interface {
 
 	// GetConnectorState Get connector state for this organization
 	//
-	// Returns whether the connector is registered in this deployment, whether the authenticated organization's licence includes it, and whether the organization has activated it. Answers 200 with `available: false` for a connector this deployment does not have.
+	// Returns whether the connector is registered on this installation, whether the authenticated organization's license includes it, and whether the organization has activated it. Answers 200 with `available: false` for a connector this installation does not have.
 	//
 	// Corresponds with GET /connectors/{connectorName}/state (the `GetConnectorState` operationId).
 	GetConnectorState(ctx context.Context, connectorName string, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -7503,7 +9272,7 @@ type ClientInterface interface {
 
 	// DeleteEntitlement Delete an entitlement
 	//
-	// Delete an entitlement by its slug.
+	// Delete an entitlement by its slug. Its usage is deleted with it. An entitlement a license still grants is refused with a 409: remove the grants first.
 	//
 	// Corresponds with DELETE /entitlements/{entitlementSlug} (the `DeleteEntitlement` operationId).
 	DeleteEntitlement(ctx context.Context, entitlementSlug string, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -7617,7 +9386,7 @@ type ClientInterface interface {
 
 	// UpdateFeatureFlagWithBody Update a featureflag
 	//
-	// Update a featureflag with the provided details.
+	// Update a featureflag with the provided details. Sending a slug renames the flag; omitting it keeps the current one.
 	//
 	// Takes any type of body and a specified content type.
 	//
@@ -7626,7 +9395,7 @@ type ClientInterface interface {
 
 	// UpdateFeatureFlag Update a featureflag
 	//
-	// Update a featureflag with the provided details.
+	// Update a featureflag with the provided details. Sending a slug renames the flag; omitting it keeps the current one.
 	//
 	// Takes a body of the `application/json` content type.
 	//
@@ -7746,6 +9515,16 @@ type ClientInterface interface {
 	//
 	// Corresponds with POST /instances/{instanceSlug}/entitlements/{entitlementSlug}/usage (the `ReportEntitlementUsageMetric` operationId).
 	ReportEntitlementUsageMetric(ctx context.Context, instanceSlug string, entitlementSlug string, body ReportEntitlementUsageMetricJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListAiInferences List AI inferences
+	//
+	// Corresponds with GET /instances/{instanceSlug}/entitlements/{entitlementSlug}/usage/inferences (the `ListAiInferences` operationId).
+	ListAiInferences(ctx context.Context, instanceSlug string, entitlementSlug string, params *ListAiInferencesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListAiReservations List open AI reservations
+	//
+	// Corresponds with GET /instances/{instanceSlug}/entitlements/{entitlementSlug}/usage/reservations (the `ListAiReservations` operationId).
+	ListAiReservations(ctx context.Context, instanceSlug string, entitlementSlug string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteInstanceIntegration Delete an instance integration
 	//
@@ -7876,7 +9655,7 @@ type ClientInterface interface {
 	//
 	// Create a new license with the provided details. Without familySlug or familyId this creates a new license family and the license becomes its version 1. With one of them it adds the next version to that family (familySlug names it by slug, familyId by identifier; sent together they must agree), and the version number is assigned by the server as the next one in the family's sequence. The version starts PUBLISHED, or DRAFT when lifecycleState says so; ARCHIVED is refused (422 CreateLicense.LifecycleStateNotSettable), because a version is archived with archive-license once it has been on sale.
 	//
-	// Where the deployment limits how many licenses an organization may have, only a new family counts against that limit (409 CreateLicense.EntitlementLimitReached once it is reached): a new version of an existing family never does.
+	// Where the installation limits how many licenses an organization may have, only a new family counts against that limit (409 CreateLicense.EntitlementLimitReached once it is reached): a new version of an existing family never does.
 	//
 	// Takes any type of body and a specified content type.
 	//
@@ -7887,7 +9666,7 @@ type ClientInterface interface {
 	//
 	// Create a new license with the provided details. Without familySlug or familyId this creates a new license family and the license becomes its version 1. With one of them it adds the next version to that family (familySlug names it by slug, familyId by identifier; sent together they must agree), and the version number is assigned by the server as the next one in the family's sequence. The version starts PUBLISHED, or DRAFT when lifecycleState says so; ARCHIVED is refused (422 CreateLicense.LifecycleStateNotSettable), because a version is archived with archive-license once it has been on sale.
 	//
-	// Where the deployment limits how many licenses an organization may have, only a new family counts against that limit (409 CreateLicense.EntitlementLimitReached once it is reached): a new version of an existing family never does.
+	// Where the installation limits how many licenses an organization may have, only a new family counts against that limit (409 CreateLicense.EntitlementLimitReached once it is reached): a new version of an existing family never does.
 	//
 	// Takes a body of the `application/json` content type.
 	//
@@ -7932,6 +9711,49 @@ type ClientInterface interface {
 	//
 	// Corresponds with POST /licenses/{licenseSlug}/archive (the `ArchiveLicense` operationId).
 	ArchiveLicense(ctx context.Context, licenseSlug string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListConversionRules List conversion rules
+	//
+	// Corresponds with GET /licenses/{licenseSlug}/conversion-rules (the `ListConversionRules` operationId).
+	ListConversionRules(ctx context.Context, licenseSlug string, params *ListConversionRulesParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateConversionRuleWithBody Create a conversion rule
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /licenses/{licenseSlug}/conversion-rules (the `CreateConversionRule` operationId).
+	CreateConversionRuleWithBody(ctx context.Context, licenseSlug string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateConversionRule Create a conversion rule
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /licenses/{licenseSlug}/conversion-rules (the `CreateConversionRule` operationId).
+	CreateConversionRule(ctx context.Context, licenseSlug string, body CreateConversionRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ArchiveConversionRule Archive a conversion rule
+	//
+	// Corresponds with DELETE /licenses/{licenseSlug}/conversion-rules/{ruleId} (the `ArchiveConversionRule` operationId).
+	ArchiveConversionRule(ctx context.Context, licenseSlug string, ruleId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetConversionRule Get a conversion rule
+	//
+	// Corresponds with GET /licenses/{licenseSlug}/conversion-rules/{ruleId} (the `GetConversionRule` operationId).
+	GetConversionRule(ctx context.Context, licenseSlug string, ruleId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateConversionRuleWithBody Update a conversion rule
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with PUT /licenses/{licenseSlug}/conversion-rules/{ruleId} (the `UpdateConversionRule` operationId).
+	UpdateConversionRuleWithBody(ctx context.Context, licenseSlug string, ruleId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateConversionRule Update a conversion rule
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with PUT /licenses/{licenseSlug}/conversion-rules/{ruleId} (the `UpdateConversionRule` operationId).
+	UpdateConversionRule(ctx context.Context, licenseSlug string, ruleId string, body UpdateConversionRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetLicenseEntitlements Get all entitlements for a license
 	//
@@ -8004,9 +9826,9 @@ type ClientInterface interface {
 	// Corresponds with POST /licenses/{licenseSlug}/unarchive (the `UnarchiveLicense` operationId).
 	UnarchiveLicense(ctx context.Context, licenseSlug string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// ListMetadataFields List active metadata fields for a resource type
+	// ListMetadataFields List metadata fields for a resource type
 	//
-	// Returns a cursor-paginated page of the active (non-archived) metadata fields declared for the org and the given resource type, ordered by displayOrder then createdAt.
+	// Returns a cursor-paginated page of the metadata fields declared for the org and the given resource type, ordered by displayOrder then createdAt. Only active fields are listed, unless includeArchived is set: an archived field's id is what unarchive-metadata-field takes.
 	//
 	// Corresponds with GET /metadata-fields (the `ListMetadataFields` operationId).
 	ListMetadataFields(ctx context.Context, params *ListMetadataFieldsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -8096,6 +9918,49 @@ type ClientInterface interface {
 	//
 	// Corresponds with POST /metadata-fields/{id}/unarchive (the `UnarchiveMetadataField` operationId).
 	UnarchiveMetadataField(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListModels List models
+	//
+	// Corresponds with GET /models (the `ListModels` operationId).
+	ListModels(ctx context.Context, params *ListModelsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateModelWithBody Create a model
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /models (the `CreateModel` operationId).
+	CreateModelWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateModel Create a model
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /models (the `CreateModel` operationId).
+	CreateModel(ctx context.Context, body CreateModelJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteModel Delete a model
+	//
+	// Corresponds with DELETE /models/{modelSlug} (the `DeleteModel` operationId).
+	DeleteModel(ctx context.Context, modelSlug string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetModel Get a model
+	//
+	// Corresponds with GET /models/{modelSlug} (the `GetModel` operationId).
+	GetModel(ctx context.Context, modelSlug string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateModelWithBody Update a model
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with PUT /models/{modelSlug} (the `UpdateModel` operationId).
+	UpdateModelWithBody(ctx context.Context, modelSlug string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateModel Update a model
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with PUT /models/{modelSlug} (the `UpdateModel` operationId).
+	UpdateModel(ctx context.Context, modelSlug string, body UpdateModelJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// EvaluateFlagsBulkWithBody OFREP bulk flag evaluation contract
 	//
@@ -8262,6 +10127,56 @@ type ClientInterface interface {
 	//
 	// Corresponds with DELETE /service-accounts/{serviceAccountSlug}/tokens/{tokenSlug} (the `DeleteServiceAccountToken` operationId).
 	DeleteServiceAccountToken(ctx context.Context, serviceAccountSlug string, tokenSlug string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetNotificationPreferences Read the caller's notification preferences
+	//
+	// Every notifiable event, with this user's effective value per channel: their own choice where they made one, the catalog default otherwise. Events absent from the catalog of an installation never appear, which is what keeps high-volume system events out of the feed.
+	//
+	// Corresponds with GET /v1/notification-preferences (the `GetNotificationPreferences` operationId).
+	GetNotificationPreferences(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PutNotificationPreferencesWithBody Set the caller's notification preferences
+	//
+	// Stores the signed-in user's choices and answers with the whole matrix. A value that equals the catalog default is stored as no row at all, so a later change to that default still reaches this user.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with PUT /v1/notification-preferences (the `PutNotificationPreferences` operationId).
+	PutNotificationPreferencesWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PutNotificationPreferences Set the caller's notification preferences
+	//
+	// Stores the signed-in user's choices and answers with the whole matrix. A value that equals the catalog default is stored as no row at all, so a later change to that default still reaches this user.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with PUT /v1/notification-preferences (the `PutNotificationPreferences` operationId).
+	PutNotificationPreferences(ctx context.Context, body PutNotificationPreferencesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListNotifications List the caller's notifications
+	//
+	// Returns the signed-in user's notification feed, newest first, with the unread count. Notifications are a view over this organization's audit trail, narrowed to the events the user subscribes to; the id of a notification is the id of the audit trail entry it reports.
+	//
+	// Corresponds with GET /v1/notifications (the `ListNotifications` operationId).
+	ListNotifications(ctx context.Context, params *ListNotificationsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// MarkNotificationsReadWithBody Mark notifications read
+	//
+	// Marks the given notifications read for the signed-in user, or all of them with all: true. Ids belonging to another organization are ignored rather than rejected, so a retry of a partially applied call is safe.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /v1/notifications/mark-read (the `MarkNotificationsRead` operationId).
+	MarkNotificationsReadWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// MarkNotificationsRead Mark notifications read
+	//
+	// Marks the given notifications read for the signed-in user, or all of them with all: true. Ids belonging to another organization are ignored rather than rejected, so a retry of a partially applied call is safe.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /v1/notifications/mark-read (the `MarkNotificationsRead` operationId).
+	MarkNotificationsRead(ctx context.Context, body MarkNotificationsReadJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
 // ListComponents List components
@@ -8444,7 +10359,7 @@ func (c *Client) DeactivateConnector(ctx context.Context, connectorName string, 
 
 // ActivateConnector Activate connector
 //
-// Activates a registered connector for the authenticated organization. Idempotent: activating an already-active connector succeeds without changing when it was first activated. Refused when the organization's licence does not include the connector.
+// Activates a registered connector for the authenticated organization. Idempotent: activating an already-active connector succeeds without changing when it was first activated. Refused when the organization's license does not include the connector.
 //
 // Corresponds with PUT /connectors/{connectorName}/activation (the `ActivateConnector` operationId).
 func (c *Client) ActivateConnector(ctx context.Context, connectorName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -8550,7 +10465,7 @@ func (c *Client) GetConnectorSettingsSchema(ctx context.Context, connectorName s
 
 // GetConnectorState Get connector state for this organization
 //
-// Returns whether the connector is registered in this deployment, whether the authenticated organization's licence includes it, and whether the organization has activated it. Answers 200 with `available: false` for a connector this deployment does not have.
+// Returns whether the connector is registered on this installation, whether the authenticated organization's license includes it, and whether the organization has activated it. Answers 200 with `available: false` for a connector this installation does not have.
 //
 // Corresponds with GET /connectors/{connectorName}/state (the `GetConnectorState` operationId).
 func (c *Client) GetConnectorState(ctx context.Context, connectorName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -9185,7 +11100,7 @@ func (c *Client) CreateEntitlement(ctx context.Context, body CreateEntitlementJS
 
 // DeleteEntitlement Delete an entitlement
 //
-// Delete an entitlement by its slug.
+// Delete an entitlement by its slug. Its usage is deleted with it. An entitlement a license still grants is refused with a 409: remove the grants first.
 //
 // Corresponds with DELETE /entitlements/{entitlementSlug} (the `DeleteEntitlement` operationId).
 func (c *Client) DeleteEntitlement(ctx context.Context, entitlementSlug string, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -9439,7 +11354,7 @@ func (c *Client) GetFeatureFlag(ctx context.Context, featureFlagSlug string, req
 
 // UpdateFeatureFlagWithBody Update a featureflag
 //
-// Update a featureflag with the provided details.
+// Update a featureflag with the provided details. Sending a slug renames the flag; omitting it keeps the current one.
 //
 // Takes any type of body and a specified content type.
 //
@@ -9458,7 +11373,7 @@ func (c *Client) UpdateFeatureFlagWithBody(ctx context.Context, featureFlagSlug 
 
 // UpdateFeatureFlag Update a featureflag
 //
-// Update a featureflag with the provided details.
+// Update a featureflag with the provided details. Sending a slug renames the flag; omitting it keeps the current one.
 //
 // Takes a body of the `application/json` content type.
 //
@@ -9719,6 +11634,36 @@ func (c *Client) ReportEntitlementUsageMetricWithBody(ctx context.Context, insta
 // Corresponds with POST /instances/{instanceSlug}/entitlements/{entitlementSlug}/usage (the `ReportEntitlementUsageMetric` operationId).
 func (c *Client) ReportEntitlementUsageMetric(ctx context.Context, instanceSlug string, entitlementSlug string, body ReportEntitlementUsageMetricJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewReportEntitlementUsageMetricRequest(c.Server, instanceSlug, entitlementSlug, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ListAiInferences List AI inferences
+//
+// Corresponds with GET /instances/{instanceSlug}/entitlements/{entitlementSlug}/usage/inferences (the `ListAiInferences` operationId).
+func (c *Client) ListAiInferences(ctx context.Context, instanceSlug string, entitlementSlug string, params *ListAiInferencesParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListAiInferencesRequest(c.Server, instanceSlug, entitlementSlug, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ListAiReservations List open AI reservations
+//
+// Corresponds with GET /instances/{instanceSlug}/entitlements/{entitlementSlug}/usage/reservations (the `ListAiReservations` operationId).
+func (c *Client) ListAiReservations(ctx context.Context, instanceSlug string, entitlementSlug string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListAiReservationsRequest(c.Server, instanceSlug, entitlementSlug)
 	if err != nil {
 		return nil, err
 	}
@@ -10008,7 +11953,7 @@ func (c *Client) GetLicenses(ctx context.Context, params *GetLicensesParams, req
 //
 // Create a new license with the provided details. Without familySlug or familyId this creates a new license family and the license becomes its version 1. With one of them it adds the next version to that family (familySlug names it by slug, familyId by identifier; sent together they must agree), and the version number is assigned by the server as the next one in the family's sequence. The version starts PUBLISHED, or DRAFT when lifecycleState says so; ARCHIVED is refused (422 CreateLicense.LifecycleStateNotSettable), because a version is archived with archive-license once it has been on sale.
 //
-// Where the deployment limits how many licenses an organization may have, only a new family counts against that limit (409 CreateLicense.EntitlementLimitReached once it is reached): a new version of an existing family never does.
+// Where the installation limits how many licenses an organization may have, only a new family counts against that limit (409 CreateLicense.EntitlementLimitReached once it is reached): a new version of an existing family never does.
 //
 // Takes any type of body and a specified content type.
 //
@@ -10029,7 +11974,7 @@ func (c *Client) CreateLicenseWithBody(ctx context.Context, contentType string, 
 //
 // Create a new license with the provided details. Without familySlug or familyId this creates a new license family and the license becomes its version 1. With one of them it adds the next version to that family (familySlug names it by slug, familyId by identifier; sent together they must agree), and the version number is assigned by the server as the next one in the family's sequence. The version starts PUBLISHED, or DRAFT when lifecycleState says so; ARCHIVED is refused (422 CreateLicense.LifecycleStateNotSettable), because a version is archived with archive-license once it has been on sale.
 //
-// Where the deployment limits how many licenses an organization may have, only a new family counts against that limit (409 CreateLicense.EntitlementLimitReached once it is reached): a new version of an existing family never does.
+// Where the installation limits how many licenses an organization may have, only a new family counts against that limit (409 CreateLicense.EntitlementLimitReached once it is reached): a new version of an existing family never does.
 //
 // Takes a body of the `application/json` content type.
 //
@@ -10125,6 +12070,119 @@ func (c *Client) UpdateLicense(ctx context.Context, licenseSlug string, body Upd
 // Corresponds with POST /licenses/{licenseSlug}/archive (the `ArchiveLicense` operationId).
 func (c *Client) ArchiveLicense(ctx context.Context, licenseSlug string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewArchiveLicenseRequest(c.Server, licenseSlug)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ListConversionRules List conversion rules
+//
+// Corresponds with GET /licenses/{licenseSlug}/conversion-rules (the `ListConversionRules` operationId).
+func (c *Client) ListConversionRules(ctx context.Context, licenseSlug string, params *ListConversionRulesParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListConversionRulesRequest(c.Server, licenseSlug, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CreateConversionRuleWithBody Create a conversion rule
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /licenses/{licenseSlug}/conversion-rules (the `CreateConversionRule` operationId).
+func (c *Client) CreateConversionRuleWithBody(ctx context.Context, licenseSlug string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateConversionRuleRequestWithBody(c.Server, licenseSlug, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CreateConversionRule Create a conversion rule
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /licenses/{licenseSlug}/conversion-rules (the `CreateConversionRule` operationId).
+func (c *Client) CreateConversionRule(ctx context.Context, licenseSlug string, body CreateConversionRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateConversionRuleRequest(c.Server, licenseSlug, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ArchiveConversionRule Archive a conversion rule
+//
+// Corresponds with DELETE /licenses/{licenseSlug}/conversion-rules/{ruleId} (the `ArchiveConversionRule` operationId).
+func (c *Client) ArchiveConversionRule(ctx context.Context, licenseSlug string, ruleId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewArchiveConversionRuleRequest(c.Server, licenseSlug, ruleId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetConversionRule Get a conversion rule
+//
+// Corresponds with GET /licenses/{licenseSlug}/conversion-rules/{ruleId} (the `GetConversionRule` operationId).
+func (c *Client) GetConversionRule(ctx context.Context, licenseSlug string, ruleId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetConversionRuleRequest(c.Server, licenseSlug, ruleId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// UpdateConversionRuleWithBody Update a conversion rule
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with PUT /licenses/{licenseSlug}/conversion-rules/{ruleId} (the `UpdateConversionRule` operationId).
+func (c *Client) UpdateConversionRuleWithBody(ctx context.Context, licenseSlug string, ruleId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateConversionRuleRequestWithBody(c.Server, licenseSlug, ruleId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// UpdateConversionRule Update a conversion rule
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with PUT /licenses/{licenseSlug}/conversion-rules/{ruleId} (the `UpdateConversionRule` operationId).
+func (c *Client) UpdateConversionRule(ctx context.Context, licenseSlug string, ruleId string, body UpdateConversionRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateConversionRuleRequest(c.Server, licenseSlug, ruleId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -10296,9 +12354,9 @@ func (c *Client) UnarchiveLicense(ctx context.Context, licenseSlug string, reqEd
 	return c.Client.Do(req)
 }
 
-// ListMetadataFields List active metadata fields for a resource type
+// ListMetadataFields List metadata fields for a resource type
 //
-// Returns a cursor-paginated page of the active (non-archived) metadata fields declared for the org and the given resource type, ordered by displayOrder then createdAt.
+// Returns a cursor-paginated page of the metadata fields declared for the org and the given resource type, ordered by displayOrder then createdAt. Only active fields are listed, unless includeArchived is set: an archived field's id is what unarchive-metadata-field takes.
 //
 // Corresponds with GET /metadata-fields (the `ListMetadataFields` operationId).
 func (c *Client) ListMetadataFields(ctx context.Context, params *ListMetadataFieldsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -10489,6 +12547,119 @@ func (c *Client) DryRunMetadataField(ctx context.Context, id string, body DryRun
 // Corresponds with POST /metadata-fields/{id}/unarchive (the `UnarchiveMetadataField` operationId).
 func (c *Client) UnarchiveMetadataField(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUnarchiveMetadataFieldRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ListModels List models
+//
+// Corresponds with GET /models (the `ListModels` operationId).
+func (c *Client) ListModels(ctx context.Context, params *ListModelsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListModelsRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CreateModelWithBody Create a model
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /models (the `CreateModel` operationId).
+func (c *Client) CreateModelWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateModelRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CreateModel Create a model
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /models (the `CreateModel` operationId).
+func (c *Client) CreateModel(ctx context.Context, body CreateModelJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateModelRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DeleteModel Delete a model
+//
+// Corresponds with DELETE /models/{modelSlug} (the `DeleteModel` operationId).
+func (c *Client) DeleteModel(ctx context.Context, modelSlug string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteModelRequest(c.Server, modelSlug)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetModel Get a model
+//
+// Corresponds with GET /models/{modelSlug} (the `GetModel` operationId).
+func (c *Client) GetModel(ctx context.Context, modelSlug string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetModelRequest(c.Server, modelSlug)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// UpdateModelWithBody Update a model
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with PUT /models/{modelSlug} (the `UpdateModel` operationId).
+func (c *Client) UpdateModelWithBody(ctx context.Context, modelSlug string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateModelRequestWithBody(c.Server, modelSlug, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// UpdateModel Update a model
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with PUT /models/{modelSlug} (the `UpdateModel` operationId).
+func (c *Client) UpdateModel(ctx context.Context, modelSlug string, body UpdateModelJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateModelRequest(c.Server, modelSlug, body)
 	if err != nil {
 		return nil, err
 	}
@@ -10855,6 +13026,116 @@ func (c *Client) CreateServiceAccountToken(ctx context.Context, serviceAccountSl
 // Corresponds with DELETE /service-accounts/{serviceAccountSlug}/tokens/{tokenSlug} (the `DeleteServiceAccountToken` operationId).
 func (c *Client) DeleteServiceAccountToken(ctx context.Context, serviceAccountSlug string, tokenSlug string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDeleteServiceAccountTokenRequest(c.Server, serviceAccountSlug, tokenSlug)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetNotificationPreferences Read the caller's notification preferences
+//
+// Every notifiable event, with this user's effective value per channel: their own choice where they made one, the catalog default otherwise. Events absent from the catalog of an installation never appear, which is what keeps high-volume system events out of the feed.
+//
+// Corresponds with GET /v1/notification-preferences (the `GetNotificationPreferences` operationId).
+func (c *Client) GetNotificationPreferences(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetNotificationPreferencesRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// PutNotificationPreferencesWithBody Set the caller's notification preferences
+//
+// Stores the signed-in user's choices and answers with the whole matrix. A value that equals the catalog default is stored as no row at all, so a later change to that default still reaches this user.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with PUT /v1/notification-preferences (the `PutNotificationPreferences` operationId).
+func (c *Client) PutNotificationPreferencesWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutNotificationPreferencesRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// PutNotificationPreferences Set the caller's notification preferences
+//
+// Stores the signed-in user's choices and answers with the whole matrix. A value that equals the catalog default is stored as no row at all, so a later change to that default still reaches this user.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with PUT /v1/notification-preferences (the `PutNotificationPreferences` operationId).
+func (c *Client) PutNotificationPreferences(ctx context.Context, body PutNotificationPreferencesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutNotificationPreferencesRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ListNotifications List the caller's notifications
+//
+// Returns the signed-in user's notification feed, newest first, with the unread count. Notifications are a view over this organization's audit trail, narrowed to the events the user subscribes to; the id of a notification is the id of the audit trail entry it reports.
+//
+// Corresponds with GET /v1/notifications (the `ListNotifications` operationId).
+func (c *Client) ListNotifications(ctx context.Context, params *ListNotificationsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListNotificationsRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// MarkNotificationsReadWithBody Mark notifications read
+//
+// Marks the given notifications read for the signed-in user, or all of them with all: true. Ids belonging to another organization are ignored rather than rejected, so a retry of a partially applied call is safe.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /v1/notifications/mark-read (the `MarkNotificationsRead` operationId).
+func (c *Client) MarkNotificationsReadWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewMarkNotificationsReadRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// MarkNotificationsRead Mark notifications read
+//
+// Marks the given notifications read for the signed-in user, or all of them with all: true. Ids belonging to another organization are ignored rather than rejected, so a retry of a partially applied call is safe.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /v1/notifications/mark-read (the `MarkNotificationsRead` operationId).
+func (c *Client) MarkNotificationsRead(ctx context.Context, body MarkNotificationsReadJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewMarkNotificationsReadRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -13451,6 +15732,175 @@ func NewReportEntitlementUsageMetricRequestWithBody(server string, instanceSlug 
 	return req, nil
 }
 
+// NewListAiInferencesRequest constructs an http.Request for the ListAiInferences method
+func NewListAiInferencesRequest(server string, instanceSlug string, entitlementSlug string, params *ListAiInferencesParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "instanceSlug", instanceSlug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "entitlementSlug", entitlementSlug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/instances/%s/entitlements/%s/usage/inferences", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.From != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "from", *params.From, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.To != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "to", *params.To, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: "date-time"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Status != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "status", *params.Status, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.TransactionId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "transactionId", *params.TransactionId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int32"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewListAiReservationsRequest constructs an http.Request for the ListAiReservations method
+func NewListAiReservationsRequest(server string, instanceSlug string, entitlementSlug string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "instanceSlug", instanceSlug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "entitlementSlug", entitlementSlug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/instances/%s/entitlements/%s/usage/reservations", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewDeleteInstanceIntegrationRequest constructs an http.Request for the DeleteInstanceIntegration method
 func NewDeleteInstanceIntegrationRequest(server string, instanceSlug string, integrationName string) (*http.Request, error) {
 	var err error
@@ -14225,6 +16675,274 @@ func NewArchiveLicenseRequest(server string, licenseSlug string) (*http.Request,
 	return req, nil
 }
 
+// NewListConversionRulesRequest constructs an http.Request for the ListConversionRules method
+func NewListConversionRulesRequest(server string, licenseSlug string, params *ListConversionRulesParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "licenseSlug", licenseSlug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/licenses/%s/conversion-rules", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Status != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "status", *params.Status, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.EntitlementSlug != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "entitlementSlug", *params.EntitlementSlug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.ModelSlug != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "modelSlug", *params.ModelSlug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateConversionRuleRequest calls the generic CreateConversionRule builder with application/json body
+func NewCreateConversionRuleRequest(server string, licenseSlug string, body CreateConversionRuleJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateConversionRuleRequestWithBody(server, licenseSlug, "application/json", bodyReader)
+}
+
+// NewCreateConversionRuleRequestWithBody constructs an http.Request for the CreateConversionRule method, with any body, and a specified content type
+func NewCreateConversionRuleRequestWithBody(server string, licenseSlug string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "licenseSlug", licenseSlug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/licenses/%s/conversion-rules", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewArchiveConversionRuleRequest constructs an http.Request for the ArchiveConversionRule method
+func NewArchiveConversionRuleRequest(server string, licenseSlug string, ruleId string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "licenseSlug", licenseSlug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "ruleId", ruleId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/licenses/%s/conversion-rules/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetConversionRuleRequest constructs an http.Request for the GetConversionRule method
+func NewGetConversionRuleRequest(server string, licenseSlug string, ruleId string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "licenseSlug", licenseSlug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "ruleId", ruleId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/licenses/%s/conversion-rules/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateConversionRuleRequest calls the generic UpdateConversionRule builder with application/json body
+func NewUpdateConversionRuleRequest(server string, licenseSlug string, ruleId string, body UpdateConversionRuleJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateConversionRuleRequestWithBody(server, licenseSlug, ruleId, "application/json", bodyReader)
+}
+
+// NewUpdateConversionRuleRequestWithBody constructs an http.Request for the UpdateConversionRule method, with any body, and a specified content type
+func NewUpdateConversionRuleRequestWithBody(server string, licenseSlug string, ruleId string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "licenseSlug", licenseSlug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "ruleId", ruleId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/licenses/%s/conversion-rules/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewGetLicenseEntitlementsRequest constructs an http.Request for the GetLicenseEntitlements method
 func NewGetLicenseEntitlementsRequest(server string, licenseSlug string, params *GetLicenseEntitlementsParams) (*http.Request, error) {
 	var err error
@@ -14585,6 +17303,18 @@ func NewListMetadataFieldsRequest(server string, params *ListMetadataFieldsParam
 			}
 		}
 
+		if params.IncludeArchived != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "includeArchived", *params.IncludeArchived, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "boolean", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
 		if params.Cursor != nil {
 
 			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
@@ -14861,6 +17591,263 @@ func NewUnarchiveMetadataFieldRequest(server string, id string) (*http.Request, 
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewListModelsRequest constructs an http.Request for the ListModels method
+func NewListModelsRequest(server string, params *ListModelsParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/models")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int32"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Status != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "status", *params.Status, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Vendor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "vendor", *params.Vendor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Modality != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "modality", *params.Modality, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateModelRequest calls the generic CreateModel builder with application/json body
+func NewCreateModelRequest(server string, body CreateModelJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateModelRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewCreateModelRequestWithBody constructs an http.Request for the CreateModel method, with any body, and a specified content type
+func NewCreateModelRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/models")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteModelRequest constructs an http.Request for the DeleteModel method
+func NewDeleteModelRequest(server string, modelSlug string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "modelSlug", modelSlug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/models/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetModelRequest constructs an http.Request for the GetModel method
+func NewGetModelRequest(server string, modelSlug string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "modelSlug", modelSlug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/models/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateModelRequest calls the generic UpdateModel builder with application/json body
+func NewUpdateModelRequest(server string, modelSlug string, body UpdateModelJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateModelRequestWithBody(server, modelSlug, "application/json", bodyReader)
+}
+
+// NewUpdateModelRequestWithBody constructs an http.Request for the UpdateModel method, with any body, and a specified content type
+func NewUpdateModelRequestWithBody(server string, modelSlug string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "modelSlug", modelSlug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/models/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -15516,6 +18503,203 @@ func NewDeleteServiceAccountTokenRequest(server string, serviceAccountSlug strin
 	return req, nil
 }
 
+// NewGetNotificationPreferencesRequest constructs an http.Request for the GetNotificationPreferences method
+func NewGetNotificationPreferencesRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/notification-preferences")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPutNotificationPreferencesRequest calls the generic PutNotificationPreferences builder with application/json body
+func NewPutNotificationPreferencesRequest(server string, body PutNotificationPreferencesJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPutNotificationPreferencesRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPutNotificationPreferencesRequestWithBody constructs an http.Request for the PutNotificationPreferences method, with any body, and a specified content type
+func NewPutNotificationPreferencesRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/notification-preferences")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewListNotificationsRequest constructs an http.Request for the ListNotifications method
+func NewListNotificationsRequest(server string, params *ListNotificationsParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/notifications")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Status != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "status", *params.Status, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.ObjectType != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "objectType", *params.ObjectType, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "array", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: "int32"}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewMarkNotificationsReadRequest calls the generic MarkNotificationsRead builder with application/json body
+func NewMarkNotificationsReadRequest(server string, body MarkNotificationsReadJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewMarkNotificationsReadRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewMarkNotificationsReadRequestWithBody constructs an http.Request for the MarkNotificationsRead method, with any body, and a specified content type
+func NewMarkNotificationsReadRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/notifications/mark-read")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 func (c *Client) applyEditors(ctx context.Context, req *http.Request, additionalEditors []RequestEditorFn) error {
 	for _, r := range c.RequestEditors {
 		if err := r(ctx, req); err != nil {
@@ -15652,7 +18836,7 @@ type ClientWithResponsesInterface interface {
 
 	// ActivateConnectorWithResponse Activate connector
 	//
-	// Activates a registered connector for the authenticated organization. Idempotent: activating an already-active connector succeeds without changing when it was first activated. Refused when the organization's licence does not include the connector.
+	// Activates a registered connector for the authenticated organization. Idempotent: activating an already-active connector succeeds without changing when it was first activated. Refused when the organization's license does not include the connector.
 	//
 	// Returns a wrapper object for the known response body format(s).
 	//
@@ -15706,7 +18890,7 @@ type ClientWithResponsesInterface interface {
 
 	// GetConnectorStateWithResponse Get connector state for this organization
 	//
-	// Returns whether the connector is registered in this deployment, whether the authenticated organization's licence includes it, and whether the organization has activated it. Answers 200 with `available: false` for a connector this deployment does not have.
+	// Returns whether the connector is registered on this installation, whether the authenticated organization's license includes it, and whether the organization has activated it. Answers 200 with `available: false` for a connector this installation does not have.
 	//
 	// Returns a wrapper object for the known response body format(s).
 	//
@@ -16021,7 +19205,7 @@ type ClientWithResponsesInterface interface {
 
 	// DeleteEntitlementWithResponse Delete an entitlement
 	//
-	// Delete an entitlement by its slug.
+	// Delete an entitlement by its slug. Its usage is deleted with it. An entitlement a license still grants is refused with a 409: remove the grants first.
 	//
 	// Returns a wrapper object for the known response body format(s).
 	//
@@ -16147,7 +19331,7 @@ type ClientWithResponsesInterface interface {
 
 	// UpdateFeatureFlagWithBodyWithResponse Update a featureflag
 	//
-	// Update a featureflag with the provided details.
+	// Update a featureflag with the provided details. Sending a slug renames the flag; omitting it keeps the current one.
 	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -16156,7 +19340,7 @@ type ClientWithResponsesInterface interface {
 
 	// UpdateFeatureFlagWithResponse Update a featureflag
 	//
-	// Update a featureflag with the provided details.
+	// Update a featureflag with the provided details. Sending a slug renames the flag; omitting it keeps the current one.
 	//
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -16288,6 +19472,20 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with POST /instances/{instanceSlug}/entitlements/{entitlementSlug}/usage (the `ReportEntitlementUsageMetric` operationId).
 	ReportEntitlementUsageMetricWithResponse(ctx context.Context, instanceSlug string, entitlementSlug string, body ReportEntitlementUsageMetricJSONRequestBody, reqEditors ...RequestEditorFn) (*ReportEntitlementUsageMetricResponse, error)
+
+	// ListAiInferencesWithResponse List AI inferences
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /instances/{instanceSlug}/entitlements/{entitlementSlug}/usage/inferences (the `ListAiInferences` operationId).
+	ListAiInferencesWithResponse(ctx context.Context, instanceSlug string, entitlementSlug string, params *ListAiInferencesParams, reqEditors ...RequestEditorFn) (*ListAiInferencesResponse, error)
+
+	// ListAiReservationsWithResponse List open AI reservations
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /instances/{instanceSlug}/entitlements/{entitlementSlug}/usage/reservations (the `ListAiReservations` operationId).
+	ListAiReservationsWithResponse(ctx context.Context, instanceSlug string, entitlementSlug string, reqEditors ...RequestEditorFn) (*ListAiReservationsResponse, error)
 
 	// DeleteInstanceIntegrationWithResponse Delete an instance integration
 	//
@@ -16432,7 +19630,7 @@ type ClientWithResponsesInterface interface {
 	//
 	// Create a new license with the provided details. Without familySlug or familyId this creates a new license family and the license becomes its version 1. With one of them it adds the next version to that family (familySlug names it by slug, familyId by identifier; sent together they must agree), and the version number is assigned by the server as the next one in the family's sequence. The version starts PUBLISHED, or DRAFT when lifecycleState says so; ARCHIVED is refused (422 CreateLicense.LifecycleStateNotSettable), because a version is archived with archive-license once it has been on sale.
 	//
-	// Where the deployment limits how many licenses an organization may have, only a new family counts against that limit (409 CreateLicense.EntitlementLimitReached once it is reached): a new version of an existing family never does.
+	// Where the installation limits how many licenses an organization may have, only a new family counts against that limit (409 CreateLicense.EntitlementLimitReached once it is reached): a new version of an existing family never does.
 	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -16443,7 +19641,7 @@ type ClientWithResponsesInterface interface {
 	//
 	// Create a new license with the provided details. Without familySlug or familyId this creates a new license family and the license becomes its version 1. With one of them it adds the next version to that family (familySlug names it by slug, familyId by identifier; sent together they must agree), and the version number is assigned by the server as the next one in the family's sequence. The version starts PUBLISHED, or DRAFT when lifecycleState says so; ARCHIVED is refused (422 CreateLicense.LifecycleStateNotSettable), because a version is archived with archive-license once it has been on sale.
 	//
-	// Where the deployment limits how many licenses an organization may have, only a new family counts against that limit (409 CreateLicense.EntitlementLimitReached once it is reached): a new version of an existing family never does.
+	// Where the installation limits how many licenses an organization may have, only a new family counts against that limit (409 CreateLicense.EntitlementLimitReached once it is reached): a new version of an existing family never does.
 	//
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -16494,6 +19692,55 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with POST /licenses/{licenseSlug}/archive (the `ArchiveLicense` operationId).
 	ArchiveLicenseWithResponse(ctx context.Context, licenseSlug string, reqEditors ...RequestEditorFn) (*ArchiveLicenseResponse, error)
+
+	// ListConversionRulesWithResponse List conversion rules
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /licenses/{licenseSlug}/conversion-rules (the `ListConversionRules` operationId).
+	ListConversionRulesWithResponse(ctx context.Context, licenseSlug string, params *ListConversionRulesParams, reqEditors ...RequestEditorFn) (*ListConversionRulesResponse, error)
+
+	// CreateConversionRuleWithBodyWithResponse Create a conversion rule
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /licenses/{licenseSlug}/conversion-rules (the `CreateConversionRule` operationId).
+	CreateConversionRuleWithBodyWithResponse(ctx context.Context, licenseSlug string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateConversionRuleResponse, error)
+
+	// CreateConversionRuleWithResponse Create a conversion rule
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /licenses/{licenseSlug}/conversion-rules (the `CreateConversionRule` operationId).
+	CreateConversionRuleWithResponse(ctx context.Context, licenseSlug string, body CreateConversionRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateConversionRuleResponse, error)
+
+	// ArchiveConversionRuleWithResponse Archive a conversion rule
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with DELETE /licenses/{licenseSlug}/conversion-rules/{ruleId} (the `ArchiveConversionRule` operationId).
+	ArchiveConversionRuleWithResponse(ctx context.Context, licenseSlug string, ruleId string, reqEditors ...RequestEditorFn) (*ArchiveConversionRuleResponse, error)
+
+	// GetConversionRuleWithResponse Get a conversion rule
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /licenses/{licenseSlug}/conversion-rules/{ruleId} (the `GetConversionRule` operationId).
+	GetConversionRuleWithResponse(ctx context.Context, licenseSlug string, ruleId string, reqEditors ...RequestEditorFn) (*GetConversionRuleResponse, error)
+
+	// UpdateConversionRuleWithBodyWithResponse Update a conversion rule
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PUT /licenses/{licenseSlug}/conversion-rules/{ruleId} (the `UpdateConversionRule` operationId).
+	UpdateConversionRuleWithBodyWithResponse(ctx context.Context, licenseSlug string, ruleId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateConversionRuleResponse, error)
+
+	// UpdateConversionRuleWithResponse Update a conversion rule
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PUT /licenses/{licenseSlug}/conversion-rules/{ruleId} (the `UpdateConversionRule` operationId).
+	UpdateConversionRuleWithResponse(ctx context.Context, licenseSlug string, ruleId string, body UpdateConversionRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateConversionRuleResponse, error)
 
 	// GetLicenseEntitlementsWithResponse Get all entitlements for a license
 	//
@@ -16576,9 +19823,9 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with POST /licenses/{licenseSlug}/unarchive (the `UnarchiveLicense` operationId).
 	UnarchiveLicenseWithResponse(ctx context.Context, licenseSlug string, reqEditors ...RequestEditorFn) (*UnarchiveLicenseResponse, error)
 
-	// ListMetadataFieldsWithResponse List active metadata fields for a resource type
+	// ListMetadataFieldsWithResponse List metadata fields for a resource type
 	//
-	// Returns a cursor-paginated page of the active (non-archived) metadata fields declared for the org and the given resource type, ordered by displayOrder then createdAt.
+	// Returns a cursor-paginated page of the metadata fields declared for the org and the given resource type, ordered by displayOrder then createdAt. Only active fields are listed, unless includeArchived is set: an archived field's id is what unarchive-metadata-field takes.
 	//
 	// Returns a wrapper object for the known response body format(s).
 	//
@@ -16674,6 +19921,55 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with POST /metadata-fields/{id}/unarchive (the `UnarchiveMetadataField` operationId).
 	UnarchiveMetadataFieldWithResponse(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*UnarchiveMetadataFieldResponse, error)
+
+	// ListModelsWithResponse List models
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /models (the `ListModels` operationId).
+	ListModelsWithResponse(ctx context.Context, params *ListModelsParams, reqEditors ...RequestEditorFn) (*ListModelsResponse, error)
+
+	// CreateModelWithBodyWithResponse Create a model
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /models (the `CreateModel` operationId).
+	CreateModelWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateModelResponse, error)
+
+	// CreateModelWithResponse Create a model
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /models (the `CreateModel` operationId).
+	CreateModelWithResponse(ctx context.Context, body CreateModelJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateModelResponse, error)
+
+	// DeleteModelWithResponse Delete a model
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with DELETE /models/{modelSlug} (the `DeleteModel` operationId).
+	DeleteModelWithResponse(ctx context.Context, modelSlug string, reqEditors ...RequestEditorFn) (*DeleteModelResponse, error)
+
+	// GetModelWithResponse Get a model
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /models/{modelSlug} (the `GetModel` operationId).
+	GetModelWithResponse(ctx context.Context, modelSlug string, reqEditors ...RequestEditorFn) (*GetModelResponse, error)
+
+	// UpdateModelWithBodyWithResponse Update a model
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PUT /models/{modelSlug} (the `UpdateModel` operationId).
+	UpdateModelWithBodyWithResponse(ctx context.Context, modelSlug string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateModelResponse, error)
+
+	// UpdateModelWithResponse Update a model
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PUT /models/{modelSlug} (the `UpdateModel` operationId).
+	UpdateModelWithResponse(ctx context.Context, modelSlug string, body UpdateModelJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateModelResponse, error)
 
 	// EvaluateFlagsBulkWithBodyWithResponse OFREP bulk flag evaluation contract
 	//
@@ -16856,6 +20152,60 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with DELETE /service-accounts/{serviceAccountSlug}/tokens/{tokenSlug} (the `DeleteServiceAccountToken` operationId).
 	DeleteServiceAccountTokenWithResponse(ctx context.Context, serviceAccountSlug string, tokenSlug string, reqEditors ...RequestEditorFn) (*DeleteServiceAccountTokenResponse, error)
+
+	// GetNotificationPreferencesWithResponse Read the caller's notification preferences
+	//
+	// Every notifiable event, with this user's effective value per channel: their own choice where they made one, the catalog default otherwise. Events absent from the catalog of an installation never appear, which is what keeps high-volume system events out of the feed.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /v1/notification-preferences (the `GetNotificationPreferences` operationId).
+	GetNotificationPreferencesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetNotificationPreferencesResponse, error)
+
+	// PutNotificationPreferencesWithBodyWithResponse Set the caller's notification preferences
+	//
+	// Stores the signed-in user's choices and answers with the whole matrix. A value that equals the catalog default is stored as no row at all, so a later change to that default still reaches this user.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PUT /v1/notification-preferences (the `PutNotificationPreferences` operationId).
+	PutNotificationPreferencesWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutNotificationPreferencesResponse, error)
+
+	// PutNotificationPreferencesWithResponse Set the caller's notification preferences
+	//
+	// Stores the signed-in user's choices and answers with the whole matrix. A value that equals the catalog default is stored as no row at all, so a later change to that default still reaches this user.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PUT /v1/notification-preferences (the `PutNotificationPreferences` operationId).
+	PutNotificationPreferencesWithResponse(ctx context.Context, body PutNotificationPreferencesJSONRequestBody, reqEditors ...RequestEditorFn) (*PutNotificationPreferencesResponse, error)
+
+	// ListNotificationsWithResponse List the caller's notifications
+	//
+	// Returns the signed-in user's notification feed, newest first, with the unread count. Notifications are a view over this organization's audit trail, narrowed to the events the user subscribes to; the id of a notification is the id of the audit trail entry it reports.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /v1/notifications (the `ListNotifications` operationId).
+	ListNotificationsWithResponse(ctx context.Context, params *ListNotificationsParams, reqEditors ...RequestEditorFn) (*ListNotificationsResponse, error)
+
+	// MarkNotificationsReadWithBodyWithResponse Mark notifications read
+	//
+	// Marks the given notifications read for the signed-in user, or all of them with all: true. Ids belonging to another organization are ignored rather than rejected, so a retry of a partially applied call is safe.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /v1/notifications/mark-read (the `MarkNotificationsRead` operationId).
+	MarkNotificationsReadWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*MarkNotificationsReadResponse, error)
+
+	// MarkNotificationsReadWithResponse Mark notifications read
+	//
+	// Marks the given notifications read for the signed-in user, or all of them with all: true. Ids belonging to another organization are ignored rather than rejected, so a retry of a partially applied call is safe.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /v1/notifications/mark-read (the `MarkNotificationsRead` operationId).
+	MarkNotificationsReadWithResponse(ctx context.Context, body MarkNotificationsReadJSONRequestBody, reqEditors ...RequestEditorFn) (*MarkNotificationsReadResponse, error)
 }
 
 type ListComponentsResponse struct {
@@ -19932,6 +23282,8 @@ type DeleteEntitlementResponse struct {
 	ApplicationproblemJSON403 *Problem
 	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
 	ApplicationproblemJSON404 *Problem
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Problem
 	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
 	ApplicationproblemJSON422 *Problem
 	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
@@ -19956,6 +23308,11 @@ func (r DeleteEntitlementResponse) GetApplicationproblemJSON403() *Problem {
 // GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
 func (r DeleteEntitlementResponse) GetApplicationproblemJSON404() *Problem {
 	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r DeleteEntitlementResponse) GetApplicationproblemJSON409() *Problem {
+	return r.ApplicationproblemJSON409
 }
 
 // GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
@@ -21497,6 +24854,11 @@ func (r GetEntitlementUsageMetricsResponse) ContentType() string {
 	return ""
 }
 
+// ReportEntitlementUsageMetricResponse200Headers the declared response headers of an HTTP 200 response for ReportEntitlementUsageMetric
+type ReportEntitlementUsageMetricResponse200Headers struct {
+	IdempotentReplayed *string
+}
+
 type ReportEntitlementUsageMetricResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -21516,6 +24878,8 @@ type ReportEntitlementUsageMetricResponse struct {
 	ApplicationproblemJSON422 *Problem
 	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
 	ApplicationproblemJSON500 *Problem
+	// Headers200 the parsed response headers for an HTTP 200 response
+	Headers200 *ReportEntitlementUsageMetricResponse200Headers
 }
 
 // GetJSON200 returns the response for an HTTP 200 `application/json` response
@@ -21581,6 +24945,165 @@ func (r ReportEntitlementUsageMetricResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r ReportEntitlementUsageMetricResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListAiInferencesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *AiInferencePage
+	// ApplicationproblemJSON400 the response for an HTTP 400 `application/problem+json` response
+	ApplicationproblemJSON400 *Problem
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r ListAiInferencesResponse) GetJSON200() *AiInferencePage {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON400 returns the response for an HTTP 400 `application/problem+json` response
+func (r ListAiInferencesResponse) GetApplicationproblemJSON400() *Problem {
+	return r.ApplicationproblemJSON400
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ListAiInferencesResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ListAiInferencesResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r ListAiInferencesResponse) GetApplicationproblemJSON404() *Problem {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r ListAiInferencesResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r ListAiInferencesResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r ListAiInferencesResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ListAiInferencesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListAiInferencesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListAiInferencesResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListAiReservationsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *AiReservations
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r ListAiReservationsResponse) GetJSON200() *AiReservations {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ListAiReservationsResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ListAiReservationsResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r ListAiReservationsResponse) GetApplicationproblemJSON404() *Problem {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r ListAiReservationsResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r ListAiReservationsResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r ListAiReservationsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ListAiReservationsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListAiReservationsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListAiReservationsResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -22929,6 +26452,449 @@ func (r ArchiveLicenseResponse) ContentType() string {
 	return ""
 }
 
+type ListConversionRulesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *[]ConversionRule
+	// ApplicationproblemJSON400 the response for an HTTP 400 `application/problem+json` response
+	ApplicationproblemJSON400 *Problem
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *Problem
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r ListConversionRulesResponse) GetJSON200() *[]ConversionRule {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON400 returns the response for an HTTP 400 `application/problem+json` response
+func (r ListConversionRulesResponse) GetApplicationproblemJSON400() *Problem {
+	return r.ApplicationproblemJSON400
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ListConversionRulesResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ListConversionRulesResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r ListConversionRulesResponse) GetApplicationproblemJSON404() *Problem {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r ListConversionRulesResponse) GetApplicationproblemJSON409() *Problem {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r ListConversionRulesResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r ListConversionRulesResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r ListConversionRulesResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ListConversionRulesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListConversionRulesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListConversionRulesResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CreateConversionRuleResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON201 the response for an HTTP 201 `application/json` response
+	JSON201 *ConversionRule
+	// ApplicationproblemJSON400 the response for an HTTP 400 `application/problem+json` response
+	ApplicationproblemJSON400 *Problem
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *Problem
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+}
+
+// GetJSON201 returns the response for an HTTP 201 `application/json` response
+func (r CreateConversionRuleResponse) GetJSON201() *ConversionRule {
+	return r.JSON201
+}
+
+// GetApplicationproblemJSON400 returns the response for an HTTP 400 `application/problem+json` response
+func (r CreateConversionRuleResponse) GetApplicationproblemJSON400() *Problem {
+	return r.ApplicationproblemJSON400
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r CreateConversionRuleResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r CreateConversionRuleResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r CreateConversionRuleResponse) GetApplicationproblemJSON404() *Problem {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r CreateConversionRuleResponse) GetApplicationproblemJSON409() *Problem {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r CreateConversionRuleResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r CreateConversionRuleResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r CreateConversionRuleResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateConversionRuleResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateConversionRuleResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CreateConversionRuleResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ArchiveConversionRuleResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// ApplicationproblemJSON400 the response for an HTTP 400 `application/problem+json` response
+	ApplicationproblemJSON400 *Problem
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *Problem
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+}
+
+// GetApplicationproblemJSON400 returns the response for an HTTP 400 `application/problem+json` response
+func (r ArchiveConversionRuleResponse) GetApplicationproblemJSON400() *Problem {
+	return r.ApplicationproblemJSON400
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ArchiveConversionRuleResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ArchiveConversionRuleResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r ArchiveConversionRuleResponse) GetApplicationproblemJSON404() *Problem {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r ArchiveConversionRuleResponse) GetApplicationproblemJSON409() *Problem {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r ArchiveConversionRuleResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r ArchiveConversionRuleResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r ArchiveConversionRuleResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ArchiveConversionRuleResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ArchiveConversionRuleResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ArchiveConversionRuleResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetConversionRuleResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *ConversionRule
+	// ApplicationproblemJSON400 the response for an HTTP 400 `application/problem+json` response
+	ApplicationproblemJSON400 *Problem
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *Problem
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetConversionRuleResponse) GetJSON200() *ConversionRule {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON400 returns the response for an HTTP 400 `application/problem+json` response
+func (r GetConversionRuleResponse) GetApplicationproblemJSON400() *Problem {
+	return r.ApplicationproblemJSON400
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r GetConversionRuleResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r GetConversionRuleResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r GetConversionRuleResponse) GetApplicationproblemJSON404() *Problem {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r GetConversionRuleResponse) GetApplicationproblemJSON409() *Problem {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r GetConversionRuleResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r GetConversionRuleResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r GetConversionRuleResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetConversionRuleResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetConversionRuleResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetConversionRuleResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpdateConversionRuleResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *ConversionRule
+	// ApplicationproblemJSON400 the response for an HTTP 400 `application/problem+json` response
+	ApplicationproblemJSON400 *Problem
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *Problem
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r UpdateConversionRuleResponse) GetJSON200() *ConversionRule {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON400 returns the response for an HTTP 400 `application/problem+json` response
+func (r UpdateConversionRuleResponse) GetApplicationproblemJSON400() *Problem {
+	return r.ApplicationproblemJSON400
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r UpdateConversionRuleResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r UpdateConversionRuleResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r UpdateConversionRuleResponse) GetApplicationproblemJSON404() *Problem {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r UpdateConversionRuleResponse) GetApplicationproblemJSON409() *Problem {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r UpdateConversionRuleResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r UpdateConversionRuleResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r UpdateConversionRuleResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateConversionRuleResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateConversionRuleResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpdateConversionRuleResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type GetLicenseEntitlementsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -24098,6 +28064,393 @@ func (r UnarchiveMetadataFieldResponse) ContentType() string {
 	return ""
 }
 
+type ListModelsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *PageModel
+	// ApplicationproblemJSON400 the response for an HTTP 400 `application/problem+json` response
+	ApplicationproblemJSON400 *Problem
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r ListModelsResponse) GetJSON200() *PageModel {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON400 returns the response for an HTTP 400 `application/problem+json` response
+func (r ListModelsResponse) GetApplicationproblemJSON400() *Problem {
+	return r.ApplicationproblemJSON400
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ListModelsResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ListModelsResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r ListModelsResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r ListModelsResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r ListModelsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ListModelsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListModelsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListModelsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CreateModelResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON201 the response for an HTTP 201 `application/json` response
+	JSON201 *Model
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+}
+
+// GetJSON201 returns the response for an HTTP 201 `application/json` response
+func (r CreateModelResponse) GetJSON201() *Model {
+	return r.JSON201
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r CreateModelResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r CreateModelResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r CreateModelResponse) GetApplicationproblemJSON409() *Problem {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r CreateModelResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r CreateModelResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r CreateModelResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateModelResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateModelResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CreateModelResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type DeleteModelResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *Problem
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r DeleteModelResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r DeleteModelResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r DeleteModelResponse) GetApplicationproblemJSON404() *Problem {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r DeleteModelResponse) GetApplicationproblemJSON409() *Problem {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r DeleteModelResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r DeleteModelResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r DeleteModelResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteModelResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteModelResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DeleteModelResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetModelResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *Model
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetModelResponse) GetJSON200() *Model {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r GetModelResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r GetModelResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r GetModelResponse) GetApplicationproblemJSON404() *Problem {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r GetModelResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r GetModelResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r GetModelResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetModelResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetModelResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetModelResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpdateModelResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *Model
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *Problem
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r UpdateModelResponse) GetJSON200() *Model {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r UpdateModelResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r UpdateModelResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r UpdateModelResponse) GetApplicationproblemJSON404() *Problem {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r UpdateModelResponse) GetApplicationproblemJSON409() *Problem {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r UpdateModelResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r UpdateModelResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r UpdateModelResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateModelResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateModelResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpdateModelResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 // EvaluateFlagsBulkResponse200Headers the declared response headers of an HTTP 200 response for EvaluateFlagsBulk
 type EvaluateFlagsBulkResponse200Headers struct {
 	ETag *string
@@ -25218,6 +29571,296 @@ func (r DeleteServiceAccountTokenResponse) ContentType() string {
 	return ""
 }
 
+type GetNotificationPreferencesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *PreferenceMatrix
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetNotificationPreferencesResponse) GetJSON200() *PreferenceMatrix {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r GetNotificationPreferencesResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r GetNotificationPreferencesResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r GetNotificationPreferencesResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r GetNotificationPreferencesResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetNotificationPreferencesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetNotificationPreferencesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetNotificationPreferencesResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type PutNotificationPreferencesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *PreferenceMatrix
+	// ApplicationproblemJSON400 the response for an HTTP 400 `application/problem+json` response
+	ApplicationproblemJSON400 *Problem
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r PutNotificationPreferencesResponse) GetJSON200() *PreferenceMatrix {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON400 returns the response for an HTTP 400 `application/problem+json` response
+func (r PutNotificationPreferencesResponse) GetApplicationproblemJSON400() *Problem {
+	return r.ApplicationproblemJSON400
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r PutNotificationPreferencesResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r PutNotificationPreferencesResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r PutNotificationPreferencesResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r PutNotificationPreferencesResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r PutNotificationPreferencesResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r PutNotificationPreferencesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PutNotificationPreferencesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r PutNotificationPreferencesResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ListNotificationsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *List
+	// ApplicationproblemJSON400 the response for an HTTP 400 `application/problem+json` response
+	ApplicationproblemJSON400 *Problem
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r ListNotificationsResponse) GetJSON200() *List {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON400 returns the response for an HTTP 400 `application/problem+json` response
+func (r ListNotificationsResponse) GetApplicationproblemJSON400() *Problem {
+	return r.ApplicationproblemJSON400
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r ListNotificationsResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r ListNotificationsResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r ListNotificationsResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r ListNotificationsResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r ListNotificationsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ListNotificationsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListNotificationsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListNotificationsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type MarkNotificationsReadResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *MarkReadResult
+	// ApplicationproblemJSON400 the response for an HTTP 400 `application/problem+json` response
+	ApplicationproblemJSON400 *Problem
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r MarkNotificationsReadResponse) GetJSON200() *MarkReadResult {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON400 returns the response for an HTTP 400 `application/problem+json` response
+func (r MarkNotificationsReadResponse) GetApplicationproblemJSON400() *Problem {
+	return r.ApplicationproblemJSON400
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r MarkNotificationsReadResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r MarkNotificationsReadResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r MarkNotificationsReadResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r MarkNotificationsReadResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r MarkNotificationsReadResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r MarkNotificationsReadResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r MarkNotificationsReadResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r MarkNotificationsReadResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 // ListComponentsWithResponse List components
 //
 // Returns a cursor-paginated page of components for the current organization.
@@ -25370,7 +30013,7 @@ func (c *ClientWithResponses) DeactivateConnectorWithResponse(ctx context.Contex
 
 // ActivateConnectorWithResponse Activate connector
 //
-// Activates a registered connector for the authenticated organization. Idempotent: activating an already-active connector succeeds without changing when it was first activated. Refused when the organization's licence does not include the connector.
+// Activates a registered connector for the authenticated organization. Idempotent: activating an already-active connector succeeds without changing when it was first activated. Refused when the organization's license does not include the connector.
 //
 // Returns a wrapper object for the known response body format(s).
 //
@@ -25460,7 +30103,7 @@ func (c *ClientWithResponses) GetConnectorSettingsSchemaWithResponse(ctx context
 
 // GetConnectorStateWithResponse Get connector state for this organization
 //
-// Returns whether the connector is registered in this deployment, whether the authenticated organization's licence includes it, and whether the organization has activated it. Answers 200 with `available: false` for a connector this deployment does not have.
+// Returns whether the connector is registered on this installation, whether the authenticated organization's license includes it, and whether the organization has activated it. Answers 200 with `available: false` for a connector this installation does not have.
 //
 // Returns a wrapper object for the known response body format(s).
 //
@@ -25985,7 +30628,7 @@ func (c *ClientWithResponses) CreateEntitlementWithResponse(ctx context.Context,
 
 // DeleteEntitlementWithResponse Delete an entitlement
 //
-// Delete an entitlement by its slug.
+// Delete an entitlement by its slug. Its usage is deleted with it. An entitlement a license still grants is refused with a 409: remove the grants first.
 //
 // Returns a wrapper object for the known response body format(s).
 //
@@ -26195,7 +30838,7 @@ func (c *ClientWithResponses) GetFeatureFlagWithResponse(ctx context.Context, fe
 
 // UpdateFeatureFlagWithBodyWithResponse Update a featureflag
 //
-// Update a featureflag with the provided details.
+// Update a featureflag with the provided details. Sending a slug renames the flag; omitting it keeps the current one.
 //
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 //
@@ -26210,7 +30853,7 @@ func (c *ClientWithResponses) UpdateFeatureFlagWithBodyWithResponse(ctx context.
 
 // UpdateFeatureFlagWithResponse Update a featureflag
 //
-// Update a featureflag with the provided details.
+// Update a featureflag with the provided details. Sending a slug renames the flag; omitting it keeps the current one.
 //
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 //
@@ -26431,6 +31074,32 @@ func (c *ClientWithResponses) ReportEntitlementUsageMetricWithResponse(ctx conte
 		return nil, err
 	}
 	return ParseReportEntitlementUsageMetricResponse(rsp)
+}
+
+// ListAiInferencesWithResponse List AI inferences
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /instances/{instanceSlug}/entitlements/{entitlementSlug}/usage/inferences (the `ListAiInferences` operationId).
+func (c *ClientWithResponses) ListAiInferencesWithResponse(ctx context.Context, instanceSlug string, entitlementSlug string, params *ListAiInferencesParams, reqEditors ...RequestEditorFn) (*ListAiInferencesResponse, error) {
+	rsp, err := c.ListAiInferences(ctx, instanceSlug, entitlementSlug, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListAiInferencesResponse(rsp)
+}
+
+// ListAiReservationsWithResponse List open AI reservations
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /instances/{instanceSlug}/entitlements/{entitlementSlug}/usage/reservations (the `ListAiReservations` operationId).
+func (c *ClientWithResponses) ListAiReservationsWithResponse(ctx context.Context, instanceSlug string, entitlementSlug string, reqEditors ...RequestEditorFn) (*ListAiReservationsResponse, error) {
+	rsp, err := c.ListAiReservations(ctx, instanceSlug, entitlementSlug, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListAiReservationsResponse(rsp)
 }
 
 // DeleteInstanceIntegrationWithResponse Delete an instance integration
@@ -26666,7 +31335,7 @@ func (c *ClientWithResponses) GetLicensesWithResponse(ctx context.Context, param
 //
 // Create a new license with the provided details. Without familySlug or familyId this creates a new license family and the license becomes its version 1. With one of them it adds the next version to that family (familySlug names it by slug, familyId by identifier; sent together they must agree), and the version number is assigned by the server as the next one in the family's sequence. The version starts PUBLISHED, or DRAFT when lifecycleState says so; ARCHIVED is refused (422 CreateLicense.LifecycleStateNotSettable), because a version is archived with archive-license once it has been on sale.
 //
-// Where the deployment limits how many licenses an organization may have, only a new family counts against that limit (409 CreateLicense.EntitlementLimitReached once it is reached): a new version of an existing family never does.
+// Where the installation limits how many licenses an organization may have, only a new family counts against that limit (409 CreateLicense.EntitlementLimitReached once it is reached): a new version of an existing family never does.
 //
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 //
@@ -26683,7 +31352,7 @@ func (c *ClientWithResponses) CreateLicenseWithBodyWithResponse(ctx context.Cont
 //
 // Create a new license with the provided details. Without familySlug or familyId this creates a new license family and the license becomes its version 1. With one of them it adds the next version to that family (familySlug names it by slug, familyId by identifier; sent together they must agree), and the version number is assigned by the server as the next one in the family's sequence. The version starts PUBLISHED, or DRAFT when lifecycleState says so; ARCHIVED is refused (422 CreateLicense.LifecycleStateNotSettable), because a version is archived with archive-license once it has been on sale.
 //
-// Where the deployment limits how many licenses an organization may have, only a new family counts against that limit (409 CreateLicense.EntitlementLimitReached once it is reached): a new version of an existing family never does.
+// Where the installation limits how many licenses an organization may have, only a new family counts against that limit (409 CreateLicense.EntitlementLimitReached once it is reached): a new version of an existing family never does.
 //
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 //
@@ -26769,6 +31438,97 @@ func (c *ClientWithResponses) ArchiveLicenseWithResponse(ctx context.Context, li
 		return nil, err
 	}
 	return ParseArchiveLicenseResponse(rsp)
+}
+
+// ListConversionRulesWithResponse List conversion rules
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /licenses/{licenseSlug}/conversion-rules (the `ListConversionRules` operationId).
+func (c *ClientWithResponses) ListConversionRulesWithResponse(ctx context.Context, licenseSlug string, params *ListConversionRulesParams, reqEditors ...RequestEditorFn) (*ListConversionRulesResponse, error) {
+	rsp, err := c.ListConversionRules(ctx, licenseSlug, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListConversionRulesResponse(rsp)
+}
+
+// CreateConversionRuleWithBodyWithResponse Create a conversion rule
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /licenses/{licenseSlug}/conversion-rules (the `CreateConversionRule` operationId).
+func (c *ClientWithResponses) CreateConversionRuleWithBodyWithResponse(ctx context.Context, licenseSlug string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateConversionRuleResponse, error) {
+	rsp, err := c.CreateConversionRuleWithBody(ctx, licenseSlug, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateConversionRuleResponse(rsp)
+}
+
+// CreateConversionRuleWithResponse Create a conversion rule
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /licenses/{licenseSlug}/conversion-rules (the `CreateConversionRule` operationId).
+func (c *ClientWithResponses) CreateConversionRuleWithResponse(ctx context.Context, licenseSlug string, body CreateConversionRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateConversionRuleResponse, error) {
+	rsp, err := c.CreateConversionRule(ctx, licenseSlug, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateConversionRuleResponse(rsp)
+}
+
+// ArchiveConversionRuleWithResponse Archive a conversion rule
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with DELETE /licenses/{licenseSlug}/conversion-rules/{ruleId} (the `ArchiveConversionRule` operationId).
+func (c *ClientWithResponses) ArchiveConversionRuleWithResponse(ctx context.Context, licenseSlug string, ruleId string, reqEditors ...RequestEditorFn) (*ArchiveConversionRuleResponse, error) {
+	rsp, err := c.ArchiveConversionRule(ctx, licenseSlug, ruleId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseArchiveConversionRuleResponse(rsp)
+}
+
+// GetConversionRuleWithResponse Get a conversion rule
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /licenses/{licenseSlug}/conversion-rules/{ruleId} (the `GetConversionRule` operationId).
+func (c *ClientWithResponses) GetConversionRuleWithResponse(ctx context.Context, licenseSlug string, ruleId string, reqEditors ...RequestEditorFn) (*GetConversionRuleResponse, error) {
+	rsp, err := c.GetConversionRule(ctx, licenseSlug, ruleId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetConversionRuleResponse(rsp)
+}
+
+// UpdateConversionRuleWithBodyWithResponse Update a conversion rule
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PUT /licenses/{licenseSlug}/conversion-rules/{ruleId} (the `UpdateConversionRule` operationId).
+func (c *ClientWithResponses) UpdateConversionRuleWithBodyWithResponse(ctx context.Context, licenseSlug string, ruleId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateConversionRuleResponse, error) {
+	rsp, err := c.UpdateConversionRuleWithBody(ctx, licenseSlug, ruleId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateConversionRuleResponse(rsp)
+}
+
+// UpdateConversionRuleWithResponse Update a conversion rule
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PUT /licenses/{licenseSlug}/conversion-rules/{ruleId} (the `UpdateConversionRule` operationId).
+func (c *ClientWithResponses) UpdateConversionRuleWithResponse(ctx context.Context, licenseSlug string, ruleId string, body UpdateConversionRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateConversionRuleResponse, error) {
+	rsp, err := c.UpdateConversionRule(ctx, licenseSlug, ruleId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateConversionRuleResponse(rsp)
 }
 
 // GetLicenseEntitlementsWithResponse Get all entitlements for a license
@@ -26906,9 +31666,9 @@ func (c *ClientWithResponses) UnarchiveLicenseWithResponse(ctx context.Context, 
 	return ParseUnarchiveLicenseResponse(rsp)
 }
 
-// ListMetadataFieldsWithResponse List active metadata fields for a resource type
+// ListMetadataFieldsWithResponse List metadata fields for a resource type
 //
-// Returns a cursor-paginated page of the active (non-archived) metadata fields declared for the org and the given resource type, ordered by displayOrder then createdAt.
+// Returns a cursor-paginated page of the metadata fields declared for the org and the given resource type, ordered by displayOrder then createdAt. Only active fields are listed, unless includeArchived is set: an archived field's id is what unarchive-metadata-field takes.
 //
 // Returns a wrapper object for the known response body format(s).
 //
@@ -27069,6 +31829,97 @@ func (c *ClientWithResponses) UnarchiveMetadataFieldWithResponse(ctx context.Con
 		return nil, err
 	}
 	return ParseUnarchiveMetadataFieldResponse(rsp)
+}
+
+// ListModelsWithResponse List models
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /models (the `ListModels` operationId).
+func (c *ClientWithResponses) ListModelsWithResponse(ctx context.Context, params *ListModelsParams, reqEditors ...RequestEditorFn) (*ListModelsResponse, error) {
+	rsp, err := c.ListModels(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListModelsResponse(rsp)
+}
+
+// CreateModelWithBodyWithResponse Create a model
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /models (the `CreateModel` operationId).
+func (c *ClientWithResponses) CreateModelWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateModelResponse, error) {
+	rsp, err := c.CreateModelWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateModelResponse(rsp)
+}
+
+// CreateModelWithResponse Create a model
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /models (the `CreateModel` operationId).
+func (c *ClientWithResponses) CreateModelWithResponse(ctx context.Context, body CreateModelJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateModelResponse, error) {
+	rsp, err := c.CreateModel(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateModelResponse(rsp)
+}
+
+// DeleteModelWithResponse Delete a model
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with DELETE /models/{modelSlug} (the `DeleteModel` operationId).
+func (c *ClientWithResponses) DeleteModelWithResponse(ctx context.Context, modelSlug string, reqEditors ...RequestEditorFn) (*DeleteModelResponse, error) {
+	rsp, err := c.DeleteModel(ctx, modelSlug, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteModelResponse(rsp)
+}
+
+// GetModelWithResponse Get a model
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /models/{modelSlug} (the `GetModel` operationId).
+func (c *ClientWithResponses) GetModelWithResponse(ctx context.Context, modelSlug string, reqEditors ...RequestEditorFn) (*GetModelResponse, error) {
+	rsp, err := c.GetModel(ctx, modelSlug, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetModelResponse(rsp)
+}
+
+// UpdateModelWithBodyWithResponse Update a model
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PUT /models/{modelSlug} (the `UpdateModel` operationId).
+func (c *ClientWithResponses) UpdateModelWithBodyWithResponse(ctx context.Context, modelSlug string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateModelResponse, error) {
+	rsp, err := c.UpdateModelWithBody(ctx, modelSlug, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateModelResponse(rsp)
+}
+
+// UpdateModelWithResponse Update a model
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PUT /models/{modelSlug} (the `UpdateModel` operationId).
+func (c *ClientWithResponses) UpdateModelWithResponse(ctx context.Context, modelSlug string, body UpdateModelJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateModelResponse, error) {
+	rsp, err := c.UpdateModel(ctx, modelSlug, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateModelResponse(rsp)
 }
 
 // EvaluateFlagsBulkWithBodyWithResponse OFREP bulk flag evaluation contract
@@ -27371,6 +32222,96 @@ func (c *ClientWithResponses) DeleteServiceAccountTokenWithResponse(ctx context.
 		return nil, err
 	}
 	return ParseDeleteServiceAccountTokenResponse(rsp)
+}
+
+// GetNotificationPreferencesWithResponse Read the caller's notification preferences
+//
+// Every notifiable event, with this user's effective value per channel: their own choice where they made one, the catalog default otherwise. Events absent from the catalog of an installation never appear, which is what keeps high-volume system events out of the feed.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /v1/notification-preferences (the `GetNotificationPreferences` operationId).
+func (c *ClientWithResponses) GetNotificationPreferencesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetNotificationPreferencesResponse, error) {
+	rsp, err := c.GetNotificationPreferences(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetNotificationPreferencesResponse(rsp)
+}
+
+// PutNotificationPreferencesWithBodyWithResponse Set the caller's notification preferences
+//
+// Stores the signed-in user's choices and answers with the whole matrix. A value that equals the catalog default is stored as no row at all, so a later change to that default still reaches this user.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PUT /v1/notification-preferences (the `PutNotificationPreferences` operationId).
+func (c *ClientWithResponses) PutNotificationPreferencesWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutNotificationPreferencesResponse, error) {
+	rsp, err := c.PutNotificationPreferencesWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePutNotificationPreferencesResponse(rsp)
+}
+
+// PutNotificationPreferencesWithResponse Set the caller's notification preferences
+//
+// Stores the signed-in user's choices and answers with the whole matrix. A value that equals the catalog default is stored as no row at all, so a later change to that default still reaches this user.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PUT /v1/notification-preferences (the `PutNotificationPreferences` operationId).
+func (c *ClientWithResponses) PutNotificationPreferencesWithResponse(ctx context.Context, body PutNotificationPreferencesJSONRequestBody, reqEditors ...RequestEditorFn) (*PutNotificationPreferencesResponse, error) {
+	rsp, err := c.PutNotificationPreferences(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePutNotificationPreferencesResponse(rsp)
+}
+
+// ListNotificationsWithResponse List the caller's notifications
+//
+// Returns the signed-in user's notification feed, newest first, with the unread count. Notifications are a view over this organization's audit trail, narrowed to the events the user subscribes to; the id of a notification is the id of the audit trail entry it reports.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /v1/notifications (the `ListNotifications` operationId).
+func (c *ClientWithResponses) ListNotificationsWithResponse(ctx context.Context, params *ListNotificationsParams, reqEditors ...RequestEditorFn) (*ListNotificationsResponse, error) {
+	rsp, err := c.ListNotifications(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListNotificationsResponse(rsp)
+}
+
+// MarkNotificationsReadWithBodyWithResponse Mark notifications read
+//
+// Marks the given notifications read for the signed-in user, or all of them with all: true. Ids belonging to another organization are ignored rather than rejected, so a retry of a partially applied call is safe.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /v1/notifications/mark-read (the `MarkNotificationsRead` operationId).
+func (c *ClientWithResponses) MarkNotificationsReadWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*MarkNotificationsReadResponse, error) {
+	rsp, err := c.MarkNotificationsReadWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseMarkNotificationsReadResponse(rsp)
+}
+
+// MarkNotificationsReadWithResponse Mark notifications read
+//
+// Marks the given notifications read for the signed-in user, or all of them with all: true. Ids belonging to another organization are ignored rather than rejected, so a retry of a partially applied call is safe.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /v1/notifications/mark-read (the `MarkNotificationsRead` operationId).
+func (c *ClientWithResponses) MarkNotificationsReadWithResponse(ctx context.Context, body MarkNotificationsReadJSONRequestBody, reqEditors ...RequestEditorFn) (*MarkNotificationsReadResponse, error) {
+	rsp, err := c.MarkNotificationsRead(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseMarkNotificationsReadResponse(rsp)
 }
 
 // ParseListComponentsResponse parses an HTTP response from a ListComponentsWithResponse call
@@ -29947,6 +34888,13 @@ func ParseDeleteEntitlementResponse(rsp *http.Response) (*DeleteEntitlementRespo
 		}
 		response.ApplicationproblemJSON404 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
 		var dest Problem
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -31271,6 +36219,148 @@ func ParseReportEntitlementUsageMetricResponse(rsp *http.Response) (*ReportEntit
 
 	}
 
+	switch {
+	case rsp.StatusCode == 200:
+		var headers ReportEntitlementUsageMetricResponse200Headers
+		if values := rsp.Header.Values("Idempotent-Replayed"); len(values) > 0 {
+			var value string
+			if err := runtime.BindStyledParameterWithOptions("simple", "Idempotent-Replayed", values[0], &value, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			}
+			headers.IdempotentReplayed = &value
+		}
+		response.Headers200 = &headers
+	}
+
+	return response, nil
+}
+
+// ParseListAiInferencesResponse parses an HTTP response from a ListAiInferencesWithResponse call
+func ParseListAiInferencesResponse(rsp *http.Response) (*ListAiInferencesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListAiInferencesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AiInferencePage
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListAiReservationsResponse parses an HTTP response from a ListAiReservationsWithResponse call
+func ParseListAiReservationsResponse(rsp *http.Response) (*ListAiReservationsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListAiReservationsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AiReservations
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
 	return response, nil
 }
 
@@ -32385,6 +37475,377 @@ func ParseArchiveLicenseResponse(rsp *http.Response) (*ArchiveLicenseResponse, e
 	return response, nil
 }
 
+// ParseListConversionRulesResponse parses an HTTP response from a ListConversionRulesWithResponse call
+func ParseListConversionRulesResponse(rsp *http.Response) (*ListConversionRulesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListConversionRulesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []ConversionRule
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateConversionRuleResponse parses an HTTP response from a CreateConversionRuleWithResponse call
+func ParseCreateConversionRuleResponse(rsp *http.Response) (*CreateConversionRuleResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateConversionRuleResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest ConversionRule
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseArchiveConversionRuleResponse parses an HTTP response from a ArchiveConversionRuleWithResponse call
+func ParseArchiveConversionRuleResponse(rsp *http.Response) (*ArchiveConversionRuleResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ArchiveConversionRuleResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case rsp.StatusCode == 204:
+		break // No content-type
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetConversionRuleResponse parses an HTTP response from a GetConversionRuleWithResponse call
+func ParseGetConversionRuleResponse(rsp *http.Response) (*GetConversionRuleResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetConversionRuleResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ConversionRule
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateConversionRuleResponse parses an HTTP response from a UpdateConversionRuleWithResponse call
+func ParseUpdateConversionRuleResponse(rsp *http.Response) (*UpdateConversionRuleResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateConversionRuleResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ConversionRule
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetLicenseEntitlementsResponse parses an HTTP response from a GetLicenseEntitlementsWithResponse call
 func ParseGetLicenseEntitlementsResponse(rsp *http.Response) (*GetLicenseEntitlementsResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -33308,6 +38769,321 @@ func ParseUnarchiveMetadataFieldResponse(rsp *http.Response) (*UnarchiveMetadata
 			return nil, err
 		}
 		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListModelsResponse parses an HTTP response from a ListModelsWithResponse call
+func ParseListModelsResponse(rsp *http.Response) (*ListModelsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListModelsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PageModel
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateModelResponse parses an HTTP response from a CreateModelWithResponse call
+func ParseCreateModelResponse(rsp *http.Response) (*CreateModelResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateModelResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest Model
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteModelResponse parses an HTTP response from a DeleteModelWithResponse call
+func ParseDeleteModelResponse(rsp *http.Response) (*DeleteModelResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteModelResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case rsp.StatusCode == 204:
+		break // No content-type
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetModelResponse parses an HTTP response from a GetModelWithResponse call
+func ParseGetModelResponse(rsp *http.Response) (*GetModelResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetModelResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Model
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateModelResponse parses an HTTP response from a UpdateModelWithResponse call
+func ParseUpdateModelResponse(rsp *http.Response) (*UpdateModelResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateModelResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Model
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
 		var dest Problem
@@ -34302,6 +40078,236 @@ func ParseDeleteServiceAccountTokenResponse(rsp *http.Response) (*DeleteServiceA
 	return response, nil
 }
 
+// ParseGetNotificationPreferencesResponse parses an HTTP response from a GetNotificationPreferencesWithResponse call
+func ParseGetNotificationPreferencesResponse(rsp *http.Response) (*GetNotificationPreferencesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetNotificationPreferencesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PreferenceMatrix
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePutNotificationPreferencesResponse parses an HTTP response from a PutNotificationPreferencesWithResponse call
+func ParsePutNotificationPreferencesResponse(rsp *http.Response) (*PutNotificationPreferencesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PutNotificationPreferencesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest PreferenceMatrix
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListNotificationsResponse parses an HTTP response from a ListNotificationsWithResponse call
+func ParseListNotificationsResponse(rsp *http.Response) (*ListNotificationsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListNotificationsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest List
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseMarkNotificationsReadResponse parses an HTTP response from a MarkNotificationsReadWithResponse call
+func ParseMarkNotificationsReadResponse(rsp *http.Response) (*MarkNotificationsReadResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &MarkNotificationsReadResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest MarkReadResult
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
 // WebhookInitiator sends OpenAPI 3.1 webhook requests to target URLs.
 // Modeled on the generated Client, but with no stored Server -- the full
 // target URL is provided per-call by the caller (typically discovered
@@ -34478,10 +40484,20 @@ type WebhookInitiatorInterface interface {
 
 	OnSystemOrganizationTokenIssued(ctx context.Context, targetURL string, body OnSystemOrganizationTokenIssuedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// OnInstanceAIModelUsageUnauthorizedWithBody fires the com.kaiten.instance.ai.v1.model_usage_unauthorized webhook with any body
+	OnInstanceAIModelUsageUnauthorizedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	OnInstanceAIModelUsageUnauthorized(ctx context.Context, targetURL string, body OnInstanceAIModelUsageUnauthorizedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// OnInstanceEntitlementCapExceededWithBody fires the com.kaiten.instance.entitlement.v1.cap_exceeded webhook with any body
 	OnInstanceEntitlementCapExceededWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	OnInstanceEntitlementCapExceeded(ctx context.Context, targetURL string, body OnInstanceEntitlementCapExceededJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// OnInstanceEntitlementMaximumExceededWithBody fires the com.kaiten.instance.entitlement.v1.maximum_exceeded webhook with any body
+	OnInstanceEntitlementMaximumExceededWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	OnInstanceEntitlementMaximumExceeded(ctx context.Context, targetURL string, body OnInstanceEntitlementMaximumExceededJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// OnInstanceEntitlementUsagePeriodRolledOverWithBody fires the com.kaiten.instance.entitlement.v1.usage_period_rolled_over webhook with any body
 	OnInstanceEntitlementUsagePeriodRolledOverWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -34548,6 +40564,21 @@ type WebhookInitiatorInterface interface {
 
 	OnInstanceUpdated(ctx context.Context, targetURL string, body OnInstanceUpdatedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// OnArchiveConversionRuleWithBody fires the com.kaiten.license.conversion_rule.v1.archived webhook with any body
+	OnArchiveConversionRuleWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	OnArchiveConversionRule(ctx context.Context, targetURL string, body OnArchiveConversionRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// OnCreateConversionRuleWithBody fires the com.kaiten.license.conversion_rule.v1.created webhook with any body
+	OnCreateConversionRuleWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	OnCreateConversionRule(ctx context.Context, targetURL string, body OnCreateConversionRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// OnUpdateConversionRuleWithBody fires the com.kaiten.license.conversion_rule.v1.updated webhook with any body
+	OnUpdateConversionRuleWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	OnUpdateConversionRule(ctx context.Context, targetURL string, body OnUpdateConversionRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// OnLicenseEntitlementAssignedWithBody fires the com.kaiten.license.entitlement.v1.assigned webhook with any body
 	OnLicenseEntitlementAssignedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -34593,6 +40624,21 @@ type WebhookInitiatorInterface interface {
 
 	OnLicenseUpdated(ctx context.Context, targetURL string, body OnLicenseUpdatedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// OnLicenseFamilyCreatedWithBody fires the com.kaiten.license_family.v1.created webhook with any body
+	OnLicenseFamilyCreatedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	OnLicenseFamilyCreated(ctx context.Context, targetURL string, body OnLicenseFamilyCreatedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// OnLicenseFamilyDeletedWithBody fires the com.kaiten.license_family.v1.deleted webhook with any body
+	OnLicenseFamilyDeletedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	OnLicenseFamilyDeleted(ctx context.Context, targetURL string, body OnLicenseFamilyDeletedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// OnLicenseFamilyUpdatedWithBody fires the com.kaiten.license_family.v1.updated webhook with any body
+	OnLicenseFamilyUpdatedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	OnLicenseFamilyUpdated(ctx context.Context, targetURL string, body OnLicenseFamilyUpdatedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// OnMetadataFieldArchivedWithBody fires the com.kaiten.metadata_field.v1.archived webhook with any body
 	OnMetadataFieldArchivedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -34617,6 +40663,21 @@ type WebhookInitiatorInterface interface {
 	OnMetadataFieldUpdatedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	OnMetadataFieldUpdated(ctx context.Context, targetURL string, body OnMetadataFieldUpdatedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// OnModelCreatedWithBody fires the com.kaiten.model.v1.created webhook with any body
+	OnModelCreatedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	OnModelCreated(ctx context.Context, targetURL string, body OnModelCreatedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// OnModelDeletedWithBody fires the com.kaiten.model.v1.deleted webhook with any body
+	OnModelDeletedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	OnModelDeleted(ctx context.Context, targetURL string, body OnModelDeletedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// OnModelUpdatedWithBody fires the com.kaiten.model.v1.updated webhook with any body
+	OnModelUpdatedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	OnModelUpdated(ctx context.Context, targetURL string, body OnModelUpdatedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// OnReleaseCreatedWithBody fires the com.kaiten.release.v1.created webhook with any body
 	OnReleaseCreatedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -35157,6 +41218,30 @@ func (p *WebhookInitiator) OnSystemOrganizationTokenIssued(ctx context.Context, 
 	return p.Client.Do(req)
 }
 
+func (p *WebhookInitiator) OnInstanceAIModelUsageUnauthorizedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnInstanceAIModelUsageUnauthorizedWebhookRequestWithBody(targetURL, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnInstanceAIModelUsageUnauthorized(ctx context.Context, targetURL string, body OnInstanceAIModelUsageUnauthorizedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnInstanceAIModelUsageUnauthorizedWebhookRequest(targetURL, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
 func (p *WebhookInitiator) OnInstanceEntitlementCapExceededWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewOnInstanceEntitlementCapExceededWebhookRequestWithBody(targetURL, contentType, body)
 	if err != nil {
@@ -35171,6 +41256,30 @@ func (p *WebhookInitiator) OnInstanceEntitlementCapExceededWithBody(ctx context.
 
 func (p *WebhookInitiator) OnInstanceEntitlementCapExceeded(ctx context.Context, targetURL string, body OnInstanceEntitlementCapExceededJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewOnInstanceEntitlementCapExceededWebhookRequest(targetURL, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnInstanceEntitlementMaximumExceededWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnInstanceEntitlementMaximumExceededWebhookRequestWithBody(targetURL, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnInstanceEntitlementMaximumExceeded(ctx context.Context, targetURL string, body OnInstanceEntitlementMaximumExceededJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnInstanceEntitlementMaximumExceededWebhookRequest(targetURL, body)
 	if err != nil {
 		return nil, err
 	}
@@ -35493,6 +41602,78 @@ func (p *WebhookInitiator) OnInstanceUpdated(ctx context.Context, targetURL stri
 	return p.Client.Do(req)
 }
 
+func (p *WebhookInitiator) OnArchiveConversionRuleWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnArchiveConversionRuleWebhookRequestWithBody(targetURL, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnArchiveConversionRule(ctx context.Context, targetURL string, body OnArchiveConversionRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnArchiveConversionRuleWebhookRequest(targetURL, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnCreateConversionRuleWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnCreateConversionRuleWebhookRequestWithBody(targetURL, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnCreateConversionRule(ctx context.Context, targetURL string, body OnCreateConversionRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnCreateConversionRuleWebhookRequest(targetURL, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnUpdateConversionRuleWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnUpdateConversionRuleWebhookRequestWithBody(targetURL, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnUpdateConversionRule(ctx context.Context, targetURL string, body OnUpdateConversionRuleJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnUpdateConversionRuleWebhookRequest(targetURL, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
 func (p *WebhookInitiator) OnLicenseEntitlementAssignedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewOnLicenseEntitlementAssignedWebhookRequestWithBody(targetURL, contentType, body)
 	if err != nil {
@@ -35709,6 +41890,78 @@ func (p *WebhookInitiator) OnLicenseUpdated(ctx context.Context, targetURL strin
 	return p.Client.Do(req)
 }
 
+func (p *WebhookInitiator) OnLicenseFamilyCreatedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnLicenseFamilyCreatedWebhookRequestWithBody(targetURL, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnLicenseFamilyCreated(ctx context.Context, targetURL string, body OnLicenseFamilyCreatedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnLicenseFamilyCreatedWebhookRequest(targetURL, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnLicenseFamilyDeletedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnLicenseFamilyDeletedWebhookRequestWithBody(targetURL, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnLicenseFamilyDeleted(ctx context.Context, targetURL string, body OnLicenseFamilyDeletedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnLicenseFamilyDeletedWebhookRequest(targetURL, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnLicenseFamilyUpdatedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnLicenseFamilyUpdatedWebhookRequestWithBody(targetURL, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnLicenseFamilyUpdated(ctx context.Context, targetURL string, body OnLicenseFamilyUpdatedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnLicenseFamilyUpdatedWebhookRequest(targetURL, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
 func (p *WebhookInitiator) OnMetadataFieldArchivedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewOnMetadataFieldArchivedWebhookRequestWithBody(targetURL, contentType, body)
 	if err != nil {
@@ -35819,6 +42072,78 @@ func (p *WebhookInitiator) OnMetadataFieldUpdatedWithBody(ctx context.Context, t
 
 func (p *WebhookInitiator) OnMetadataFieldUpdated(ctx context.Context, targetURL string, body OnMetadataFieldUpdatedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewOnMetadataFieldUpdatedWebhookRequest(targetURL, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnModelCreatedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnModelCreatedWebhookRequestWithBody(targetURL, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnModelCreated(ctx context.Context, targetURL string, body OnModelCreatedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnModelCreatedWebhookRequest(targetURL, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnModelDeletedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnModelDeletedWebhookRequestWithBody(targetURL, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnModelDeleted(ctx context.Context, targetURL string, body OnModelDeletedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnModelDeletedWebhookRequest(targetURL, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnModelUpdatedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnModelUpdatedWebhookRequestWithBody(targetURL, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnModelUpdated(ctx context.Context, targetURL string, body OnModelUpdatedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnModelUpdatedWebhookRequest(targetURL, body)
 	if err != nil {
 		return nil, err
 	}
@@ -36559,6 +42884,37 @@ func NewOnSystemOrganizationTokenIssuedWebhookRequestWithBody(targetURL string, 
 	return req, nil
 }
 
+// NewOnInstanceAIModelUsageUnauthorizedWebhookRequest builds a application/json POST request for the com.kaiten.instance.ai.v1.model_usage_unauthorized webhook
+func NewOnInstanceAIModelUsageUnauthorizedWebhookRequest(targetURL string, body OnInstanceAIModelUsageUnauthorizedJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewOnInstanceAIModelUsageUnauthorizedWebhookRequestWithBody(targetURL, "application/json", bodyReader)
+}
+
+// NewOnInstanceAIModelUsageUnauthorizedWebhookRequestWithBody builds a POST request for the com.kaiten.instance.ai.v1.model_usage_unauthorized webhook with any body
+func NewOnInstanceAIModelUsageUnauthorizedWebhookRequestWithBody(targetURL string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+	_ = err
+
+	reqURL, err := url.Parse(targetURL)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, reqURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewOnInstanceEntitlementCapExceededWebhookRequest builds a application/json POST request for the com.kaiten.instance.entitlement.v1.cap_exceeded webhook
 func NewOnInstanceEntitlementCapExceededWebhookRequest(targetURL string, body OnInstanceEntitlementCapExceededJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -36572,6 +42928,37 @@ func NewOnInstanceEntitlementCapExceededWebhookRequest(targetURL string, body On
 
 // NewOnInstanceEntitlementCapExceededWebhookRequestWithBody builds a POST request for the com.kaiten.instance.entitlement.v1.cap_exceeded webhook with any body
 func NewOnInstanceEntitlementCapExceededWebhookRequestWithBody(targetURL string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+	_ = err
+
+	reqURL, err := url.Parse(targetURL)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, reqURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewOnInstanceEntitlementMaximumExceededWebhookRequest builds a application/json POST request for the com.kaiten.instance.entitlement.v1.maximum_exceeded webhook
+func NewOnInstanceEntitlementMaximumExceededWebhookRequest(targetURL string, body OnInstanceEntitlementMaximumExceededJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewOnInstanceEntitlementMaximumExceededWebhookRequestWithBody(targetURL, "application/json", bodyReader)
+}
+
+// NewOnInstanceEntitlementMaximumExceededWebhookRequestWithBody builds a POST request for the com.kaiten.instance.entitlement.v1.maximum_exceeded webhook with any body
+func NewOnInstanceEntitlementMaximumExceededWebhookRequestWithBody(targetURL string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 	_ = err
 
@@ -36993,6 +43380,99 @@ func NewOnInstanceUpdatedWebhookRequestWithBody(targetURL string, contentType st
 	return req, nil
 }
 
+// NewOnArchiveConversionRuleWebhookRequest builds a application/json POST request for the com.kaiten.license.conversion_rule.v1.archived webhook
+func NewOnArchiveConversionRuleWebhookRequest(targetURL string, body OnArchiveConversionRuleJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewOnArchiveConversionRuleWebhookRequestWithBody(targetURL, "application/json", bodyReader)
+}
+
+// NewOnArchiveConversionRuleWebhookRequestWithBody builds a POST request for the com.kaiten.license.conversion_rule.v1.archived webhook with any body
+func NewOnArchiveConversionRuleWebhookRequestWithBody(targetURL string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+	_ = err
+
+	reqURL, err := url.Parse(targetURL)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, reqURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewOnCreateConversionRuleWebhookRequest builds a application/json POST request for the com.kaiten.license.conversion_rule.v1.created webhook
+func NewOnCreateConversionRuleWebhookRequest(targetURL string, body OnCreateConversionRuleJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewOnCreateConversionRuleWebhookRequestWithBody(targetURL, "application/json", bodyReader)
+}
+
+// NewOnCreateConversionRuleWebhookRequestWithBody builds a POST request for the com.kaiten.license.conversion_rule.v1.created webhook with any body
+func NewOnCreateConversionRuleWebhookRequestWithBody(targetURL string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+	_ = err
+
+	reqURL, err := url.Parse(targetURL)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, reqURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewOnUpdateConversionRuleWebhookRequest builds a application/json POST request for the com.kaiten.license.conversion_rule.v1.updated webhook
+func NewOnUpdateConversionRuleWebhookRequest(targetURL string, body OnUpdateConversionRuleJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewOnUpdateConversionRuleWebhookRequestWithBody(targetURL, "application/json", bodyReader)
+}
+
+// NewOnUpdateConversionRuleWebhookRequestWithBody builds a POST request for the com.kaiten.license.conversion_rule.v1.updated webhook with any body
+func NewOnUpdateConversionRuleWebhookRequestWithBody(targetURL string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+	_ = err
+
+	reqURL, err := url.Parse(targetURL)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, reqURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewOnLicenseEntitlementAssignedWebhookRequest builds a application/json POST request for the com.kaiten.license.entitlement.v1.assigned webhook
 func NewOnLicenseEntitlementAssignedWebhookRequest(targetURL string, body OnLicenseEntitlementAssignedJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -37272,6 +43752,99 @@ func NewOnLicenseUpdatedWebhookRequestWithBody(targetURL string, contentType str
 	return req, nil
 }
 
+// NewOnLicenseFamilyCreatedWebhookRequest builds a application/json POST request for the com.kaiten.license_family.v1.created webhook
+func NewOnLicenseFamilyCreatedWebhookRequest(targetURL string, body OnLicenseFamilyCreatedJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewOnLicenseFamilyCreatedWebhookRequestWithBody(targetURL, "application/json", bodyReader)
+}
+
+// NewOnLicenseFamilyCreatedWebhookRequestWithBody builds a POST request for the com.kaiten.license_family.v1.created webhook with any body
+func NewOnLicenseFamilyCreatedWebhookRequestWithBody(targetURL string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+	_ = err
+
+	reqURL, err := url.Parse(targetURL)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, reqURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewOnLicenseFamilyDeletedWebhookRequest builds a application/json POST request for the com.kaiten.license_family.v1.deleted webhook
+func NewOnLicenseFamilyDeletedWebhookRequest(targetURL string, body OnLicenseFamilyDeletedJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewOnLicenseFamilyDeletedWebhookRequestWithBody(targetURL, "application/json", bodyReader)
+}
+
+// NewOnLicenseFamilyDeletedWebhookRequestWithBody builds a POST request for the com.kaiten.license_family.v1.deleted webhook with any body
+func NewOnLicenseFamilyDeletedWebhookRequestWithBody(targetURL string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+	_ = err
+
+	reqURL, err := url.Parse(targetURL)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, reqURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewOnLicenseFamilyUpdatedWebhookRequest builds a application/json POST request for the com.kaiten.license_family.v1.updated webhook
+func NewOnLicenseFamilyUpdatedWebhookRequest(targetURL string, body OnLicenseFamilyUpdatedJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewOnLicenseFamilyUpdatedWebhookRequestWithBody(targetURL, "application/json", bodyReader)
+}
+
+// NewOnLicenseFamilyUpdatedWebhookRequestWithBody builds a POST request for the com.kaiten.license_family.v1.updated webhook with any body
+func NewOnLicenseFamilyUpdatedWebhookRequestWithBody(targetURL string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+	_ = err
+
+	reqURL, err := url.Parse(targetURL)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, reqURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewOnMetadataFieldArchivedWebhookRequest builds a application/json POST request for the com.kaiten.metadata_field.v1.archived webhook
 func NewOnMetadataFieldArchivedWebhookRequest(targetURL string, body OnMetadataFieldArchivedJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -37409,6 +43982,99 @@ func NewOnMetadataFieldUpdatedWebhookRequest(targetURL string, body OnMetadataFi
 
 // NewOnMetadataFieldUpdatedWebhookRequestWithBody builds a POST request for the com.kaiten.metadata_field.v1.updated webhook with any body
 func NewOnMetadataFieldUpdatedWebhookRequestWithBody(targetURL string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+	_ = err
+
+	reqURL, err := url.Parse(targetURL)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, reqURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewOnModelCreatedWebhookRequest builds a application/json POST request for the com.kaiten.model.v1.created webhook
+func NewOnModelCreatedWebhookRequest(targetURL string, body OnModelCreatedJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewOnModelCreatedWebhookRequestWithBody(targetURL, "application/json", bodyReader)
+}
+
+// NewOnModelCreatedWebhookRequestWithBody builds a POST request for the com.kaiten.model.v1.created webhook with any body
+func NewOnModelCreatedWebhookRequestWithBody(targetURL string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+	_ = err
+
+	reqURL, err := url.Parse(targetURL)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, reqURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewOnModelDeletedWebhookRequest builds a application/json POST request for the com.kaiten.model.v1.deleted webhook
+func NewOnModelDeletedWebhookRequest(targetURL string, body OnModelDeletedJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewOnModelDeletedWebhookRequestWithBody(targetURL, "application/json", bodyReader)
+}
+
+// NewOnModelDeletedWebhookRequestWithBody builds a POST request for the com.kaiten.model.v1.deleted webhook with any body
+func NewOnModelDeletedWebhookRequestWithBody(targetURL string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+	_ = err
+
+	reqURL, err := url.Parse(targetURL)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, reqURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewOnModelUpdatedWebhookRequest builds a application/json POST request for the com.kaiten.model.v1.updated webhook
+func NewOnModelUpdatedWebhookRequest(targetURL string, body OnModelUpdatedJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewOnModelUpdatedWebhookRequestWithBody(targetURL, "application/json", bodyReader)
+}
+
+// NewOnModelUpdatedWebhookRequestWithBody builds a POST request for the com.kaiten.model.v1.updated webhook with any body
+func NewOnModelUpdatedWebhookRequestWithBody(targetURL string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 	_ = err
 
