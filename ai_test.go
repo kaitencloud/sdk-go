@@ -65,7 +65,7 @@ func respondNetworkError() responder {
 	}
 }
 
-// givenAIClient is givenClient with the keyed retry's backoff shortened to nothing.
+// givenAIClient is givenClient with the transaction retry's backoff shortened to nothing.
 func givenAIClient(t *testing.T, respond responder) (*Client, *recorder) {
 	t.Helper()
 
@@ -111,8 +111,8 @@ func TestReserveSendsTheReservePhaseAndReadsItsOutcome(t *testing.T) {
 	if req.method != http.MethodPost || req.path != "/api/instances/acme-prod/entitlements/chat-credits/usage" {
 		t.Errorf("request = %s %s, want the usage report route", req.method, req.path)
 	}
-	if req.header.Get("Idempotency-Key") == "" {
-		t.Error("request carries no Idempotency-Key")
+	if _, ok := req.header["Idempotency-Key"]; ok {
+		t.Error("AI request carries the numeric-only Idempotency-Key")
 	}
 
 	want := `{"value":{"type":"ai_usage","phase":"reserve","transactionId":"tx-1","model":"gpt-4o","requestType":"COMPLETION","usage":{"inputTokens":1000,"outputTokens":4000},"ttlSeconds":91}}`
@@ -205,6 +205,9 @@ func TestAIReportRefusalsCarryTheirTypedError(t *testing.T) {
 		{"server predating ai_usage, value type", http.StatusUnprocessableEntity, "ReportEntitlementUsageMetric.InvalidValueType", ErrAIUsageUnsupported},
 		{"malformed AI body", http.StatusUnprocessableEntity, "ReportEntitlementUsageMetric.InvalidAiUsage", nil},
 		{"malformed transaction id", http.StatusUnprocessableEntity, "ReportEntitlementUsageMetric.InvalidTransactionId", nil},
+		{"AI idempotency header rejected", http.StatusUnprocessableEntity, "ReportEntitlementUsageMetric.AiIdempotencyKeyUnsupported", nil},
+		{"future validation error", http.StatusUnprocessableEntity, "ReportEntitlementUsageMetric.FutureValidation", nil},
+		{"unknown conflict", http.StatusConflict, "", nil},
 		{"pool unknown", http.StatusNotFound, "ReportEntitlementUsageMetric.ContextNotFound", nil},
 	}
 
@@ -241,9 +244,9 @@ func TestAIReportRefusalsCarryTheirTypedError(t *testing.T) {
 }
 
 // The retry doctrine: a network error or a 500, 502, 503 or 504 is retried at most three
-// times, every attempt carrying the same Idempotency-Key and the same body -- so the
-// same transaction id -- since only that lets the API tell a retry from a second report.
-func TestAIReportsRetryUnderOneKey(t *testing.T) {
+// times, every attempt carrying the same body and transaction id, without the
+// numeric-only Idempotency-Key header.
+func TestAIReportsRetryUnderOneTransaction(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
@@ -302,10 +305,10 @@ func TestAIReportsRetryUnderOneKey(t *testing.T) {
 			}
 
 			first := sent.at(t, 0)
-			for i := 1; i < sent.count(); i++ {
+			for i := 0; i < sent.count(); i++ {
 				retry := sent.at(t, i)
-				if retry.header.Get("Idempotency-Key") != first.header.Get("Idempotency-Key") {
-					t.Errorf("attempt %d Idempotency-Key = %q, want %q", i, retry.header.Get("Idempotency-Key"), first.header.Get("Idempotency-Key"))
+				if _, ok := retry.header["Idempotency-Key"]; ok {
+					t.Errorf("attempt %d carries the numeric-only Idempotency-Key", i)
 				}
 				if string(retry.body) != string(first.body) {
 					t.Errorf("attempt %d body = %s, want %s", i, retry.body, first.body)
@@ -315,21 +318,24 @@ func TestAIReportsRetryUnderOneKey(t *testing.T) {
 	}
 }
 
-// Two logical calls are two keys: a key reused across calls would have the API answer
-// the second commit with the first one's replay.
-func TestEveryAIReportGetsItsOwnKey(t *testing.T) {
+// Repeating a logical call keeps its immutable body identity, including across calls.
+func TestRepeatedAIReportKeepsItsTransactionIdentity(t *testing.T) {
 	t.Parallel()
 
 	client, sent := givenAIClient(t, respondJSON(http.StatusOK, committedBody))
-
 	for range 2 {
 		if _, err := client.AI.Commit(t.Context(), "acme-prod", "chat-credits", AICommitInput{TransactionID: "tx-1"}); err != nil {
 			t.Fatalf("Commit() error = %v", err)
 		}
 	}
-
-	if sent.at(t, 0).header.Get("Idempotency-Key") == sent.at(t, 1).header.Get("Idempotency-Key") {
-		t.Error("two calls sent the same Idempotency-Key")
+	for i := range 2 {
+		req := sent.at(t, i)
+		if _, ok := req.header["Idempotency-Key"]; ok {
+			t.Error("AI report carries a numeric Idempotency-Key")
+		}
+		if string(req.body) != string(sent.at(t, 0).body) {
+			t.Error("repeated report changed its immutable body")
+		}
 	}
 }
 
@@ -404,8 +410,8 @@ func TestAIReportRetriesADroppedConnection(t *testing.T) {
 	mu.Lock()
 	defer mu.Unlock()
 
-	if len(keys) != 2 || keys[0] == "" || keys[0] != keys[1] {
-		t.Errorf("Idempotency-Keys = %q, want two attempts under one key", keys)
+	if len(keys) != 2 || keys[0] != "" || keys[1] != "" {
+		t.Errorf("Idempotency-Keys = %q, want two attempts with no numeric key", keys)
 	}
 }
 
@@ -662,5 +668,50 @@ func TestAIReportsDoNotRetryMalformedResponses(t *testing.T) {
 				t.Fatalf("requests = %d, want 1: response decoding is not a transport failure", sent.count())
 			}
 		})
+	}
+}
+
+func TestAIReportsStripInheritedNumericKeysButNumericReportsKeepThem(t *testing.T) {
+	t.Parallel()
+
+	client, sent := givenClient(t, respondInTurn(
+		respondProblem(http.StatusServiceUnavailable, ""),
+		respondJSON(http.StatusOK, reservedBody),
+		respondJSON(http.StatusOK, committedBody),
+	), WithRequestEditorFn(func(_ context.Context, req *http.Request) error {
+		req.Header.Set("Idempotency-Key", "numeric-event")
+		req.Header["idempotency-key"] = []string{"lowercase-event"}
+		req.Header["IDEMPOTENCY-KEY"] = []string{""}
+		req.Header.Set("X-Correlation-ID", "keep-me")
+		return nil
+	}))
+	client.AI.retryBase = time.Microsecond
+	if _, err := client.AI.Reserve(t.Context(), "instance", "credits", AIReserveInput{TransactionID: "tx-1", Model: "model", RequestType: AIRequestTypeCompletion}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := client.AI.Commit(t.Context(), "instance", "credits", AICommitInput{TransactionID: "tx-1"}); err != nil {
+		t.Fatal(err)
+	}
+	for i := range sent.count() {
+		req := sent.at(t, i)
+		for name := range req.header {
+			if strings.EqualFold(name, "Idempotency-Key") {
+				t.Errorf("AI attempt %d retained numeric header %q", i, name)
+			}
+		}
+		if req.header.Get("X-Correlation-ID") != "keep-me" {
+			t.Error("AI report removed an unrelated header")
+		}
+	}
+	if _, err := client.Instances.ReportEntitlementUsageMetric(t.Context(), "instance", "credits", UsageReportInput{Value: -1, Behavior: Append}); err != nil {
+		t.Fatal(err)
+	}
+	req := sent.at(t, sent.count()-1)
+	if req.header.Get("Idempotency-Key") != "numeric-event" {
+		t.Error("numeric report lost its inherited idempotency key")
+	}
+	value := aiValue(t, req)
+	if value["type"] != "number" || value["value"] != float64(-1) {
+		t.Fatalf("AI pool adjustment is not a numeric delta: %v", value)
 	}
 }

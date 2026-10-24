@@ -69,7 +69,7 @@ type PlatformUsers struct{ client *PlatformClient }
 type AI struct {
 	client *Client
 
-	// retryBase is the first backoff of the keyed retry; each retry doubles it. Zero
+	// retryBase is the first backoff of the transaction retry; each retry doubles it. Zero
 	// means aiRetryBase. Tests shorten it so a retried status does not cost seconds.
 	retryBase time.Duration
 }

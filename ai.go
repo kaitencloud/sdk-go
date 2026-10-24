@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"math/rand/v2"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -43,8 +44,10 @@ var (
 	ErrAIUsageUnsupported = errors.New("AI usage reports unsupported")
 
 	// ErrAICommitFailed is returned by AI.Run when the provider call succeeded but its
-	// commit could not be recorded, retries included. The call's result is good; the
-	// reservation lapses on its own and nothing is charged for it.
+	// commit could not be confirmed, retries included. The call's result is good;
+	// settlement may already have succeeded if its response was lost. Reconcile or
+	// retry the identical commit body under the same transaction id before assuming
+	// nothing was charged. An open reservation lapses on its own.
 	ErrAICommitFailed = errors.New("AI usage commit failed")
 )
 
@@ -60,7 +63,6 @@ const (
 	codeInvalidAIUsage         = "ReportEntitlementUsageMetric.InvalidAiUsage"
 	codeAIUsageRequiresAppend  = "ReportEntitlementUsageMetric.AiUsageRequiresAppend"
 	codeAICreditPoolAppendOnly = "ReportEntitlementUsageMetric.AiCreditPoolAppendOnly"
-	idempotencyKeyHeader       = "Idempotency-Key"
 	idempotentReplayedHeader   = "Idempotent-Replayed"
 	aiMaxRetries               = 3
 	aiRetryBase                = 250 * time.Millisecond
@@ -73,8 +75,8 @@ const (
 // A refusal is one of the typed errors: ErrInsufficientCredits, ErrModelNotAuthorized,
 // ErrUnknownModel, ErrTransactionIDReused or ErrAIUsageUnsupported. Do not call the
 // provider after any error. A network error or a 500, 502, 503 or 504 is retried up to
-// three times under the same transaction id and Idempotency-Key, which the API
-// deduplicates.
+// three times under the same transaction id and body, which the API deduplicates.
+// AI reports never send the numeric-report Idempotency-Key header.
 func (s *AI) Reserve(ctx context.Context, instanceSlug, entitlementSlug string, input AIReserveInput) (AIReport, error) {
 	if input.TransactionID == "" {
 		id, err := newTransactionID()
@@ -121,7 +123,7 @@ type AIRun struct {
 //
 // The commit runs on a context that ctx cancelling does not stop, bounded by
 // DefaultTimeout, so a call cut short by its own deadline is still accounted for. When
-// fn succeeded but the commit could not be recorded, Run returns an error wrapping
+// fn succeeded but the commit could not be confirmed, Run returns an error wrapping
 // ErrAICommitFailed: the provider's answer, which fn keeps, is good.
 func (s *AI) Run(ctx context.Context, instanceSlug, entitlementSlug string, input AIReserveInput, fn func(context.Context) (AICall, error)) (AIRun, error) {
 	var run AIRun
@@ -172,23 +174,26 @@ func (s *AI) Run(ctx context.Context, instanceSlug, entitlementSlug string, inpu
 	return run, err
 }
 
-// report sends one AI usage report, retrying it under one Idempotency-Key.
+// report sends one AI usage report, retrying the identical phase and transaction id.
 func (s *AI) report(ctx context.Context, instanceSlug, entitlementSlug string, payload aiReportPayload) (AIReport, error) {
 	body, err := json.Marshal(payload)
 	if err != nil {
 		return AIReport{}, fmt.Errorf("encode AI usage report request: %w", err)
 	}
 
-	// One key per logical call, the same on each of its retries: it is what lets the
-	// API tell a retry from a second report.
-	key := uuid.NewString()
-	withKey := func(_ context.Context, req *http.Request) error {
-		req.Header.Set(idempotencyKeyHeader, key)
+	// Run after client-wide editors: an inherited numeric key is invalid for AI,
+	// even when empty or inserted under a non-canonical header spelling.
+	withoutNumericKey := func(_ context.Context, req *http.Request) error {
+		for name := range req.Header {
+			if strings.EqualFold(name, "Idempotency-Key") {
+				delete(req.Header, name)
+			}
+		}
 		return nil
 	}
 
 	for attempt := 0; ; attempt++ {
-		httpResp, err := s.client.raw.ReportEntitlementUsageMetricWithBody(ctx, instanceSlug, entitlementSlug, contentTypeJSON, bytes.NewReader(body), withKey)
+		httpResp, err := s.client.raw.ReportEntitlementUsageMetricWithBody(ctx, instanceSlug, entitlementSlug, contentTypeJSON, bytes.NewReader(body), withoutNumericKey)
 		resp := &gen.ReportEntitlementUsageMetricResponse{HTTPResponse: httpResp}
 
 		// Decide retries from transport errors and status before decoding JSON:
@@ -285,7 +290,7 @@ func aiReportError(err error) error {
 		switch apiErr.Code {
 		case codeTransactionIDReused:
 			sentinel = ErrTransactionIDReused
-		case codeThresholdExceeded, "":
+		case codeThresholdExceeded:
 			sentinel = ErrInsufficientCredits
 		}
 	case http.StatusUnprocessableEntity:
@@ -298,10 +303,11 @@ func aiReportError(err error) error {
 			sentinel = ErrAIUsageUnsupported
 		case codeTransactionIDRequired, codeInvalidTransactionID, codeInvalidAIUsage, codeAIUsageRequiresAppend, codeAICreditPoolAppendOnly:
 			// A malformed body: the caller's bug, reported as the API worded it.
-		default:
-			// Any other 422 is a server that predates the ai_usage variant refusing it:
-			// generic validation, or InvalidValueType.
+		case "", "ReportEntitlementUsageMetric.InvalidValueType":
+			// Known legacy validation responses from servers predating ai_usage.
 			sentinel = ErrAIUsageUnsupported
+		default:
+			// Unknown codes retain their problem details, not a guessed capability error.
 		}
 	}
 
