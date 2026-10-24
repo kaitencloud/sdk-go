@@ -305,7 +305,7 @@ func TestAIReportsRetryUnderOneTransaction(t *testing.T) {
 			}
 
 			first := sent.at(t, 0)
-			for i := 0; i < sent.count(); i++ {
+			for i := range sent.count() {
 				retry := sent.at(t, i)
 				if _, ok := retry.header["Idempotency-Key"]; ok {
 					t.Errorf("attempt %d carries the numeric-only Idempotency-Key", i)
