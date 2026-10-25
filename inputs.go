@@ -414,8 +414,9 @@ type UsageReportInput struct {
 	// TransactionID makes the report idempotent: Kaiten applies a report at
 	// most once per key, instance and entitlement within its idempotency window
 	// (35 days by default), and answers a repeat with the original result. Use a
-	// UUID, or a business event ID plus the meter ("llm-call:9f2c:tokens"). A
-	// report with a key is retried on transient failures; one without is never
+	// UUID, or a business event ID plus the meter ("llm-call:9f2c:tokens").
+	// Sent as the Idempotency-Key header. A keyed report is retried on transient
+	// failures once the server has shown it honours keys; one without is never
 	// retried. 1 to 128 characters of letters, digits, '.', '_', ':' and '-'.
 	TransactionID string
 }

@@ -18,7 +18,6 @@ package sdk
 
 import (
 	"fmt"
-	"log/slog"
 	"net/http"
 	"net/url"
 	"strings"
@@ -50,12 +49,11 @@ type Client struct {
 	// request editors the generated client was handed.
 	list listTransport
 
-	// log is where the client reports what an operator should know; nil means
-	// slog.Default().
-	log *slog.Logger
-	// transactionIDsUnsupported is set once a server refuses usage report
-	// transaction IDs: from then on reports go out without them.
-	transactionIDsUnsupported atomic.Bool
+	// keysHonoured is set by the first usage report Kaiten answers with a
+	// transactionId: from then on a keyed report whose outcome is unknown is
+	// retried under its key. Per client, not per process: two clients may talk
+	// to two Kaitens.
+	keysHonoured atomic.Bool
 
 	// Billing is the billing API, a namespace per resource below it.
 	Billing           *Billing
@@ -87,7 +85,6 @@ func NewClient(baseURL string, opts ...Option) (*Client, error) {
 	}
 
 	client := newClient(raw, resolved.listTransport())
-	client.log = resolved.logger
 
 	return client, nil
 }
@@ -156,11 +153,4 @@ func (t listTransport) resolve(path string, query url.Values) (string, error) {
 // Raw returns the underlying generated Core API client for low-level access.
 func (c *Client) Raw() *gen.ClientWithResponses {
 	return c.raw
-}
-
-func (c *Client) logger() *slog.Logger {
-	if c.log != nil {
-		return c.log
-	}
-	return slog.Default()
 }

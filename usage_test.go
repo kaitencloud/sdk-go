@@ -1,12 +1,13 @@
+// Copyright 2026 KAITEN INC
+// SPDX-License-Identifier: Apache-2.0
+
 package sdk
 
 import (
-	"bytes"
 	"context"
 	"errors"
 	"fmt"
 	"io"
-	"log/slog"
 	"net/http"
 	"strings"
 	"sync"
@@ -20,7 +21,23 @@ func init() {
 	usageReportRetryDelay = time.Millisecond
 }
 
-const acceptedUsage = `{"entitlementId":"e","entitlementSlug":"seats","licenseId":"l","value":{"type":"number","value":5,"event_count":1},"limit":{"type":"number","value":10}}`
+const acceptedUsage = `{"entitlementId":"e","entitlementSlug":"seats","licenseId":"l","value":{"type":"number","value":5,"event_count":1},"limit":{"type":"number","value":10},"transactionId":null}`
+
+// keyedUsage is a Kaiten that honours keys answering a keyed report.
+const keyedUsage = `{"entitlementId":"e","entitlementSlug":"seats","licenseId":"l","value":{"type":"number","value":5,"event_count":1},"limit":{"type":"number","value":10},"transactionId":"evt-0"}`
+
+// confirmedClient is a client whose server has already answered a keyed report
+// with its transactionId, so its keyed reports are retried.
+func confirmedClient(t *testing.T, then responder) (*Client, *recorder) {
+	t.Helper()
+	client, sent := givenClient(t, respondInTurn(respondJSON(http.StatusOK, keyedUsage), then))
+	result, err := client.Instances.ReportEntitlementUsage(t.Context(), "acme-prod", "seats", UsageReportInput{Value: 1, TransactionID: "evt-0"})
+	if err != nil || result.TransactionID != "evt-0" {
+		t.Fatalf("confirming report: %+v, %v", result, err)
+	}
+	sent.reset()
+	return client, sent
+}
 
 // respondInTurn answers the nth request with the nth responder, and the last
 // one for every request after.
@@ -56,16 +73,16 @@ func problem(status int, code string) string {
 	return fmt.Sprintf(`{"title":%q,"status":%d,"code":%q}`, http.StatusText(status), status, code)
 }
 
-func TestReportEntitlementUsageSendsTheTransactionIDOnlyWhenSet(t *testing.T) {
+func TestReportEntitlementUsageSendsTheKeyInTheHeader(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		name  string
-		input UsageReportInput
-		want  string
+		name   string
+		input  UsageReportInput
+		header string
 	}{
-		{"with a key", UsageReportInput{Value: 5, TransactionID: "evt-1"}, `{"behavior":"append","transactionId":"evt-1","value":{"type":"number","value":5}}`},
-		{"without a key", UsageReportInput{Value: 5}, `{"behavior":"append","value":{"type":"number","value":5}}`},
+		{"with a key", UsageReportInput{Value: 5, TransactionID: "evt-1"}, "evt-1"},
+		{"without a key", UsageReportInput{Value: 5}, ""},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -75,8 +92,13 @@ func TestReportEntitlementUsageSendsTheTransactionIDOnlyWhenSet(t *testing.T) {
 			if _, err := client.Instances.ReportEntitlementUsage(t.Context(), "acme-prod", "seats", test.input); err != nil {
 				t.Fatalf("ReportEntitlementUsage() error = %v", err)
 			}
-			if got := string(sent.only(t).body); got != test.want {
-				t.Errorf("request body = %s, want %s", got, test.want)
+			req := sent.only(t)
+			if got := req.header.Get("Idempotency-Key"); got != test.header {
+				t.Errorf("Idempotency-Key = %q, want %q", got, test.header)
+			}
+			// The body is closed: the key is never in it.
+			if want := `{"behavior":"append","value":{"type":"number","value":5}}`; string(req.body) != want {
+				t.Errorf("request body = %s, want %s", req.body, want)
 			}
 		})
 	}
@@ -85,16 +107,16 @@ func TestReportEntitlementUsageSendsTheTransactionIDOnlyWhenSet(t *testing.T) {
 func TestReportEntitlementUsageReadsWhatTheServerSaidAboutTheReport(t *testing.T) {
 	t.Parallel()
 
-	client, _ := givenClient(t, respondWithHeaders(http.StatusOK, acceptedUsage, map[string]string{
+	client, _ := givenClient(t, respondWithHeaders(http.StatusOK, keyedUsage, map[string]string{
 		"Idempotent-Replayed":     "true",
 		"Kaiten-Metadata-Dropped": "too_large",
 	}))
-	result, err := client.Instances.ReportEntitlementUsage(t.Context(), "acme-prod", "seats", UsageReportInput{Value: 5, TransactionID: "evt-1"})
+	result, err := client.Instances.ReportEntitlementUsage(t.Context(), "acme-prod", "seats", UsageReportInput{Value: 5, TransactionID: "evt-0"})
 	if err != nil {
 		t.Fatalf("ReportEntitlementUsage() error = %v", err)
 	}
-	if !result.Replayed || !result.MetadataDropped {
-		t.Errorf("result = %+v, want Replayed and MetadataDropped", result)
+	if !result.Replayed || !result.MetadataDropped || result.TransactionID != "evt-0" {
+		t.Errorf("result = %+v, want Replayed, MetadataDropped and the key", result)
 	}
 	if result.Usage.EntitlementSlug != "seats" {
 		t.Errorf("Usage = %+v, want the decoded usage", result.Usage)
@@ -105,25 +127,27 @@ func TestReportEntitlementUsageReadsWhatTheServerSaidAboutTheReport(t *testing.T
 	if err != nil {
 		t.Fatalf("ReportEntitlementUsage() error = %v", err)
 	}
-	if result.Replayed || result.MetadataDropped {
-		t.Errorf("result = %+v, want neither flag without the headers", result)
+	if result.Replayed || result.MetadataDropped || result.TransactionID != "" {
+		t.Errorf("result = %+v, want no flag and no key", result)
 	}
 }
 
-// A report without a key may have been counted when its request failed, so it is
-// never sent twice; a report with one is applied at most once, so it is retried.
-func TestReportEntitlementUsageRetriesOnlyWithAKey(t *testing.T) {
+// The retry rule (billing spec §24 #60): a keyed report whose outcome is
+// unknown is retried only once the server has answered a report with its
+// transactionId, because an older Kaiten ignores the header and would count a
+// resent report twice. A report without a key is never sent twice.
+func TestReportEntitlementUsageRetriesOnlyOnceKeysAreHonoured(t *testing.T) {
 	t.Parallel()
 
 	transient := []responder{
 		respondJSON(http.StatusServiceUnavailable, problem(http.StatusServiceUnavailable, "ReportEntitlementUsageMetric.LedgerUnavailable")),
 		respondTransportError(),
-		respondJSON(http.StatusOK, acceptedUsage),
+		respondJSON(http.StatusOK, keyedUsage),
 	}
 
-	t.Run("with a key it retries transient failures under the same key", func(t *testing.T) {
+	t.Run("a confirmed server: transient failures are retried under the same key", func(t *testing.T) {
 		t.Parallel()
-		client, sent := givenClient(t, respondInTurn(transient...))
+		client, sent := confirmedClient(t, respondInTurn(transient...))
 
 		if _, err := client.Instances.ReportEntitlementUsage(t.Context(), "acme-prod", "seats", UsageReportInput{Value: 5, TransactionID: "evt-1"}); err != nil {
 			t.Fatalf("ReportEntitlementUsage() error = %v", err)
@@ -132,15 +156,48 @@ func TestReportEntitlementUsageRetriesOnlyWithAKey(t *testing.T) {
 			t.Fatalf("requests = %d, want 3", sent.count())
 		}
 		for i := range 3 {
-			if key := sent.at(t, i).decodeBody(t)["transactionId"]; key != "evt-1" {
-				t.Errorf("attempt %d sent transactionId %v, want evt-1", i+1, key)
+			if key := sent.at(t, i).header.Get("Idempotency-Key"); key != "evt-1" {
+				t.Errorf("attempt %d sent Idempotency-Key %q, want evt-1", i+1, key)
 			}
 		}
 	})
 
-	t.Run("without a key it sends once", func(t *testing.T) {
+	t.Run("an unconfirmed server: a keyed report is sent once", func(t *testing.T) {
 		t.Parallel()
 		client, sent := givenClient(t, respondInTurn(transient...))
+
+		_, err := client.Instances.ReportEntitlementUsage(t.Context(), "acme-prod", "seats", UsageReportInput{Value: 5, TransactionID: "evt-1"})
+		var apiErr *Error
+		if !errors.As(err, &apiErr) || apiErr.StatusCode != http.StatusServiceUnavailable {
+			t.Fatalf("error = %v, want the 503", err)
+		}
+		if sent.count() != 1 {
+			t.Errorf("requests = %d, want 1", sent.count())
+		}
+	})
+
+	t.Run("an older server that ignores the key never confirms it", func(t *testing.T) {
+		t.Parallel()
+		// It answers without transactionId, keyed or not.
+		client, sent := givenClient(t, respondInTurn(respondJSON(http.StatusOK, `{"entitlementId":"e","entitlementSlug":"seats","licenseId":"l","value":{"type":"number","value":5}}`),
+			respondJSON(http.StatusBadGateway, `{"title":"Bad Gateway"}`)))
+		if _, err := client.Instances.ReportEntitlementUsage(t.Context(), "acme-prod", "seats", UsageReportInput{Value: 5, TransactionID: "evt-1"}); err != nil {
+			t.Fatalf("first report: %v", err)
+		}
+		if _, err := client.Instances.ReportEntitlementUsage(t.Context(), "acme-prod", "seats", UsageReportInput{Value: 5, TransactionID: "evt-2"}); err == nil {
+			t.Fatal("second report: error = nil, want the 502")
+		}
+		if sent.count() != 2 {
+			t.Errorf("requests = %d, want 2: the 502 is not retried", sent.count())
+		}
+		if key := sent.at(t, 1).header.Get("Idempotency-Key"); key != "evt-2" {
+			t.Errorf("Idempotency-Key = %q, want evt-2: a report keeps its key", key)
+		}
+	})
+
+	t.Run("without a key it sends once, even on a confirmed server", func(t *testing.T) {
+		t.Parallel()
+		client, sent := confirmedClient(t, respondInTurn(transient...))
 
 		_, err := client.Instances.ReportEntitlementUsage(t.Context(), "acme-prod", "seats", UsageReportInput{Value: 5})
 		var apiErr *Error
@@ -152,9 +209,21 @@ func TestReportEntitlementUsageRetriesOnlyWithAKey(t *testing.T) {
 		}
 	})
 
+	t.Run("the flag is per client", func(t *testing.T) {
+		t.Parallel()
+		confirmedClient(t, respondJSON(http.StatusOK, keyedUsage))
+		other, sent := givenClient(t, respondJSON(http.StatusBadGateway, `{"title":"Bad Gateway"}`))
+		if _, err := other.Instances.ReportEntitlementUsage(t.Context(), "acme-prod", "seats", UsageReportInput{Value: 5, TransactionID: "evt-1"}); err == nil {
+			t.Fatal("error = nil")
+		}
+		if sent.count() != 1 {
+			t.Errorf("requests = %d, want 1: another client's confirmation does not count", sent.count())
+		}
+	})
+
 	t.Run("it gives up after three attempts", func(t *testing.T) {
 		t.Parallel()
-		client, sent := givenClient(t, respondJSON(http.StatusBadGateway, `{"title":"Bad Gateway"}`))
+		client, sent := confirmedClient(t, respondJSON(http.StatusBadGateway, `{"title":"Bad Gateway"}`))
 
 		_, err := client.Instances.ReportEntitlementUsage(t.Context(), "acme-prod", "seats", UsageReportInput{Value: 5, TransactionID: "evt-1"})
 		var apiErr *Error
@@ -169,7 +238,7 @@ func TestReportEntitlementUsageRetriesOnlyWithAKey(t *testing.T) {
 	t.Run("it never retries a refusal", func(t *testing.T) {
 		t.Parallel()
 		for _, status := range []int{http.StatusConflict, http.StatusUnprocessableEntity, http.StatusNotFound, http.StatusForbidden} {
-			client, sent := givenClient(t, respondJSON(status, problem(status, "Some.Code")))
+			client, sent := confirmedClient(t, respondJSON(status, problem(status, "ReportEntitlementUsageMetric.TransactionIdReused")))
 			if _, err := client.Instances.ReportEntitlementUsage(t.Context(), "acme-prod", "seats", UsageReportInput{Value: 5, TransactionID: "evt-1"}); err == nil {
 				t.Fatalf("%d: error = nil", status)
 			}
@@ -182,7 +251,7 @@ func TestReportEntitlementUsageRetriesOnlyWithAKey(t *testing.T) {
 	t.Run("a cancelled context stops the retries", func(t *testing.T) {
 		t.Parallel()
 		ctx, cancel := context.WithCancel(t.Context())
-		client, sent := givenClient(t, func(req *http.Request) (*http.Response, error) {
+		client, sent := confirmedClient(t, func(req *http.Request) (*http.Response, error) {
 			cancel()
 			return jsonResponse(req, http.StatusServiceUnavailable, `{"title":"Service Unavailable"}`), nil
 		})
@@ -242,62 +311,6 @@ func TestReportEntitlementUsageRefusesAMalformedKeyBeforeSending(t *testing.T) {
 		if sent.count() != 0 {
 			t.Errorf("%q: requests = %d, want none", key, sent.count())
 		}
-	}
-}
-
-// A server older than transaction IDs refuses the body member with a generic
-// validation problem. The report must still be counted -- sent again without
-// the key -- and the client stops sending keys, and so stops retrying, for good.
-func TestReportEntitlementUsageFallsBackOnAServerWithoutTransactionIDs(t *testing.T) {
-	t.Parallel()
-
-	refused := `{"title":"Unprocessable Entity","status":422,"code":"UNPROCESSABLE","errors":[{"message":"unexpected property","location":"body.transactionId"}]}`
-	var logged bytes.Buffer
-	logger := slog.New(slog.NewTextHandler(&logged, nil))
-
-	client, sent := givenClient(t, func(req *http.Request) (*http.Response, error) {
-		body, _ := io.ReadAll(req.Body)
-		if strings.Contains(string(body), "transactionId") {
-			return jsonResponse(req, http.StatusUnprocessableEntity, refused), nil
-		}
-		if strings.Contains(string(body), `"value":7`) {
-			return jsonResponse(req, http.StatusServiceUnavailable, `{"title":"Service Unavailable"}`), nil
-		}
-		return jsonResponse(req, http.StatusOK, acceptedUsage), nil
-	}, WithLogger(logger))
-
-	if _, err := client.Instances.ReportEntitlementUsage(t.Context(), "acme-prod", "seats", UsageReportInput{Value: 5, TransactionID: "evt-1"}); err != nil {
-		t.Fatalf("first report: error = %v, want it counted without the key", err)
-	}
-	if sent.count() != 2 || strings.Contains(string(sent.at(t, 1).body), "transactionId") {
-		t.Fatalf("requests = %d, want the refused one then one without the key", sent.count())
-	}
-
-	// Later reports go out without a key at once, and are not retried.
-	if _, err := client.Instances.ReportEntitlementUsage(t.Context(), "acme-prod", "seats", UsageReportInput{Value: 7, TransactionID: "evt-2"}); err == nil {
-		t.Fatal("second report: error = nil, want the 503")
-	}
-	if sent.count() != 3 || strings.Contains(string(sent.at(t, 2).body), "transactionId") {
-		t.Errorf("requests = %d, want one more, without the key and not retried", sent.count())
-	}
-
-	if n := strings.Count(logged.String(), "does not support usage report transaction IDs"); n != 1 {
-		t.Errorf("logged %d times, want once:\n%s", n, logged.String())
-	}
-}
-
-func TestRefusesTransactionIDIgnoresTheNewServersOwnCode(t *testing.T) {
-	t.Parallel()
-
-	location := "body.transactionId"
-	details := []ErrorDetail{{Location: &location}}
-	resp := apiResponse{StatusCode: http.StatusUnprocessableEntity, Problem: &ErrorModel{Errors: &details}}
-	if !refusesTransactionID(resp) {
-		t.Error("a validation problem on body.transactionId is an old server")
-	}
-	resp.Code = "ReportEntitlementUsageMetric.InvalidTransactionId"
-	if refusesTransactionID(resp) {
-		t.Error("a malformed key on a new server is not an old server")
 	}
 }
 

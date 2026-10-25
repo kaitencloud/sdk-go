@@ -1,7 +1,11 @@
+// Copyright 2026 KAITEN INC
+// SPDX-License-Identifier: Apache-2.0
+
 package sdk
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"mime"
@@ -16,14 +20,12 @@ import (
 // Problem codes a usage report can answer with, which ReportEntitlementUsage maps
 // to sentinels.
 const (
-	codeThresholdExceeded     = "ReportEntitlementUsageMetric.ThresholdExceeded"
-	codeTransactionIDReused   = "ReportEntitlementUsageMetric.TransactionIdReused"
-	codeInvalidTransactionID  = "ReportEntitlementUsageMetric.InvalidTransactionId"
-	transactionIDBodyLocation = "body.transactionId"
+	codeThresholdExceeded   = "ReportEntitlementUsageMetric.ThresholdExceeded"
+	codeTransactionIDReused = "ReportEntitlementUsageMetric.TransactionIdReused"
 )
 
-// maxUsageReportAttempts is how many times a report with a TransactionID is sent
-// before its failure is returned: the first attempt and two retries.
+// maxUsageReportAttempts is how many times a keyed report is sent before its
+// failure is returned: the first attempt and two retries.
 const maxUsageReportAttempts = 3
 
 // usageReportRetryDelay is the wait before the first retry; each later one waits
@@ -37,6 +39,10 @@ var transactionIDPattern = regexp.MustCompile(`^[A-Za-z0-9._:-]{1,128}$`)
 type UsageReportResult struct {
 	// Usage is the entitlement's usage after the report.
 	Usage EntitlementUsage
+	// TransactionID is the key Kaiten recorded the report under, empty for a
+	// report sent without one -- and for any report to a Kaiten that predates
+	// keys, which ignores the header and may count a resent report twice.
+	TransactionID string
 	// Replayed is true when the report carried a TransactionID Kaiten had already
 	// accepted: Usage is that earlier report's answer and nothing was counted
 	// again. A replay can describe a usage window that has since closed, so do
@@ -51,21 +57,20 @@ type UsageReportResult struct {
 // entitlementSlug for the instance identified by instanceSlug, and returns the
 // resulting usage with what Kaiten said about the report.
 //
-// Without a TransactionID the report is sent once and never retried: a report
-// that timed out may or may not have been counted, and sending it again could
-// count it twice. With one, Kaiten applies the report at most once, so it is
-// retried on transport errors and on 500, 502, 503 and 504 -- three attempts
-// in all, every one under the same key. A retry of a report the server did
-// count answers with Replayed set.
+// input.TransactionID travels in the Idempotency-Key header. Kaiten applies a
+// keyed report at most once, so a keyed report whose outcome is unknown -- a
+// transport error, or a 500, 502, 503 or 504 -- is sent again, three attempts in
+// all, every one under the same key, with exponential backoff. The client does
+// so only once a Kaiten has shown it honours keys, by answering a report with
+// its transactionId: an older Kaiten ignores the header, and a report resent to
+// it could count twice. Until then, and for a report without a key, an unknown
+// outcome is returned to the caller. A report is never resent without its key,
+// and the client never makes one up.
 //
 // A conflict wraps ErrThresholdExceeded (the limit refused the report) or
-// ErrTransactionIDReused (the key was already used for a different report) as
-// well as the *Error. A malformed TransactionID is refused before any request,
-// with ErrInvalidTransactionID.
-//
-// A Kaiten server older than TransactionID support refuses the field. The
-// client then sends the report again without it, and stops sending keys and
-// retrying reports for its lifetime; it logs that once.
+// ErrTransactionIDReused (the key was already used for a different report),
+// neither ever retried, as well as the *Error. A malformed TransactionID is
+// refused before any request, with ErrInvalidTransactionID.
 func (s *Instances) ReportEntitlementUsage(ctx context.Context, instanceSlug, entitlementSlug string, input UsageReportInput) (UsageReportResult, error) {
 	var result UsageReportResult
 
@@ -82,39 +87,45 @@ func (s *Instances) ReportEntitlementUsage(ctx context.Context, instanceSlug, en
 	if key != "" && !transactionIDPattern.MatchString(key) {
 		return result, fmt.Errorf("%w: %q is not 1 to 128 characters of letters, digits, '.', '_', ':' and '-'", ErrInvalidTransactionID, key)
 	}
-	if s.client.transactionIDsUnsupported.Load() {
-		key = ""
-	}
-	attempts := 1
+	params := &gen.ReportEntitlementUsageMetricParams{}
 	if key != "" {
-		attempts = maxUsageReportAttempts
+		params.IdempotencyKey = &key
 	}
 
 	for attempt := 1; ; attempt++ {
+		// Read per attempt: a concurrent report may confirm keys meanwhile.
+		retryable := key != "" && s.client.keysHonoured.Load() && attempt < maxUsageReportAttempts
+
 		body, err := jsonBody(usageReportPayload{
-			Behavior:      &behavior,
-			Metadata:      cloneMapPtr(input.Metadata),
-			TransactionID: key,
-			Value:         usageValue,
+			Behavior: &behavior,
+			Metadata: cloneMapPtr(input.Metadata),
+			Value:    usageValue,
 		})
 		if err != nil {
 			return result, fmt.Errorf("encode usage report request: %w", err)
 		}
 
-		resp, err := s.client.raw.ReportEntitlementUsageMetricWithBodyWithResponse(ctx, instanceSlug, entitlementSlug, contentTypeJSON, body)
+		resp, err := s.client.raw.ReportEntitlementUsageMetricWithBodyWithResponse(ctx, instanceSlug, entitlementSlug, params, contentTypeJSON, body)
 		if err != nil {
-			if attempt < attempts && ctx.Err() == nil {
-				if waitErr := waitBeforeRetry(ctx, attempt); waitErr != nil {
-					return result, fmt.Errorf("report entitlement usage: %w", err)
+			if retryable && ctx.Err() == nil {
+				if waitErr := waitBeforeRetry(ctx, attempt); waitErr == nil {
+					continue
 				}
-				continue
 			}
 			return result, fmt.Errorf("report entitlement usage: %w", err)
 		}
 
 		apiResp := newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON409, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500, resp.ApplicationproblemJSON503)
 		if resp.JSON200 != nil {
-			result.Usage = *resp.JSON200
+			// EntitlementUsage is a subset of the answer: decode the body again
+			// rather than copy field by field.
+			if err := json.Unmarshal(resp.Body, &result.Usage); err != nil {
+				return result, fmt.Errorf("decode usage report response: %w", err)
+			}
+			if id := resp.JSON200.TransactionId; id != nil {
+				result.TransactionID = *id
+				s.client.keysHonoured.Store(true)
+			}
 			if headers := resp.Headers200; headers != nil {
 				result.Replayed = stringValue(headers.IdempotentReplayed) == "true"
 				result.MetadataDropped = stringValue(headers.KaitenMetadataDropped) != ""
@@ -122,30 +133,22 @@ func (s *Instances) ReportEntitlementUsage(ctx context.Context, instanceSlug, en
 			return result, nil
 		}
 
-		if key != "" && refusesTransactionID(apiResp) {
-			s.client.disableTransactionIDs()
-			key, attempts = "", 1
-			continue
-		}
-		if attempt < attempts && retryableStatus(apiResp.StatusCode) {
-			if waitErr := waitBeforeRetry(ctx, attempt); waitErr != nil {
-				return result, responseError(apiResp)
+		if retryable && retryableStatus(apiResp.StatusCode) {
+			if waitErr := waitBeforeRetry(ctx, attempt); waitErr == nil {
+				continue
 			}
-			continue
 		}
 
 		return result, usageReportError(apiResp)
 	}
 }
 
-// usageReportPayload is the report body. TransactionID is omitted when empty:
-// the body is closed, and a server without the field refuses any request that
-// names it.
+// usageReportPayload is the report body. The key is not in it: it travels in
+// the Idempotency-Key header, and the body is closed.
 type usageReportPayload struct {
-	Behavior      *EntitlementUsageBehavior `json:"behavior,omitempty"`
-	Metadata      *map[string]any           `json:"metadata,omitempty"`
-	TransactionID string                    `json:"transactionId,omitempty"`
-	Value         EntitlementUsageValue     `json:"value"`
+	Behavior *EntitlementUsageBehavior `json:"behavior,omitempty"`
+	Metadata *map[string]any           `json:"metadata,omitempty"`
+	Value    EntitlementUsageValue     `json:"value"`
 }
 
 // usageReportError is the *Error of a refused report, with the sentinel its
@@ -160,25 +163,6 @@ func usageReportError(resp apiResponse) error {
 	default:
 		return err
 	}
-}
-
-// refusesTransactionID reports whether resp is a server without TransactionID
-// support refusing the field: a validation problem located on it, from a
-// server that does not know the code newer ones answer a malformed key with.
-// The key was checked before sending, so it is not malformed.
-func refusesTransactionID(resp apiResponse) bool {
-	if resp.StatusCode != http.StatusUnprocessableEntity && resp.StatusCode != http.StatusBadRequest {
-		return false
-	}
-	if resp.Code == codeInvalidTransactionID || resp.Problem == nil || resp.Problem.Errors == nil {
-		return false
-	}
-	for _, detail := range *resp.Problem.Errors {
-		if stringValue(detail.Location) == transactionIDBodyLocation {
-			return true
-		}
-	}
-	return false
 }
 
 func retryableStatus(status int) bool {
@@ -200,15 +184,6 @@ func waitBeforeRetry(ctx context.Context, attempt int) error {
 		return ctx.Err()
 	case <-timer.C:
 		return nil
-	}
-}
-
-// disableTransactionIDs stops this client sending keys, logging the first time.
-func (c *Client) disableTransactionIDs() {
-	if c.transactionIDsUnsupported.CompareAndSwap(false, true) {
-		c.logger().Warn("kaiten: the server does not support usage report transaction IDs; " +
-			"reports are sent without them and are not retried for the rest of this client's life. " +
-			"Upgrade Kaiten to make retries safe.")
 	}
 }
 

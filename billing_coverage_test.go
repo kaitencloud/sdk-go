@@ -1,3 +1,6 @@
+// Copyright 2026 KAITEN INC
+// SPDX-License-Identifier: Apache-2.0
+
 package sdk
 
 import (
@@ -766,7 +769,7 @@ func billingProblemCoverage() map[string]problemCoverage[*Client] {
 		"LicenseFamilies.Update": {
 			response: gen.UpdateLicenseFamilyResponse{},
 			call: func(ctx context.Context, c *Client) error {
-				_, err := c.LicenseFamilies.Update(ctx, "x", LicenseFamilyVisibility{})
+				_, err := c.LicenseFamilies.Update(ctx, "x", LicenseFamilyUpdate{})
 				return err
 			},
 		},

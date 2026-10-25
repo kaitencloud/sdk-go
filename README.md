@@ -115,7 +115,6 @@ client, err := sdk.NewClient("https://kaiten.example.com/api",
 | `WithHTTPClient(client)`   | Use a custom `*http.Client`; replaces `DefaultTimeout` (30s).    |
 | `WithRequestEditorFn(fn)`  | Run a function on each request before it is sent. Repeatable.    |
 | `WithBaseURL(url)`         | Override the base URL given to the constructor.                  |
-| `WithLogger(logger)`       | Where to log events an operator should know about; `slog.Default()` otherwise. |
 
 ## Core API
 
@@ -244,9 +243,12 @@ current position of an instance against its limits.
 
 A report without a key is sent once and never retried: if its request fails, it
 may or may not have been counted, and sending it again could count it twice. Give
-it a `TransactionID` and Kaiten applies it at most once (per instance, entitlement
-and key, within 35 days by default), so the SDK retries it on network errors and
-on 500, 502, 503 and 504, up to three attempts, all under the same key.
+it a `TransactionID`, sent as the `Idempotency-Key` header, and Kaiten applies it
+at most once (per instance, entitlement and key, within 35 days by default). The
+SDK then retries it on network errors and on 500, 502, 503 and 504, up to three
+attempts, all under the same key -- once the server has shown it honours keys, by
+answering a report with its `transactionId`. Until then a failed keyed report is
+returned to you, like one without a key.
 
 ```go
 result, err := client.Instances.ReportEntitlementUsage(ctx, "acme-production", "tokens",
@@ -270,9 +272,10 @@ case result.MetadataDropped:
 }
 ```
 
-A server older than transaction IDs refuses the field. The client then sends the
-report again without it, and stops sending keys (and retrying) for its lifetime,
-logging that once through `WithLogger`.
+That proof is kept per client. A Kaiten older than keys ignores the header, so a
+report resent to it would count twice: its answers never carry a
+`transactionId`, and the client never retries against it. The SDK never makes a
+key up, and never resends a report without its key.
 
 #### Usage history
 

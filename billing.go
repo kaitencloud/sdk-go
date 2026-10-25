@@ -1,3 +1,6 @@
+// Copyright 2026 KAITEN INC
+// SPDX-License-Identifier: Apache-2.0
+
 package sdk
 
 import (
@@ -1730,7 +1733,7 @@ func (s *BillingSession) ValidateVoucher(ctx context.Context, input SessionVouch
 }
 
 // Update changes a licence family.
-func (s *LicenseFamilies) Update(ctx context.Context, familySlug string, input LicenseFamilyVisibility) (LicenseFamilyView, error) {
+func (s *LicenseFamilies) Update(ctx context.Context, familySlug string, input LicenseFamilyUpdate) (LicenseFamilyView, error) {
 	body, err := jsonBody(input)
 	if err != nil {
 		var zero LicenseFamilyView

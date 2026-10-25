@@ -127,6 +127,12 @@ func (r *recorder) count() int {
 	return len(r.requests)
 }
 
+// reset forgets the requests recorded so far, for a test that sets a client up
+// with requests of its own before the ones it asserts on.
+func (r *recorder) reset() {
+	r.requests = nil
+}
+
 // at returns the nth recorded request, failing rather than panicking when the walk made
 // fewer calls than the test expected.
 func (r *recorder) at(t *testing.T, n int) recordedRequest {

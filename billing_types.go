@@ -1,3 +1,6 @@
+// Copyright 2026 KAITEN INC
+// SPDX-License-Identifier: Apache-2.0
+
 package sdk
 
 import "github.com/kaitencloud/sdk-go/internal/gen"
@@ -84,24 +87,6 @@ type CanceledSubscriptionProviderKind = gen.CanceledSubscriptionProviderKind
 
 // CanceledSubscriptionStatus is the Core API's CanceledSubscriptionStatus.
 type CanceledSubscriptionStatus = gen.CanceledSubscriptionStatus
-
-// Cancellation is the Core API's Cancellation.
-type Cancellation = gen.Cancellation
-
-// CancellationBillingPeriod is the Core API's CancellationBillingPeriod.
-type CancellationBillingPeriod = gen.CancellationBillingPeriod
-
-// CancellationCollectionMethod Effective: the subscription's own, else the organization's default
-type CancellationCollectionMethod = gen.CancellationCollectionMethod
-
-// CancellationMode How it was canceled; a trial is canceled at once in either mode
-type CancellationMode = gen.CancellationMode
-
-// CancellationProviderKind Who collects its invoices. NOOP: the organization itself, through the handoff queue
-type CancellationProviderKind = gen.CancellationProviderKind
-
-// CancellationStatus is the Core API's CancellationStatus.
-type CancellationStatus = gen.CancellationStatus
 
 // CloseBacklog is the Core API's CloseBacklog.
 type CloseBacklog = gen.CloseBacklog
@@ -340,8 +325,8 @@ type InvoiceVoid = gen.InvoiceVoid
 // InvoiceWriteOff is the Core API's InvoiceWriteOff.
 type InvoiceWriteOff = gen.InvoiceWriteOff
 
-// LicenseFamilyVisibility is the Core API's LicenseFamilyVisibility.
-type LicenseFamilyVisibility = gen.LicenseFamilyVisibility
+// LicenseFamilyUpdate is the Core API's LicenseFamilyUpdate.
+type LicenseFamilyUpdate = gen.LicenseFamilyUpdate
 
 // LicensePriceChanges is the Core API's LicensePriceChanges.
 type LicensePriceChanges = gen.LicensePriceChanges
@@ -611,15 +596,6 @@ type PortalSession = gen.PortalSession
 
 // PortalUpcomingInvoice is the Core API's PortalUpcomingInvoice.
 type PortalUpcomingInvoice = gen.PortalUpcomingInvoice
-
-// PortalVoucher is the Core API's PortalVoucher.
-type PortalVoucher = gen.PortalVoucher
-
-// PortalVoucherStatus is the Core API's PortalVoucherStatus.
-type PortalVoucherStatus = gen.PortalVoucherStatus
-
-// PortalVoucherVoucherType is the Core API's PortalVoucherVoucherType.
-type PortalVoucherVoucherType = gen.PortalVoucherVoucherType
 
 // Price is the Core API's Price.
 type Price = gen.Price
@@ -1014,20 +990,6 @@ const (
 	CanceledSubscriptionStatusCANCELED                        = gen.CanceledSubscriptionStatusCANCELED
 	CanceledSubscriptionStatusPASTDUE                         = gen.CanceledSubscriptionStatusPASTDUE
 	CanceledSubscriptionStatusTRIAL                           = gen.CanceledSubscriptionStatusTRIAL
-	CancellationBillingPeriodANNUAL                           = gen.CancellationBillingPeriodANNUAL
-	CancellationBillingPeriodMONTHLY                          = gen.CancellationBillingPeriodMONTHLY
-	CancellationBillingPeriodQUARTERLY                        = gen.CancellationBillingPeriodQUARTERLY
-	CancellationBillingPeriodSEMIANNUAL                       = gen.CancellationBillingPeriodSEMIANNUAL
-	CancellationCollectionMethodCHARGEAUTOMATICALLY           = gen.CancellationCollectionMethodCHARGEAUTOMATICALLY
-	CancellationCollectionMethodSENDINVOICE                   = gen.CancellationCollectionMethodSENDINVOICE
-	CancellationModeATPERIODEND                               = gen.CancellationModeATPERIODEND
-	CancellationModeIMMEDIATE                                 = gen.CancellationModeIMMEDIATE
-	CancellationProviderKindNOOP                              = gen.CancellationProviderKindNOOP
-	CancellationProviderKindSTRIPE                            = gen.CancellationProviderKindSTRIPE
-	CancellationStatusACTIVE                                  = gen.CancellationStatusACTIVE
-	CancellationStatusCANCELED                                = gen.CancellationStatusCANCELED
-	CancellationStatusPASTDUE                                 = gen.CancellationStatusPASTDUE
-	CancellationStatusTRIAL                                   = gen.CancellationStatusTRIAL
 	ClosedInvoiceKindACTIVATION                               = gen.ClosedInvoiceKindACTIVATION
 	ClosedInvoiceKindFINAL                                    = gen.ClosedInvoiceKindFINAL
 	ClosedInvoiceKindRENEWAL                                  = gen.ClosedInvoiceKindRENEWAL
@@ -1278,11 +1240,6 @@ const (
 	PortalPaymentMethodStatusACTIVE                           = gen.PortalPaymentMethodStatusACTIVE
 	PortalPaymentMethodStatusEXPIRED                          = gen.PortalPaymentMethodStatusEXPIRED
 	PortalPaymentMethodStatusFAILED                           = gen.PortalPaymentMethodStatusFAILED
-	PortalVoucherStatusACTIVE                                 = gen.PortalVoucherStatusACTIVE
-	PortalVoucherStatusEXPIRED                                = gen.PortalVoucherStatusEXPIRED
-	PortalVoucherStatusREVOKED                                = gen.PortalVoucherStatusREVOKED
-	PortalVoucherVoucherTypeENTITLEMENTBOOST                  = gen.PortalVoucherVoucherTypeENTITLEMENTBOOST
-	PortalVoucherVoucherTypePRICE                             = gen.PortalVoucherVoucherTypePRICE
 	PriceBillingModelFLATFEE                                  = gen.PriceBillingModelFLATFEE
 	PriceBillingModelOVERAGE                                  = gen.PriceBillingModelOVERAGE
 	PriceBillingModelUSAGEBASED                               = gen.PriceBillingModelUSAGEBASED
@@ -1302,8 +1259,8 @@ const (
 	ProvenanceBoostModifierTypeMULTIPLY                       = gen.ProvenanceBoostModifierTypeMULTIPLY
 	ProvenanceBoostModifierTypeSET                            = gen.ProvenanceBoostModifierTypeSET
 	ProvenanceBoostModifierTypeUNLIMITED                      = gen.ProvenanceBoostModifierTypeUNLIMITED
-	MATCHED                                                   = gen.MATCHED
-	MISMATCH                                                  = gen.MISMATCH
+	ProviderRecordReconciliationStatusMATCHED                 = gen.ProviderRecordReconciliationStatusMATCHED
+	ProviderRecordReconciliationStatusMISMATCH                = gen.ProviderRecordReconciliationStatusMISMATCH
 	ProviderRecordStatusDraft                                 = gen.ProviderRecordStatusDraft
 	ProviderRecordStatusOpen                                  = gen.ProviderRecordStatusOpen
 	ProviderRecordStatusPaid                                  = gen.ProviderRecordStatusPaid
@@ -1370,9 +1327,9 @@ const (
 	SessionBoostModifierTypeMULTIPLY                          = gen.SessionBoostModifierTypeMULTIPLY
 	SessionBoostModifierTypeSET                               = gen.SessionBoostModifierTypeSET
 	SessionBoostModifierTypeUNLIMITED                         = gen.SessionBoostModifierTypeUNLIMITED
-	Preview                                                   = gen.Preview
-	RequiresPaymentMethod                                     = gen.RequiresPaymentMethod
-	Subscribed                                                = gen.Subscribed
+	SessionCheckoutStatusPreview                              = gen.SessionCheckoutStatusPreview
+	SessionCheckoutStatusRequiresPaymentMethod                = gen.SessionCheckoutStatusRequiresPaymentMethod
+	SessionCheckoutStatusSubscribed                           = gen.SessionCheckoutStatusSubscribed
 	SessionDiscountAppliesToADDONS                            = gen.SessionDiscountAppliesToADDONS
 	SessionDiscountAppliesToBOTH                              = gen.SessionDiscountAppliesToBOTH
 	SessionDiscountAppliesToLICENSEBASE                       = gen.SessionDiscountAppliesToLICENSEBASE
