@@ -552,6 +552,13 @@ func billingProblemCoverage() map[string]problemCoverage[*Client] {
 			},
 		},
 
+		"BillingVouchers.Delete": {
+			response: gen.DeleteVoucherResponse{},
+			call: func(ctx context.Context, c *Client) error {
+				return c.Billing.Vouchers.Delete(ctx, "x")
+			},
+		},
+
 		"BillingVouchers.Publish": {
 			response: gen.PublishVoucherResponse{},
 			call: func(ctx context.Context, c *Client) error {
@@ -814,7 +821,7 @@ func billingServiceCoverage(client *Client) map[string]serviceCoverage {
 		},
 		"BillingVouchers": {
 			service: client.Billing.Vouchers,
-			methods: []string{"ListPage", "List", "Create", "Get", "Update", "Publish", "Archive", "ListRedemptionsPage", "ListRedemptions", "Lookup", "Validate"},
+			methods: []string{"ListPage", "List", "Create", "Get", "Update", "Delete", "Publish", "Archive", "ListRedemptionsPage", "ListRedemptions", "Lookup", "Validate"},
 		},
 		"BillingPublishableKeys": {
 			service: client.Billing.PublishableKeys,

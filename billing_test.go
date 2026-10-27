@@ -160,3 +160,55 @@ func TestBillingInvoicesRecomposeReadsBothStatuses(t *testing.T) {
 		}
 	}
 }
+
+// Delete is an authenticated, bodiless DELETE on the voucher itself, and its
+// 204 is success.
+func TestBillingVouchersDeleteSendsABodilessDelete(t *testing.T) {
+	t.Parallel()
+
+	client, rec := givenClient(t, respondNoContent(), WithBearerToken("ksh_secret"))
+
+	if err := client.Billing.Vouchers.Delete(t.Context(), "vch_1"); err != nil {
+		t.Fatalf("Delete() error = %v", err)
+	}
+
+	request := rec.only(t)
+	if request.method != http.MethodDelete || request.path != "/api/vouchers/vch_1" {
+		t.Errorf("request = %s %s, want DELETE /api/vouchers/vch_1", request.method, request.path)
+	}
+	if len(request.body) != 0 {
+		t.Errorf("request body = %s, want none", request.body)
+	}
+	if got := request.header.Get("Authorization"); got != "Bearer ksh_secret" {
+		t.Errorf("Authorization = %q, want %q", got, "Bearer ksh_secret")
+	}
+}
+
+// A refused delete carries its code: a voucher redeemed at least once is one
+// to archive instead, and an unknown one, or another organization's, is not
+// there to delete.
+func TestBillingVouchersDeleteReportsItsCodes(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		status int
+		code   string
+	}{
+		{status: http.StatusConflict, code: "DeleteVoucher.Redeemed"},
+		{status: http.StatusNotFound, code: "DeleteVoucher.NotFound"},
+	}
+
+	for _, test := range tests {
+		client, _ := givenClient(t, respondJSON(test.status, problem(test.status, test.code)))
+
+		err := client.Billing.Vouchers.Delete(t.Context(), "vch_1")
+
+		var apiErr *Error
+		if !errors.As(err, &apiErr) {
+			t.Fatalf("%d: error = %v, want an *Error", test.status, err)
+		}
+		if apiErr.StatusCode != test.status || apiErr.Code != test.code || apiErr.Problem == nil {
+			t.Errorf("%d: StatusCode = %d, Code = %q, Problem = %v, want %q", test.status, apiErr.StatusCode, apiErr.Code, apiErr.Problem, test.code)
+		}
+	}
+}
