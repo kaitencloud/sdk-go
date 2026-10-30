@@ -239,6 +239,73 @@ usage, err := client.Instances.ReportEntitlementUsageMetric(ctx, "sakura-tokyo-p
 `Instances.ListEntitlementUsageMetrics` and `EntitlementGroups.GetUsage` read the
 current position of an instance against its limits.
 
+#### Safe retries with a transaction ID
+
+A report without a key is sent once and never retried: if its request fails, it
+may or may not have been counted, and sending it again could count it twice. Give
+it a `TransactionID`, sent as the `Idempotency-Key` header, and Kaiten applies it
+at most once (per instance, entitlement and key, within 35 days by default). The
+SDK then retries it on network errors and on 500, 502, 503 and 504, up to three
+attempts, all under the same key -- once the server has shown it honours keys, by
+answering a report with its `transactionId`. Until then a failed keyed report is
+returned to you, like one without a key.
+
+```go
+result, err := client.Instances.ReportEntitlementUsage(ctx, "acme-production", "tokens",
+	sdk.UsageReportInput{
+		Value:         1200,
+		TransactionID: "llm-call:9f2c:tokens", // a UUID, or the business event ID plus the meter
+		Metadata:      map[string]any{"model": "large"},
+	},
+)
+switch {
+case errors.Is(err, sdk.ErrTransactionIDReused):
+	// The key was already used for a different report: a bug in how keys are
+	// made. Not retryable. Send a correction as a new report under a new key.
+case err != nil:
+	return err
+case result.Replayed:
+	// Kaiten had already counted this report; result.Usage is its original
+	// answer, possibly for a window that has since closed.
+case result.MetadataDropped:
+	// Counted, but the metadata was above 4 KiB and was not stored.
+}
+```
+
+That proof is kept per client. A Kaiten older than keys ignores the header, so a
+report resent to it would count twice: its answers never carry a
+`transactionId`, and the client never retries against it. The SDK never makes a
+key up, and never resends a report without its key.
+
+#### Usage history
+
+Every accepted report is kept in the usage history for the organization's
+retention: the counter before and after it, and the limit it was gated on.
+
+```go
+from := time.Now().AddDate(0, 0, -7)
+reports, err := client.Instances.ListUsageReports(ctx, "acme-production", "tokens",
+	&sdk.UsageReportsOptions{From: &from},
+)
+
+// Or stream it, as CSV or NDJSON. Close the body.
+export, err := client.Instances.ExportUsageReports(ctx, "acme-production", "tokens",
+	&sdk.UsageExportOptions{From: &from, Format: sdk.UsageExportCSV},
+)
+if err != nil {
+	return err
+}
+defer export.Body.Close()
+_, err = io.Copy(file, export.Body) // export.Filename names the range
+```
+
+`Instances.ExportOrganizationUsageReports` exports the whole organization, 31 days
+at a time, optionally for one instance or entitlement; `InstanceID` and
+`EntitlementID` reach deleted ones. A `From` before the start of the
+organization's history answers a 422 whose `Code` ends in `OutsideRetention`.
+The client's timeout covers reading an export's body: give a large export a client
+with a longer one through `WithHTTPClient`.
+
 ### Feature flags
 
 ```go
@@ -250,6 +317,40 @@ for _, flag := range flags {
 
 `sdk.BasicDefaultVariant` and `sdk.BasicVariantTargeting` build the default variant
 and the targeting rules a `FeatureFlag` carries on create and update.
+
+### Billing
+
+`client.Billing` holds the billing settings and provider (`Settings`,
+`UpdateSettings`, `Capabilities`, `Health`, `Sync`, `ClosePeriods`) and a
+namespace per resource:
+
+| Namespace           | Covers                                                                  |
+| ------------------- | ----------------------------------------------------------------------- |
+| `Subscriptions`     | an instance's subscription: subscribe, change, cancel, reactivate, scheduled plan change, upcoming invoice, its invoices |
+| `Invoices`          | list, get, export, void, recompose, mark paid, write off, release a hold, retry a push, sync, a line's usage reports |
+| `Handoff`           | the accounting handoff: claim a leased batch, acknowledge each invoice  |
+| `LicensePrices`     | a licence version's prices and the invoice preview                      |
+| `Addons`            | the add-on catalogue: versions, grants, prices, compatibility, families |
+| `InstanceAddons`    | attach, set the quantity of, detach an add-on                           |
+| `Vouchers`, `InstanceVouchers` | vouchers, their redemptions, redeem and revoke on an instance |
+| `PublishableKeys`, `CustomerSessions` | the `pk_` keys and `kst_` sessions a customer's page uses |
+| `Customers`         | a customer's billing, payment method and provider portal                |
+| `Public`, `Session` | what a `pk_` key and a `kst_` session reach: build the client with that token |
+
+```go
+claim, err := client.Billing.Handoff.Claim(ctx, sdk.HandoffClaimSize{})
+for _, invoice := range claim.Invoices {
+	reference := book(invoice) // your accounting system
+	_, err = client.Billing.Handoff.Ack(ctx, invoice.Id, sdk.HandoffBooking{
+		LeaseId:           &claim.LeaseId,
+		ExternalReference: &reference,
+	})
+}
+```
+
+The list methods walk every page. Each paginated one (`Invoices.List`,
+`Handoff.List`, `Vouchers.ListRedemptions`, ...) also has a `...Page` variant that
+returns one page and its cursor.
 
 ## Platform API
 
@@ -378,9 +479,16 @@ if err != nil {
 | `Problem`    | The decoded problem-details body (`title`, `detail`, `errors`, ...).  |
 | `ErrorID`    | Correlation id for the server-side log entry, when given.             |
 | `Body`       | The raw response body.                                                |
+| `RetryAfter` | How long to wait before retrying, when the API said (429, 503).       |
 
-`Instances.ReportUsage` additionally returns `sdk.ErrThresholdExceeded` when a report
-would cross the entitlement's limit.
+The usage report methods also return sentinels for `errors.Is`, alongside the
+`*sdk.Error`:
+
+| Sentinel                      | Meaning                                                                 |
+| ----------------------------- | ----------------------------------------------------------------------- |
+| `ErrThresholdExceeded`        | The report would cross the entitlement's limit.                         |
+| `ErrTransactionIDReused`      | The key was already used for a different report. Do not retry it.       |
+| `ErrInvalidTransactionID`     | The key is not 1 to 128 characters of `[A-Za-z0-9._:-]`; nothing was sent. |
 
 ## Low-level access
 

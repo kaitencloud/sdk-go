@@ -21,6 +21,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"sync/atomic"
 	"time"
 
 	"github.com/kaitencloud/sdk-go/internal/gen"
@@ -48,6 +49,14 @@ type Client struct {
 	// request editors the generated client was handed.
 	list listTransport
 
+	// keysHonoured is set by the first usage report Kaiten answers with a
+	// transactionId: from then on a keyed report whose outcome is unknown is
+	// retried under its key. Per client, not per process: two clients may talk
+	// to two Kaitens.
+	keysHonoured atomic.Bool
+
+	// Billing is the billing API, a namespace per resource below it.
+	Billing           *Billing
 	Components        *Components
 	Customers         *Customers
 	DeploymentZones   *DeploymentZones
@@ -75,7 +84,9 @@ func NewClient(baseURL string, opts ...Option) (*Client, error) {
 		return nil, fmt.Errorf("create SDK client: %w", err)
 	}
 
-	return newClient(raw, resolved.listTransport()), nil
+	client := newClient(raw, resolved.listTransport())
+
+	return client, nil
 }
 
 func newClient(raw *gen.ClientWithResponses, list listTransport) *Client {
@@ -95,6 +106,7 @@ func newClient(raw *gen.ClientWithResponses, list listTransport) *Client {
 	client.Licenses = &Licenses{client: client}
 	client.MetadataFields = &MetadataFields{client: client}
 	client.Releases = &Releases{client: client}
+	client.Billing = newBilling(client)
 	client.ServiceAccounts = &ServiceAccounts{client: client}
 
 	return client
