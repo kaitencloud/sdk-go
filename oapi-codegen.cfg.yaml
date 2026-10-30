@@ -9,5 +9,10 @@ output: internal/gen/client.gen.go
 # and the generated package does not compile.
 output-options:
   skip-prune: true
+  # Evaluation belongs to OpenFeature and its official OFREP provider. Exact
+  # operation IDs from the Core contract; management and webhook APIs stay.
+  exclude-operation-ids:
+    - evaluateFlag
+    - evaluateFlagsBulk
   overlay:
     path: oapi-codegen.overlay.yaml

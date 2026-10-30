@@ -89,3 +89,29 @@ jobs:
 
       - name: Test
         run: go test -race -shuffle=on -cover ./...
+
+      - name: Verify management-only generator policy
+        run: |
+          set -eu
+          go test ./internal/gen -run TestNoDirectFlagEvaluationExports
+          tmp=$(mktemp -d)
+          trap 'rm -rf "$tmp"' EXIT
+          # Config output wins over -o; omit only the output path in this temp copy.
+          sed '/^output:/d' oapi-codegen.cfg.yaml > "$tmp/config.yaml"
+          go run github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@v2.8.0 --config "$tmp/config.yaml" -o "$tmp/client.gen.go" testdata/ofrep-policy.yaml
+          if grep -Eq 'EvaluateFlag|OfrepEvaluate|/ofrep/v1/evaluate/flags' "$tmp/client.gen.go"; then
+            echo "Direct flag evaluation escaped the SDK generator filter" >&2
+            exit 1
+          fi
+          grep -q 'func (c \*ClientWithResponses) GetFeatureFlagsWithResponse(' "$tmp/client.gen.go"
+          grep -q 'type InvoiceHandoff struct' "$tmp/client.gen.go"
+          go test "$tmp/client.gen.go"
+
+      - name: Verify official OpenFeature/OFREP example
+        working-directory: examples/openfeature
+        run: |
+          go mod tidy
+          git diff --exit-code -- go.mod go.sum
+          go test -race -shuffle=on -cover ./...
+          go vet ./...
+          go build -o /dev/null .

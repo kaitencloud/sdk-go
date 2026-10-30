@@ -79,6 +79,33 @@ tasks:
       - task: license-header
         vars: { FILE: internal/gen/client.gen.go }
 
+  generate:check:
+    desc: Check the management-only generator policy and existing invoice overlay
+    cmds:
+      - |
+          set -eu
+          go test ./internal/gen -run TestNoDirectFlagEvaluationExports
+          tmp=$(mktemp -d)
+          trap 'rm -rf "$tmp"' EXIT
+          # Config output wins over -o; omit only the output path in this temp copy.
+          sed '/^output:/d' oapi-codegen.cfg.yaml > "$tmp/config.yaml"
+          go run github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@{{.OAPI_CODEGEN_VERSION}} --config "$tmp/config.yaml" -o "$tmp/client.gen.go" testdata/ofrep-policy.yaml
+          if grep -Eq 'EvaluateFlag|OfrepEvaluate|/ofrep/v1/evaluate/flags' "$tmp/client.gen.go"; then
+            echo "Direct flag evaluation escaped the SDK generator filter" >&2
+            exit 1
+          fi
+          grep -q 'func (c \*ClientWithResponses) GetFeatureFlagsWithResponse(' "$tmp/client.gen.go"
+          grep -q 'type InvoiceHandoff struct' "$tmp/client.gen.go"
+          go test "$tmp/client.gen.go"
+
+  example:check:
+    desc: Test and build the isolated official OpenFeature/OFREP example
+    dir: examples/openfeature
+    cmds:
+      - go test -race -shuffle=on -cover ./...
+      - go vet ./...
+      - go build -o /dev/null .
+
   generate:platform:
     desc: Regenerate the Platform API client from PLATFORM_OPENAPI_SPEC
     preconditions:
