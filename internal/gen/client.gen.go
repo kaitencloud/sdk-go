@@ -11929,6 +11929,36 @@ func (e OnVoucherCreatedJSONBodyType) Valid() bool {
 	}
 }
 
+// Defines values for OnVoucherDeletedJSONBodyName.
+const (
+	VOUCHERDELETED OnVoucherDeletedJSONBodyName = "VOUCHER_DELETED"
+)
+
+// Valid indicates whether the value is a known member of the OnVoucherDeletedJSONBodyName enum.
+func (e OnVoucherDeletedJSONBodyName) Valid() bool {
+	switch e {
+	case VOUCHERDELETED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for OnVoucherDeletedJSONBodyType.
+const (
+	ComKaitenVoucherV1Deleted OnVoucherDeletedJSONBodyType = "com.kaiten.voucher.v1.deleted"
+)
+
+// Valid indicates whether the value is a known member of the OnVoucherDeletedJSONBodyType enum.
+func (e OnVoucherDeletedJSONBodyType) Valid() bool {
+	switch e {
+	case ComKaitenVoucherV1Deleted:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for OnVoucherExhaustedJSONBodyName.
 const (
 	VOUCHEREXHAUSTED OnVoucherExhaustedJSONBodyName = "VOUCHER_EXHAUSTED"
@@ -14840,7 +14870,7 @@ type HandoffBacklog struct {
 	OldestPendingIssuedAt *time.Time `json:"oldestPendingIssuedAt"`
 	Pending               int64      `json:"pending"`
 
-	// ReclaimedLast24h PENDING invoices claimed again after a lease expired, whose latest lease runs or ended in the last 24 hours: a consumer that claims and does not acknowledge
+	// ReclaimedLast24h Invoices claimed again after a lease expired, in the last 24 hours: a consumer that claims and does not acknowledge
 	ReclaimedLast24h int64 `json:"reclaimedLast24h"`
 }
 
@@ -24796,6 +24826,28 @@ type OnVoucherCreatedJSONBodyName string
 // OnVoucherCreatedJSONBodyType defines parameters for OnVoucherCreated.
 type OnVoucherCreatedJSONBodyType string
 
+// OnVoucherDeletedJSONBody defines parameters for OnVoucherDeleted.
+type OnVoucherDeletedJSONBody struct {
+	Data    VoucherDelivered `json:"data"`
+	Headers *EventHeaders    `json:"headers,omitempty"`
+
+	// Name Event name
+	//
+	// Examples: VOUCHER_DELETED
+	Name OnVoucherDeletedJSONBodyName `json:"name"`
+
+	// Type Event type
+	//
+	// Examples: com.kaiten.voucher.v1.deleted
+	Type OnVoucherDeletedJSONBodyType `json:"type"`
+}
+
+// OnVoucherDeletedJSONBodyName defines parameters for OnVoucherDeleted.
+type OnVoucherDeletedJSONBodyName string
+
+// OnVoucherDeletedJSONBodyType defines parameters for OnVoucherDeleted.
+type OnVoucherDeletedJSONBodyType string
+
 // OnVoucherExhaustedJSONBody defines parameters for OnVoucherExhausted.
 type OnVoucherExhaustedJSONBody struct {
 	Data    ExhaustedEventDelivered `json:"data"`
@@ -25495,6 +25547,9 @@ type OnVoucherArchivedJSONRequestBody OnVoucherArchivedJSONBody
 
 // OnVoucherCreatedJSONRequestBody defines body for OnVoucherCreated for application/json ContentType.
 type OnVoucherCreatedJSONRequestBody OnVoucherCreatedJSONBody
+
+// OnVoucherDeletedJSONRequestBody defines body for OnVoucherDeleted for application/json ContentType.
+type OnVoucherDeletedJSONRequestBody OnVoucherDeletedJSONBody
 
 // OnVoucherExhaustedJSONRequestBody defines body for OnVoucherExhausted for application/json ContentType.
 type OnVoucherExhaustedJSONRequestBody OnVoucherExhaustedJSONBody
@@ -31721,6 +31776,13 @@ type ClientInterface interface {
 	// Corresponds with POST /vouchers/validate (the `ValidateVoucher` operationId).
 	ValidateVoucher(ctx context.Context, body ValidateVoucherJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DeleteVoucher Delete a voucher
+	//
+	// Deletes a voucher no instance ever redeemed, whatever its status, with its grants and flag grants: the entitlements and flags they held can be deleted again, and its code can be given to another voucher. A voucher redeemed at least once, or one a checkout waiting for its payment applies, is history (409 DeleteVoucher.Redeemed): archive it instead. Emits VOUCHER_DELETED. Requires billing to be enabled for the organization.
+	//
+	// Corresponds with DELETE /vouchers/{voucherId} (the `DeleteVoucher` operationId).
+	DeleteVoucher(ctx context.Context, voucherId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetVoucher Get a voucher
 	//
 	// One voucher, with its code. Requires billing to be enabled for the organization.
@@ -37453,6 +37515,23 @@ func (c *Client) ValidateVoucherWithBody(ctx context.Context, contentType string
 // Corresponds with POST /vouchers/validate (the `ValidateVoucher` operationId).
 func (c *Client) ValidateVoucher(ctx context.Context, body ValidateVoucherJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewValidateVoucherRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DeleteVoucher Delete a voucher
+//
+// Deletes a voucher no instance ever redeemed, whatever its status, with its grants and flag grants: the entitlements and flags they held can be deleted again, and its code can be given to another voucher. A voucher redeemed at least once, or one a checkout waiting for its payment applies, is history (409 DeleteVoucher.Redeemed): archive it instead. Emits VOUCHER_DELETED. Requires billing to be enabled for the organization.
+//
+// Corresponds with DELETE /vouchers/{voucherId} (the `DeleteVoucher` operationId).
+func (c *Client) DeleteVoucher(ctx context.Context, voucherId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteVoucherRequest(c.Server, voucherId)
 	if err != nil {
 		return nil, err
 	}
@@ -48296,6 +48375,40 @@ func NewValidateVoucherRequestWithBody(server string, contentType string, body i
 	return req, nil
 }
 
+// NewDeleteVoucherRequest constructs an http.Request for the DeleteVoucher method
+func NewDeleteVoucherRequest(server string, voucherId string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "voucherId", voucherId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/vouchers/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetVoucherRequest constructs an http.Request for the GetVoucher method
 func NewGetVoucherRequest(server string, voucherId string) (*http.Request, error) {
 	var err error
@@ -51388,6 +51501,15 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with POST /vouchers/validate (the `ValidateVoucher` operationId).
 	ValidateVoucherWithResponse(ctx context.Context, body ValidateVoucherJSONRequestBody, reqEditors ...RequestEditorFn) (*ValidateVoucherResponse, error)
+
+	// DeleteVoucherWithResponse Delete a voucher
+	//
+	// Deletes a voucher no instance ever redeemed, whatever its status, with its grants and flag grants: the entitlements and flags they held can be deleted again, and its code can be given to another voucher. A voucher redeemed at least once, or one a checkout waiting for its payment applies, is history (409 DeleteVoucher.Redeemed): archive it instead. Emits VOUCHER_DELETED. Requires billing to be enabled for the organization.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with DELETE /vouchers/{voucherId} (the `DeleteVoucher` operationId).
+	DeleteVoucherWithResponse(ctx context.Context, voucherId string, reqEditors ...RequestEditorFn) (*DeleteVoucherResponse, error)
 
 	// GetVoucherWithResponse Get a voucher
 	//
@@ -71646,6 +71768,103 @@ func (r ValidateVoucherResponse) ContentType() string {
 	return ""
 }
 
+// DeleteVoucherResponse503Headers the declared response headers of an HTTP 503 response for DeleteVoucher
+type DeleteVoucherResponse503Headers struct {
+	RetryAfter *int
+}
+
+type DeleteVoucherResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// ApplicationproblemJSON400 the response for an HTTP 400 `application/problem+json` response
+	ApplicationproblemJSON400 *Problem
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *Problem
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+	// ApplicationproblemJSON503 the response for an HTTP 503 `application/problem+json` response
+	ApplicationproblemJSON503 *Problem
+	// Headers503 the parsed response headers for an HTTP 503 response
+	Headers503 *DeleteVoucherResponse503Headers
+}
+
+// GetApplicationproblemJSON400 returns the response for an HTTP 400 `application/problem+json` response
+func (r DeleteVoucherResponse) GetApplicationproblemJSON400() *Problem {
+	return r.ApplicationproblemJSON400
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r DeleteVoucherResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r DeleteVoucherResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r DeleteVoucherResponse) GetApplicationproblemJSON404() *Problem {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r DeleteVoucherResponse) GetApplicationproblemJSON409() *Problem {
+	return r.ApplicationproblemJSON409
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r DeleteVoucherResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r DeleteVoucherResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetApplicationproblemJSON503 returns the response for an HTTP 503 `application/problem+json` response
+func (r DeleteVoucherResponse) GetApplicationproblemJSON503() *Problem {
+	return r.ApplicationproblemJSON503
+}
+
+// GetBody returns the raw response body bytes
+func (r DeleteVoucherResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteVoucherResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteVoucherResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DeleteVoucherResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 // GetVoucherResponse503Headers the declared response headers of an HTTP 503 response for GetVoucher
 type GetVoucherResponse503Headers struct {
 	RetryAfter *int
@@ -76855,6 +77074,21 @@ func (c *ClientWithResponses) ValidateVoucherWithResponse(ctx context.Context, b
 		return nil, err
 	}
 	return ParseValidateVoucherResponse(rsp)
+}
+
+// DeleteVoucherWithResponse Delete a voucher
+//
+// Deletes a voucher no instance ever redeemed, whatever its status, with its grants and flag grants: the entitlements and flags they held can be deleted again, and its code can be given to another voucher. A voucher redeemed at least once, or one a checkout waiting for its payment applies, is history (409 DeleteVoucher.Redeemed): archive it instead. Emits VOUCHER_DELETED. Requires billing to be enabled for the organization.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with DELETE /vouchers/{voucherId} (the `DeleteVoucher` operationId).
+func (c *ClientWithResponses) DeleteVoucherWithResponse(ctx context.Context, voucherId string, reqEditors ...RequestEditorFn) (*DeleteVoucherResponse, error) {
+	rsp, err := c.DeleteVoucher(ctx, voucherId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteVoucherResponse(rsp)
 }
 
 // GetVoucherWithResponse Get a voucher
@@ -94818,6 +95052,97 @@ func ParseValidateVoucherResponse(rsp *http.Response) (*ValidateVoucherResponse,
 	return response, nil
 }
 
+// ParseDeleteVoucherResponse parses an HTTP response from a DeleteVoucherWithResponse call
+func ParseDeleteVoucherResponse(rsp *http.Response) (*DeleteVoucherResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteVoucherResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case rsp.StatusCode == 204:
+		break // No content-type
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON503 = &dest
+
+	}
+
+	switch {
+	case rsp.StatusCode == 503:
+		var headers DeleteVoucherResponse503Headers
+		if values := rsp.Header.Values("Retry-After"); len(values) > 0 {
+			var value int
+			if err := runtime.BindStyledParameterWithOptions("simple", "Retry-After", values[0], &value, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			}
+			headers.RetryAfter = &value
+		}
+		response.Headers503 = &headers
+	}
+
+	return response, nil
+}
+
 // ParseGetVoucherResponse parses an HTTP response from a GetVoucherWithResponse call
 func ParseGetVoucherResponse(rsp *http.Response) (*GetVoucherResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -95904,6 +96229,11 @@ type WebhookInitiatorInterface interface {
 	OnVoucherCreatedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	OnVoucherCreated(ctx context.Context, targetURL string, body OnVoucherCreatedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// OnVoucherDeletedWithBody fires the com.kaiten.voucher.v1.deleted webhook with any body
+	OnVoucherDeletedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	OnVoucherDeleted(ctx context.Context, targetURL string, body OnVoucherDeletedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// OnVoucherExhaustedWithBody fires the com.kaiten.voucher.v1.exhausted webhook with any body
 	OnVoucherExhaustedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -98604,6 +98934,30 @@ func (p *WebhookInitiator) OnVoucherCreatedWithBody(ctx context.Context, targetU
 
 func (p *WebhookInitiator) OnVoucherCreated(ctx context.Context, targetURL string, body OnVoucherCreatedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewOnVoucherCreatedWebhookRequest(targetURL, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnVoucherDeletedWithBody(ctx context.Context, targetURL string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnVoucherDeletedWebhookRequestWithBody(targetURL, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := p.applyWebhookEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return p.Client.Do(req)
+}
+
+func (p *WebhookInitiator) OnVoucherDeleted(ctx context.Context, targetURL string, body OnVoucherDeletedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewOnVoucherDeletedWebhookRequest(targetURL, body)
 	if err != nil {
 		return nil, err
 	}
@@ -102164,6 +102518,37 @@ func NewOnVoucherCreatedWebhookRequest(targetURL string, body OnVoucherCreatedJS
 
 // NewOnVoucherCreatedWebhookRequestWithBody builds a POST request for the com.kaiten.voucher.v1.created webhook with any body
 func NewOnVoucherCreatedWebhookRequestWithBody(targetURL string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+	_ = err
+
+	reqURL, err := url.Parse(targetURL)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, reqURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewOnVoucherDeletedWebhookRequest builds a application/json POST request for the com.kaiten.voucher.v1.deleted webhook
+func NewOnVoucherDeletedWebhookRequest(targetURL string, body OnVoucherDeletedJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewOnVoucherDeletedWebhookRequestWithBody(targetURL, "application/json", bodyReader)
+}
+
+// NewOnVoucherDeletedWebhookRequestWithBody builds a POST request for the com.kaiten.voucher.v1.deleted webhook with any body
+func NewOnVoucherDeletedWebhookRequestWithBody(targetURL string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 	_ = err
 

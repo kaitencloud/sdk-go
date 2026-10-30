@@ -1239,6 +1239,19 @@ func (s *BillingVouchers) Update(ctx context.Context, voucherID string, input Vo
 	return expectJSON(apiResp, resp.JSON200)
 }
 
+// Delete deletes a voucher no instance ever redeemed, whatever its status, and frees its
+// code. One redeemed at least once, or held by a checkout waiting for its payment, is
+// refused with 409 DeleteVoucher.Redeemed: Archive retires it instead.
+func (s *BillingVouchers) Delete(ctx context.Context, voucherID string) error {
+	resp, err := s.client.raw.DeleteVoucherWithResponse(ctx, voucherID)
+	if err != nil {
+		return fmt.Errorf("delete voucher: %w", err)
+	}
+
+	apiResp := withRetryAfter(newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON409, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500, resp.ApplicationproblemJSON503), resp.HTTPResponse)
+	return expectNoContent(apiResp)
+}
+
 // Publish publishes a draft voucher: its code can be redeemed from now on.
 func (s *BillingVouchers) Publish(ctx context.Context, voucherID string) (Voucher, error) {
 	resp, err := s.client.raw.PublishVoucherWithResponse(ctx, voucherID)
