@@ -7,9 +7,12 @@
 // rather than hiding it:
 //
 //   - Client covers the Core API -- customers, instances, entitlements, licenses,
-//     feature flags -- authenticated by an organization-scoped token (`ksh_...`).
+//     feature-flag management -- authenticated by an organization-scoped token (`ksh_...`).
 //   - PlatformClient covers the Platform API -- organizations, users, and the
 //     credentials themselves -- authenticated by a platform credential (`ksm_...`).
+//
+// Flag evaluation is not part of this package: use the OpenFeature Go SDK with
+// its official OFREP provider against the Core gateway.
 //
 // The two are not interchangeable in either direction: the Core listener refuses a
 // platform credential outright, and the Platform listener serves none of the Core
@@ -150,7 +153,9 @@ func (t listTransport) resolve(path string, query url.Values) (string, error) {
 	return resolved.String(), nil
 }
 
-// Raw returns the underlying generated Core API client for low-level access.
+// Raw returns the generated Core API client for low-level management access.
+// OFREP evaluation operations are excluded: use OpenFeature and its official
+// OFREP provider to evaluate flags.
 func (c *Client) Raw() *gen.ClientWithResponses {
 	return c.raw
 }
