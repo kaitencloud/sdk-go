@@ -5,6 +5,7 @@ package sdk
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -141,6 +142,170 @@ func TestUpdateNeverSendsFamilySlugOrLifecycleState(t *testing.T) {
 			}
 			if got := string(request.body); got != test.expected {
 				t.Errorf("request body = %s, want %s", got, test.expected)
+			}
+		})
+	}
+}
+
+// TestLicenseWritesRenderTheCommercialTermsOnlyWhenSet pins the four commercial terms
+// on both license bodies. A term left nil renders no key: the server's default on
+// create, the stored value on update, and the bytes a caller who sets no term sent
+// before the terms existed. A term that is set reaches the wire whatever its value:
+// false turns the payment method off, and 0 and "" are how an update removes the trial
+// and the URL. Create refuses that 0 and reads that "" as no URL, which is the
+// server's call to make, not the SDK's.
+func TestLicenseWritesRenderTheCommercialTermsOnlyWhenSet(t *testing.T) {
+	t.Parallel()
+
+	paid, custom := LicensePricingTypePAID, LicensePricingTypeCUSTOM
+	twoWeeks, noTrial := int32(14), int32(0)
+	required, notRequired := true, false
+	contactSales, noURL := "https://kaiten-sushi.example/contact-sales", ""
+
+	tests := []struct {
+		name                  string
+		pricingType           *LicensePricingType
+		trialPeriodDays       *int32
+		requiresPaymentMethod *bool
+		selfServeCtaURL       *string
+		createBody            string
+		updateBody            string
+	}{
+		{
+			name:       "no term set leaves each to the server",
+			createBody: `{"name":"Premium","description":"d","type":"PAID","isDefault":false}`,
+			updateBody: `{"name":"Premium","description":"d","type":"PAID","version":"2","isDefault":false}`,
+		},
+		{
+			name:            "CUSTOM, sold through a contact page",
+			pricingType:     &custom,
+			selfServeCtaURL: &contactSales,
+			createBody:      `{"name":"Premium","description":"d","type":"PAID","isDefault":false,"pricingType":"CUSTOM","selfServeCtaUrl":"https://kaiten-sushi.example/contact-sales"}`,
+			updateBody:      `{"name":"Premium","description":"d","type":"PAID","version":"2","isDefault":false,"pricingType":"CUSTOM","selfServeCtaUrl":"https://kaiten-sushi.example/contact-sales"}`,
+		},
+		{
+			name:                  "PAID, with a trial and a payment method at sign-up",
+			pricingType:           &paid,
+			trialPeriodDays:       &twoWeeks,
+			requiresPaymentMethod: &required,
+			createBody:            `{"name":"Premium","description":"d","type":"PAID","isDefault":false,"pricingType":"PAID","trialPeriodDays":14,"requiresPaymentMethod":true}`,
+			updateBody:            `{"name":"Premium","description":"d","type":"PAID","version":"2","isDefault":false,"pricingType":"PAID","trialPeriodDays":14,"requiresPaymentMethod":true}`,
+		},
+		{
+			name:                  "false, 0 and an empty URL are sent, not dropped",
+			trialPeriodDays:       &noTrial,
+			requiresPaymentMethod: &notRequired,
+			selfServeCtaURL:       &noURL,
+			createBody:            `{"name":"Premium","description":"d","type":"PAID","isDefault":false,"trialPeriodDays":0,"requiresPaymentMethod":false,"selfServeCtaUrl":""}`,
+			updateBody:            `{"name":"Premium","description":"d","type":"PAID","version":"2","isDefault":false,"trialPeriodDays":0,"requiresPaymentMethod":false,"selfServeCtaUrl":""}`,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+
+			input := LicenseInput{
+				Name:                  "Premium",
+				Description:           "d",
+				Type:                  LicenseType("PAID"),
+				Version:               "2",
+				PricingType:           test.pricingType,
+				TrialPeriodDays:       test.trialPeriodDays,
+				RequiresPaymentMethod: test.requiresPaymentMethod,
+				SelfServeCtaURL:       test.selfServeCtaURL,
+			}
+
+			client, sent := givenClient(t, respondToWrite)
+
+			if _, err := client.Licenses.Create(t.Context(), input); err != nil {
+				t.Fatalf("Create() error = %v", err)
+			}
+			if err := client.Licenses.Update(t.Context(), "premium-v2", input); err != nil {
+				t.Fatalf("Update() error = %v", err)
+			}
+
+			for i, want := range []struct{ method, path, body string }{
+				{http.MethodPost, "/api/licenses", test.createBody},
+				{http.MethodPut, "/api/licenses/premium-v2", test.updateBody},
+			} {
+				request := sent.at(t, i)
+				if request.method != want.method || request.path != want.path {
+					t.Errorf("request %d = %s %s, want %s %s", i, request.method, request.path, want.method, want.path)
+				}
+				if got := string(request.body); got != want.body {
+					t.Errorf("%s body = %s, want %s", want.method, got, want.body)
+				}
+			}
+		})
+	}
+}
+
+// TestLicenseReadsCarryTheCommercialTerms pins the four terms on a License read
+// back, and on the version a family resolves to, which is the same type. A term the
+// server sends as null comes back nil rather than as a zero: written back on update
+// a zero would remove the trial or the URL, and on create 0 is refused.
+func TestLicenseReadsCarryTheCommercialTerms(t *testing.T) {
+	t.Parallel()
+
+	// terms projects the four fields back to JSON with no omitempty, so nil shows as
+	// null and is told apart from a zero.
+	type terms struct {
+		PricingType           *LicensePricingType `json:"pricingType"`
+		TrialPeriodDays       *int32              `json:"trialPeriodDays"`
+		RequiresPaymentMethod *bool               `json:"requiresPaymentMethod"`
+		SelfServeCtaURL       *string             `json:"selfServeCtaUrl"`
+	}
+
+	premium := `"pricingType":"CUSTOM","trialPeriodDays":null,"requiresPaymentMethod":false,"selfServeCtaUrl":"https://kaiten-sushi.example/contact-sales"`
+	standard := `"pricingType":"PAID","trialPeriodDays":14,"requiresPaymentMethod":true,"selfServeCtaUrl":null`
+
+	tests := []struct {
+		name  string
+		body  string
+		read  func(context.Context, *Client) (*License, error)
+		terms string
+	}{
+		{
+			name:  "a license",
+			body:  `{"slug":"premium-v2","name":"Premium","description":"d","type":"PAID","version":"2","isDefault":true,` + premium + `}`,
+			terms: premium,
+			read: func(ctx context.Context, c *Client) (*License, error) {
+				license, err := c.Licenses.Get(ctx, "premium-v2")
+				return &license, err
+			},
+		},
+		{
+			name:  "a family's current version",
+			body:  `{"slug":"standard","versionCount":2,"currentVersion":{"slug":"standard","name":"Standard","description":"d","type":"DEVELOPMENT","version":"1","isDefault":true,` + standard + `}}`,
+			terms: standard,
+			read: func(ctx context.Context, c *Client) (*License, error) {
+				family, err := c.LicenseFamilies.Get(ctx, "standard", nil)
+				return family.CurrentVersion, err
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+
+			client, _ := givenClient(t, respondJSON(http.StatusOK, test.body))
+
+			license, err := test.read(t.Context(), client)
+			if err != nil {
+				t.Fatalf("read error = %v", err)
+			}
+			if license == nil {
+				t.Fatal("license = nil, want the version the body carries")
+			}
+
+			got, err := json.Marshal(terms{license.PricingType, license.TrialPeriodDays, license.RequiresPaymentMethod, license.SelfServeCtaUrl})
+			if err != nil {
+				t.Fatalf("json.Marshal() error = %v", err)
+			}
+			if want := "{" + test.terms + "}"; string(got) != want {
+				t.Errorf("terms = %s, want %s", got, want)
 			}
 		})
 	}

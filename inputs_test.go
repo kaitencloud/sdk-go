@@ -287,18 +287,20 @@ func TestRequestBodiesMatchTheirSpecBodies(t *testing.T) {
 	}
 }
 
-// TestEntitlementAndGrantWritesReachEveryWritableKey fails when the spec gives the
-// entitlement or grant bodies a field no input can send.
+// TestWritesReachEveryWritableKey fails when the spec gives the entitlement, grant or
+// license bodies a field no input can send.
 //
 // TestRequestBodiesMatchTheirSpecBodies cannot catch that: its expected sets are
 // transcribed by hand, so a field the spec adds is missing from the expectation exactly
 // as it is missing from the input. That is how resetPeriod, resetAnchor,
 // warningThresholdPercent, the sale-unit trio and limitCapExceededOveragePercent stayed
 // out of reach while internal/gen already declared them -- and because both PUTs replace
-// rather than patch, every Update reset what it could not send. This test reads the
-// body's keys off the generated request type instead, so a regenerated client with a new
-// key fails here until the input renders it or the key is listed below as read-only.
-func TestEntitlementAndGrantWritesReachEveryWritableKey(t *testing.T) {
+// rather than patch, every Update reset what it could not send. A license's four
+// commercial terms went the same way, and every version the SDK created was CUSTOM. This
+// test reads the body's keys off the generated request type instead, so a regenerated
+// client with a new key fails here until the input renders it or the key is listed
+// below as read-only.
+func TestWritesReachEveryWritableKey(t *testing.T) {
 	t.Parallel()
 
 	name := "pinned"
@@ -309,10 +311,33 @@ func TestEntitlementAndGrantWritesReachEveryWritableKey(t *testing.T) {
 		t.Fatalf("NumberLicenseValue() error = %v", err)
 	}
 
+	draft, paid := LicenseLifecycleDraft, LicensePricingTypePAID
+	trialDays, requiresPaymentMethod := int32(14), true
+	contactSales := "https://kaiten-sushi.example/contact-sales"
+	license := LicenseInput{
+		Name:                  name,
+		Description:           "d",
+		Type:                  LicenseType("PAID"),
+		Version:               "1",
+		VersionName:           &name,
+		IsDefault:             true,
+		Slug:                  &name,
+		FamilySlug:            &name,
+		FamilyID:              &name,
+		LifecycleState:        &draft,
+		PricingType:           &paid,
+		TrialPeriodDays:       &trialDays,
+		RequiresPaymentMethod: &requiresPaymentMethod,
+		SelfServeCtaURL:       &contactSales,
+	}
+
 	// The fields the spec marks readOnly: they are in the generated request type because
-	// the bodies reuse the resource schemas, and the API ignores them on a write.
+	// the bodies reuse the resource schemas, and the API ignores them on a write. A
+	// license's version is readOnly too, but update sends it back as an echo of the
+	// stored number, so it is listed as unsent on create instead.
 	entitlementReadOnly := []string{"createdAt", "entitlementGroups", "id", "updatedAt"}
 	grantReadOnly := []string{"createdAt", "createdBy", "entitlementGroups", "entitlementName", "entitlementType", "licenseId", "licenseSlug", "updatedAt", "updatedBy"}
+	licenseReadOnly := []string{"createdAt", "id", "updatedAt"}
 
 	tests := []struct {
 		name     string
@@ -356,6 +381,28 @@ func TestEntitlementAndGrantWritesReachEveryWritableKey(t *testing.T) {
 			unsent: []string{"entitlementSlug"},
 			call: func(ctx context.Context, c *Client) error {
 				return c.Licenses.UpdateEntitlement(ctx, name, name, grantValue, WithOveragePercent(20))
+			},
+		},
+		{
+			name:     "create license",
+			body:     gen.CreateLicenseJSONRequestBody{},
+			readOnly: licenseReadOnly,
+			// See LicenseInput.Version: the server assigns it.
+			unsent: []string{"version"},
+			call: func(ctx context.Context, c *Client) error {
+				_, err := c.Licenses.Create(ctx, license)
+				return err
+			},
+		},
+		{
+			name:     "update license",
+			body:     gen.UpdateLicenseJSONRequestBody{},
+			readOnly: licenseReadOnly,
+			// See licenseUpdatePayload: familySlug is refused on update, and the
+			// lifecycle state moves through its own operations.
+			unsent: []string{"familySlug", "lifecycleState"},
+			call: func(ctx context.Context, c *Client) error {
+				return c.Licenses.Update(ctx, name, license)
 			},
 		},
 	}
