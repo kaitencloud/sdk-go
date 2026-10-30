@@ -252,6 +252,11 @@ type InstanceInput struct {
 //   - LifecycleState is create-only, and DRAFT or PUBLISHED there. After that the
 //     state moves through Licenses.Publish, Archive and Unarchive, so updatePayload
 //     never renders it.
+//   - The commercial terms -- PricingType, TrialPeriodDays, RequiresPaymentMethod and
+//     SelfServeCtaURL -- are sent by both, and nil leaves a term out of the body:
+//     create then takes the server's default, and update keeps the stored value. Only
+//     an update removes a term: TrialPeriodDays 0 ends the trial and an empty
+//     SelfServeCtaURL drops the URL.
 //
 // There is no IsActive: no request body publishes one, and both bodies are
 // additionalProperties:false, so sending it was a 422 on every call.
@@ -316,6 +321,38 @@ type LicenseInput struct {
 	// (DRAFT to PUBLISHED), Archive (PUBLISHED to ARCHIVED) and Unarchive (ARCHIVED
 	// to PUBLISHED), which apply the lifecycle rules and record their own events.
 	LifecycleState *LicenseLifecycleState
+
+	// PricingType is how the version is sold: LicensePricingTypeFREE and
+	// LicensePricingTypePAID can be bought self-serve, and LicensePricingTypeCUSTOM
+	// sends the buyer to SelfServeCtaURL or a conversation. Nil is CUSTOM on create
+	// and keeps the stored pricing type on update.
+	//
+	// The API checks it against the version's prices and its family. A FREE version
+	// holds no price above 0 (422 UpdateLicense.FreePriceNotZero). A family falls back
+	// only to a family whose every version is FREE -- LicenseFamilies.Update refuses
+	// any other with 422 UpdateLicenseFamily.InvalidFallback -- and that family then
+	// stays FREE: a version of it created or updated with another pricing type is a
+	// 422, CreateLicense.FallbackMustBeFree or UpdateLicense.FallbackMustBeFree.
+	PricingType *LicensePricingType
+
+	// TrialPeriodDays is the trial, from 1 to 365 days, that a subscription to the
+	// version starts with when it names none. Nil is no trial on create and keeps the
+	// stored trial on update, where 0 removes it. Any other value outside 1 to 365 --
+	// 0 on create included -- is a 422, CreateLicense.InvalidTrialDays or
+	// UpdateLicense.InvalidTrialDays.
+	TrialPeriodDays *int32
+
+	// RequiresPaymentMethod makes a self-serve sign-up capture a payment method before
+	// the version activates, even with nothing due. Nil is false on create and keeps
+	// the stored value on update, so turning it off there takes an explicit false.
+	RequiresPaymentMethod *bool
+
+	// SelfServeCtaURL is where a buyer is sent when the version cannot be bought
+	// self-serve: an http or https URL of at most 2048 characters, or a 422 whose code
+	// ends in .InvalidSelfServeCtaUrl. Nil, like "", is no URL on create. On update
+	// nil keeps the stored URL and "" removes it. A License reads it back as
+	// SelfServeCtaUrl, nil when there is none.
+	SelfServeCtaURL *string
 }
 
 // MetadataFieldInput is the input for creating a metadata field.
@@ -743,29 +780,42 @@ type instancePatchPayload struct {
 // means on the wire: no family named opens a new one, and no lifecycleState is the
 // server's PUBLISHED. A nil pointer has to render no key at all rather than a null --
 // none of the three is nullable, so a null is a 422 like any other wrong value.
+//
+// The four commercial terms are omitempty too, and their absence is the server's
+// default: CUSTOM, no trial, no payment method, no URL. They are nullable, and a null
+// would mean the same, but rendering no key keeps a create that sets no term byte for
+// byte what it was. omitempty drops only a nil pointer, so false, 0 and "" still render.
 type licenseCreatePayload struct {
-	Name           string                 `json:"name"`
-	Description    string                 `json:"description"`
-	Type           LicenseType            `json:"type"`
-	VersionName    *string                `json:"versionName,omitempty"`
-	IsDefault      bool                   `json:"isDefault"`
-	Slug           *string                `json:"slug,omitempty"`
-	FamilySlug     *string                `json:"familySlug,omitempty"`
-	FamilyID       *string                `json:"familyId,omitempty"`
-	LifecycleState *LicenseLifecycleState `json:"lifecycleState,omitempty"`
+	Name                  string                 `json:"name"`
+	Description           string                 `json:"description"`
+	Type                  LicenseType            `json:"type"`
+	VersionName           *string                `json:"versionName,omitempty"`
+	IsDefault             bool                   `json:"isDefault"`
+	Slug                  *string                `json:"slug,omitempty"`
+	FamilySlug            *string                `json:"familySlug,omitempty"`
+	FamilyID              *string                `json:"familyId,omitempty"`
+	LifecycleState        *LicenseLifecycleState `json:"lifecycleState,omitempty"`
+	PricingType           *LicensePricingType    `json:"pricingType,omitempty"`
+	TrialPeriodDays       *int32                 `json:"trialPeriodDays,omitempty"`
+	RequiresPaymentMethod *bool                  `json:"requiresPaymentMethod,omitempty"`
+	SelfServeCtaURL       *string                `json:"selfServeCtaUrl,omitempty"`
 }
 
 func (in LicenseInput) createPayload() licenseCreatePayload {
 	return licenseCreatePayload{
-		Name:           in.Name,
-		Description:    in.Description,
-		Type:           in.Type,
-		VersionName:    in.VersionName,
-		IsDefault:      in.IsDefault,
-		Slug:           in.Slug,
-		FamilySlug:     in.FamilySlug,
-		FamilyID:       in.FamilyID,
-		LifecycleState: in.LifecycleState,
+		Name:                  in.Name,
+		Description:           in.Description,
+		Type:                  in.Type,
+		VersionName:           in.VersionName,
+		IsDefault:             in.IsDefault,
+		Slug:                  in.Slug,
+		FamilySlug:            in.FamilySlug,
+		FamilyID:              in.FamilyID,
+		LifecycleState:        in.LifecycleState,
+		PricingType:           in.PricingType,
+		TrialPeriodDays:       in.TrialPeriodDays,
+		RequiresPaymentMethod: in.RequiresPaymentMethod,
+		SelfServeCtaURL:       in.SelfServeCtaURL,
 	}
 }
 
@@ -776,27 +826,40 @@ func (in LicenseInput) createPayload() licenseCreatePayload {
 // stored state and refuses any other with UpdateLicense.LifecycleStateNotSettable, so the
 // state an input was created with would fail every update once the version has moved on.
 // Slug and FamilyID stay, as the values a read-modify-write caller carries back.
+//
+// The commercial terms render only when set, as on create. The body restates the
+// version, but the terms follow a rule of their own: one left out keeps its stored
+// value. A set term renders whatever its value, because 0 and "" are how a trial and a
+// URL are removed, and false is how a payment method stops being required.
 type licenseUpdatePayload struct {
-	Name        string      `json:"name"`
-	Description string      `json:"description"`
-	Type        LicenseType `json:"type"`
-	Version     string      `json:"version"`
-	VersionName *string     `json:"versionName,omitempty"`
-	IsDefault   bool        `json:"isDefault"`
-	Slug        *string     `json:"slug,omitempty"`
-	FamilyID    *string     `json:"familyId,omitempty"`
+	Name                  string              `json:"name"`
+	Description           string              `json:"description"`
+	Type                  LicenseType         `json:"type"`
+	Version               string              `json:"version"`
+	VersionName           *string             `json:"versionName,omitempty"`
+	IsDefault             bool                `json:"isDefault"`
+	Slug                  *string             `json:"slug,omitempty"`
+	FamilyID              *string             `json:"familyId,omitempty"`
+	PricingType           *LicensePricingType `json:"pricingType,omitempty"`
+	TrialPeriodDays       *int32              `json:"trialPeriodDays,omitempty"`
+	RequiresPaymentMethod *bool               `json:"requiresPaymentMethod,omitempty"`
+	SelfServeCtaURL       *string             `json:"selfServeCtaUrl,omitempty"`
 }
 
 func (in LicenseInput) updatePayload() licenseUpdatePayload {
 	return licenseUpdatePayload{
-		Name:        in.Name,
-		Description: in.Description,
-		Type:        in.Type,
-		Version:     in.Version,
-		VersionName: in.VersionName,
-		IsDefault:   in.IsDefault,
-		Slug:        in.Slug,
-		FamilyID:    in.FamilyID,
+		Name:                  in.Name,
+		Description:           in.Description,
+		Type:                  in.Type,
+		Version:               in.Version,
+		VersionName:           in.VersionName,
+		IsDefault:             in.IsDefault,
+		Slug:                  in.Slug,
+		FamilyID:              in.FamilyID,
+		PricingType:           in.PricingType,
+		TrialPeriodDays:       in.TrialPeriodDays,
+		RequiresPaymentMethod: in.RequiresPaymentMethod,
+		SelfServeCtaURL:       in.SelfServeCtaURL,
 	}
 }
 

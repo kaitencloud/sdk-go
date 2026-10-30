@@ -187,6 +187,14 @@ moves only through `Licenses.Publish`, `Licenses.Archive` and `Licenses.Unarchiv
 `sdk.BooleanLicenseValue` and `sdk.ConfigLicenseValue` build the other two value
 kinds.
 
+A version also carries its commercial terms. `LicenseInput` writes them as
+`PricingType` (`LicensePricingTypeFREE`, `LicensePricingTypePAID` or
+`LicensePricingTypeCUSTOM`), `TrialPeriodDays`, `RequiresPaymentMethod` and
+`SelfServeCtaURL`, and `License` reads them back under the same names, the last one
+spelled `SelfServeCtaUrl`. A term left nil takes the server's default on create --
+CUSTOM, no trial, no payment method, no URL -- and keeps its value on update, where
+`TrialPeriodDays` 0 removes the trial and an empty `SelfServeCtaURL` the URL.
+
 An entitlement says how usage is measured, and a grant how much of it a license allows
 and how strictly. A periodic entitlement counts per window, and a grant may tolerate
 usage past its value:
