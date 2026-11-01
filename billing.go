@@ -82,7 +82,8 @@ type BillingCustomers struct {
 	client *Client
 }
 
-// BillingPublic is what a publishable key (pk_) reaches. Build the Client with the key as its token.
+// BillingPublic is what a publishable key (pk_) reaches. Build the Client with WithPublishableKey:
+// Kaiten refuses a pk_ sent as a bearer token.
 type BillingPublic struct {
 	client *Client
 }
