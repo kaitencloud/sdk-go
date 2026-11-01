@@ -112,6 +112,7 @@ client, err := sdk.NewClient("https://kaiten.example.com/api",
 | Option                     | Purpose                                                          |
 | -------------------------- | ---------------------------------------------------------------- |
 | `WithBearerToken(token)`   | Set the bearer token sent with every request.                    |
+| `WithPublishableKey(key)`  | Send a `pk_` key in `X-Kaiten-Publishable-Key`, for `Billing.Public`. |
 | `WithHTTPClient(client)`   | Use a custom `*http.Client`; replaces `DefaultTimeout` (30s).    |
 | `WithRequestEditorFn(fn)`  | Run a function on each request before it is sent. Repeatable.    |
 | `WithBaseURL(url)`         | Override the base URL given to the constructor.                  |
@@ -343,7 +344,7 @@ namespace per resource:
 | `Vouchers`, `InstanceVouchers` | vouchers, their redemptions, redeem and revoke on an instance |
 | `PublishableKeys`, `CustomerSessions` | the `pk_` keys and `kst_` sessions a customer's page uses |
 | `Customers`         | a customer's billing, payment method and provider portal                |
-| `Public`, `Session` | what a `pk_` key and a `kst_` session reach: build the client with that token |
+| `Public`, `Session` | what a `pk_` key and a `kst_` session reach: build the client with `WithPublishableKey` or `WithBearerToken` respectively |
 
 ```go
 claim, err := client.Billing.Handoff.Claim(ctx, sdk.HandoffClaimSize{})
