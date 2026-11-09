@@ -121,7 +121,8 @@ client, err := sdk.NewClient("https://kaiten.example.com/api",
 
 `Client` groups the Core API by resource: `Customers`, `Instances`, `Licenses`,
 `LicenseFamilies`, `Entitlements`, `EntitlementGroups`, `FeatureFlags`,
-`MetadataFields`, `Components`, `DeploymentZones`, `Releases` and `ServiceAccounts`.
+`MetadataFields`, `Components`, `DeploymentZones`, `Releases`, `ServiceAccounts` and
+`Dashboard`, whose `Summary` needs a Kaiten recent enough to serve it (26.11.1).
 Every namespace exposes the CRUD operations its resource supports, plus the
 operations below.
 
@@ -364,7 +365,7 @@ returns one page and its cursor.
 ## Platform API
 
 `PlatformClient` reaches the Platform API with a platform credential and exposes
-`Organizations`, `Users`, `Tokens` and `Connectors`. `PlatformClient.Me` returns the
+`Organizations`, `Users`, `Tokens`, `Connectors` and `Billing`. `PlatformClient.Me` returns the
 credential the client is using.
 
 ```go

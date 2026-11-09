@@ -127,11 +127,26 @@ type FeatureFlag = gen.FeatureFlag
 // FeatureFlagType describes the value type of a feature flag.
 type FeatureFlagType = gen.FeatureFlagType
 
+// DashboardRange is the period a DashboardSummary's rates and lists cover.
+type DashboardRange = gen.GetDashboardSummaryParamsRange
+
+// DashboardSummary is the console's home in one response.
+type DashboardSummary = gen.DashboardSummary
+
+// DashboardSummaryParams selects what Dashboard.Summary covers.
+type DashboardSummaryParams = gen.GetDashboardSummaryParams
+
 // Instance is a deployed instance of the product for a customer.
 type Instance = gen.Instance
 
 // InstanceStatus is the health status of an instance.
 type InstanceStatus = gen.InstanceStatus
+
+// LicenseTerm says where an instance stands in its assigned license interval.
+type LicenseTerm = gen.LicenseTerm
+
+// LicenseTermStatus is the state of an instance's license interval when Kaiten evaluated it.
+type LicenseTermStatus = gen.LicenseTermStatus
 
 // License grants a customer a set of entitlements.
 type License = gen.License
@@ -205,6 +220,12 @@ type Organization = genplatform.Organization
 // PlainToken is a service account token including its plaintext secret, returned only on creation.
 type PlainToken = gen.PlainToken
 
+// PlatformClosePeriodsReport says what PlatformBilling.ClosePeriods closed, held and skipped.
+type PlatformClosePeriodsReport = genplatform.ClosePeriodsReport
+
+// PlatformClosePeriodsScope narrows what PlatformBilling.ClosePeriods closes.
+type PlatformClosePeriodsScope = genplatform.ClosePeriodsScope
+
 // PlatformCredential describes the platform credential (`ksm_...`) a PlatformClient is
 // authenticating with, as returned by PlatformClient.Me. Never carries a token value.
 type PlatformCredential = genplatform.PlatformCredential
@@ -275,6 +296,14 @@ const (
 	FeatureFlagTypeNumber  FeatureFlagType = gen.FeatureFlagTypeNumber
 	FeatureFlagTypeObject  FeatureFlagType = gen.FeatureFlagTypeObject
 	FeatureFlagTypeString  FeatureFlagType = gen.FeatureFlagTypeString
+
+	DashboardRange7d  DashboardRange = gen.GetDashboardSummaryParamsRangeN7d
+	DashboardRange30d DashboardRange = gen.GetDashboardSummaryParamsRangeN30d
+	DashboardRange90d DashboardRange = gen.GetDashboardSummaryParamsRangeN90d
+
+	LicenseTermStatusActive     LicenseTermStatus = gen.LicenseTermStatusACTIVE
+	LicenseTermStatusExpired    LicenseTermStatus = gen.LicenseTermStatusEXPIRED
+	LicenseTermStatusNotStarted LicenseTermStatus = gen.LicenseTermStatusNOTSTARTED
 )
 
 // The rollout-strategy discriminators are unexported: they are the tag inside a union,
