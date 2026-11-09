@@ -21,6 +21,106 @@ import (
 	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
+// Defines values for ClosedInvoiceKind.
+const (
+	ACTIVATION ClosedInvoiceKind = "ACTIVATION"
+	FINAL      ClosedInvoiceKind = "FINAL"
+	RENEWAL    ClosedInvoiceKind = "RENEWAL"
+)
+
+// Valid indicates whether the value is a known member of the ClosedInvoiceKind enum.
+func (e ClosedInvoiceKind) Valid() bool {
+	switch e {
+	case ACTIVATION:
+		return true
+	case FINAL:
+		return true
+	case RENEWAL:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ClosedInvoiceStatus.
+const (
+	DRAFT         ClosedInvoiceStatus = "DRAFT"
+	MANUAL        ClosedInvoiceStatus = "MANUAL"
+	PAID          ClosedInvoiceStatus = "PAID"
+	PAYMENTFAILED ClosedInvoiceStatus = "PAYMENT_FAILED"
+	PUSHED        ClosedInvoiceStatus = "PUSHED"
+	PUSHFAILED    ClosedInvoiceStatus = "PUSH_FAILED"
+	UNCOLLECTIBLE ClosedInvoiceStatus = "UNCOLLECTIBLE"
+	VOID          ClosedInvoiceStatus = "VOID"
+)
+
+// Valid indicates whether the value is a known member of the ClosedInvoiceStatus enum.
+func (e ClosedInvoiceStatus) Valid() bool {
+	switch e {
+	case DRAFT:
+		return true
+	case MANUAL:
+		return true
+	case PAID:
+		return true
+	case PAYMENTFAILED:
+		return true
+	case PUSHED:
+		return true
+	case PUSHFAILED:
+		return true
+	case UNCOLLECTIBLE:
+		return true
+	case VOID:
+		return true
+	default:
+		return false
+	}
+}
+
+// ClosePeriodsReport defines model for ClosePeriodsReport.
+type ClosePeriodsReport struct {
+	// Closed Periods closed into an invoice
+	Closed int64 `json:"closed"`
+
+	// Examined Subscriptions the batch looked at
+	Examined int64 `json:"examined"`
+
+	// HasMore Set when due subscriptions are left beyond the batch
+	HasMore bool `json:"hasMore"`
+
+	// Held Of those, invoices held as DRAFTs for their usage journal
+	Held     int64           `json:"held"`
+	Invoices []ClosedInvoice `json:"invoices"`
+
+	// Skipped Subscriptions left for later: held by another transaction, their meters' clock not at the boundary, or failed (logged)
+	Skipped int64 `json:"skipped"`
+}
+
+// ClosePeriodsScope defines model for ClosePeriodsScope.
+type ClosePeriodsScope struct {
+	// InstanceSlug Close only this instance's subscription
+	InstanceSlug *string `json:"instanceSlug,omitempty"`
+}
+
+// ClosedInvoice defines model for ClosedInvoice.
+type ClosedInvoice struct {
+	BoundaryAt time.Time `json:"boundaryAt"`
+
+	// Held Set when the invoice is a held DRAFT
+	Held         bool                `json:"held"`
+	Id           string              `json:"id"`
+	InstanceSlug string              `json:"instanceSlug"`
+	Kind         ClosedInvoiceKind   `json:"kind"`
+	Status       ClosedInvoiceStatus `json:"status"`
+}
+
+// ClosedInvoiceKind defines model for ClosedInvoice.Kind.
+type ClosedInvoiceKind string
+
+// ClosedInvoiceStatus defines model for ClosedInvoice.Status.
+type ClosedInvoiceStatus string
+
 // Connector defines model for Connector.
 type Connector struct {
 	// CreatedAt Timestamp when connector was first registered
@@ -77,7 +177,7 @@ type ErrorDetail struct {
 type MintOrganizationTokenBody struct {
 	// Name Human-readable label for the credential
 	//
-	// Examples: kbk-dogfooding
+	// Examples: ci-deploy
 	Name string `json:"name"`
 
 	// Scopes Requested scopes, which must be a subset of the calling platform credential's. Omitted inherits all of them.
@@ -111,8 +211,8 @@ type Organization struct {
 
 // PlainToken defines model for PlainToken.
 type PlainToken struct {
-	CreatedAt        time.Time  `json:"createdAt"`
-	CreatedBy        User       `json:"createdBy"`
+	CreatedAt        *time.Time `json:"createdAt,omitempty"`
+	CreatedBy        *User      `json:"createdBy,omitempty"`
 	ExpiresAt        *time.Time `json:"expiresAt,omitempty"`
 	Id               *string    `json:"id,omitempty"`
 	Name             string     `json:"name"`
@@ -212,8 +312,8 @@ type RegisterConnectorBody struct {
 
 // Token defines model for Token.
 type Token struct {
-	CreatedAt        time.Time  `json:"createdAt"`
-	CreatedBy        User       `json:"createdBy"`
+	CreatedAt        *time.Time `json:"createdAt,omitempty"`
+	CreatedBy        *User      `json:"createdBy,omitempty"`
 	ExpiresAt        *time.Time `json:"expiresAt,omitempty"`
 	Id               *string    `json:"id,omitempty"`
 	Name             string     `json:"name"`
@@ -244,6 +344,9 @@ type RegisterConnectorJSONRequestBody = RegisterConnectorBody
 
 // EnsureOrganizationJSONRequestBody defines body for EnsureOrganization for application/json ContentType.
 type EnsureOrganizationJSONRequestBody = EnsureOrganizationBody
+
+// PlatformCloseBillingPeriodsJSONRequestBody defines body for PlatformCloseBillingPeriods for application/json ContentType.
+type PlatformCloseBillingPeriodsJSONRequestBody = ClosePeriodsScope
 
 // MintOrganizationTokenJSONRequestBody defines body for MintOrganizationToken for application/json ContentType.
 type MintOrganizationTokenJSONRequestBody = MintOrganizationTokenBody
@@ -324,7 +427,7 @@ type ClientInterface interface {
 
 	// RegisterConnectorWithBody Register connector manifest
 	//
-	// Registers or updates connector metadata and settings schema for this Kaiten deployment.
+	// Registers or updates connector metadata and settings schema for this Kaiten installation.
 	//
 	// Takes any type of body and a specified content type.
 	//
@@ -333,7 +436,7 @@ type ClientInterface interface {
 
 	// RegisterConnector Register connector manifest
 	//
-	// Registers or updates connector metadata and settings schema for this Kaiten deployment.
+	// Registers or updates connector metadata and settings schema for this Kaiten installation.
 	//
 	// Takes a body of the `application/json` content type.
 	//
@@ -349,7 +452,7 @@ type ClientInterface interface {
 
 	// EnsureOrganizationWithBody Create an organization if it does not already exist
 	//
-	// Converges on the organization an external identity provider describes, creating it if it is not already there and returning it either way. The internal id is derived from the external id, so the operation is idempotent: a re-run returns the same organization instead of creating a second tenant, and an organization that already exists -- including one provisioned on a first login -- is returned unchanged apart from acquiring a name if it had none. Platform API: requires a Kaiten platform token (`ksm_...`) with write:organizations.
+	// Converges on the organization an external identity provider describes, creating it if it is not already there and returning it either way. The internal id is derived from the external id, so the operation is idempotent: a re-run returns the same organization instead of creating a second one, and an organization that already exists -- including one provisioned on a first login -- is returned unchanged apart from acquiring a name if it had none. Platform API: requires a Kaiten platform token (`ksm_...`) with write:organizations.
 	//
 	// Takes any type of body and a specified content type.
 	//
@@ -358,7 +461,7 @@ type ClientInterface interface {
 
 	// EnsureOrganization Create an organization if it does not already exist
 	//
-	// Converges on the organization an external identity provider describes, creating it if it is not already there and returning it either way. The internal id is derived from the external id, so the operation is idempotent: a re-run returns the same organization instead of creating a second tenant, and an organization that already exists -- including one provisioned on a first login -- is returned unchanged apart from acquiring a name if it had none. Platform API: requires a Kaiten platform token (`ksm_...`) with write:organizations.
+	// Converges on the organization an external identity provider describes, creating it if it is not already there and returning it either way. The internal id is derived from the external id, so the operation is idempotent: a re-run returns the same organization instead of creating a second one, and an organization that already exists -- including one provisioned on a first login -- is returned unchanged apart from acquiring a name if it had none. Platform API: requires a Kaiten platform token (`ksm_...`) with write:organizations.
 	//
 	// Takes a body of the `application/json` content type.
 	//
@@ -378,6 +481,24 @@ type ClientInterface interface {
 	//
 	// Corresponds with GET /platform/organizations/{orgId} (the `GetOrganization` operationId).
 	GetOrganization(ctx context.Context, orgId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PlatformCloseBillingPeriodsWithBody Close an organization's due billing periods
+	//
+	// Closes the subscriptions whose period has ended now, rather than at the period-close job's next pass: each one's RENEWAL invoice is composed and issued (or held, when its usage journal fails a check) and its period advances. A subscription several periods behind closes one period at a time until it is current. Only what is due closes, at most the configured batch size per call. Platform API: requires a Kaiten platform token (`ksm_...`) with write:billing; the closes are recorded under system:kaiten.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /platform/organizations/{orgId}/billing/close-periods (the `PlatformCloseBillingPeriods` operationId).
+	PlatformCloseBillingPeriodsWithBody(ctx context.Context, orgId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PlatformCloseBillingPeriods Close an organization's due billing periods
+	//
+	// Closes the subscriptions whose period has ended now, rather than at the period-close job's next pass: each one's RENEWAL invoice is composed and issued (or held, when its usage journal fails a check) and its period advances. A subscription several periods behind closes one period at a time until it is current. Only what is due closes, at most the configured batch size per call. Platform API: requires a Kaiten platform token (`ksm_...`) with write:billing; the closes are recorded under system:kaiten.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /platform/organizations/{orgId}/billing/close-periods (the `PlatformCloseBillingPeriods` operationId).
+	PlatformCloseBillingPeriods(ctx context.Context, orgId openapi_types.UUID, body PlatformCloseBillingPeriodsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteMembership Remove a user's membership on an organization
 	//
@@ -428,7 +549,7 @@ type ClientInterface interface {
 
 // RegisterConnectorWithBody Register connector manifest
 //
-// Registers or updates connector metadata and settings schema for this Kaiten deployment.
+// Registers or updates connector metadata and settings schema for this Kaiten installation.
 //
 // Takes any type of body and a specified content type.
 //
@@ -447,7 +568,7 @@ func (c *Client) RegisterConnectorWithBody(ctx context.Context, contentType stri
 
 // RegisterConnector Register connector manifest
 //
-// Registers or updates connector metadata and settings schema for this Kaiten deployment.
+// Registers or updates connector metadata and settings schema for this Kaiten installation.
 //
 // Takes a body of the `application/json` content type.
 //
@@ -483,7 +604,7 @@ func (c *Client) GetPlatformMe(ctx context.Context, reqEditors ...RequestEditorF
 
 // EnsureOrganizationWithBody Create an organization if it does not already exist
 //
-// Converges on the organization an external identity provider describes, creating it if it is not already there and returning it either way. The internal id is derived from the external id, so the operation is idempotent: a re-run returns the same organization instead of creating a second tenant, and an organization that already exists -- including one provisioned on a first login -- is returned unchanged apart from acquiring a name if it had none. Platform API: requires a Kaiten platform token (`ksm_...`) with write:organizations.
+// Converges on the organization an external identity provider describes, creating it if it is not already there and returning it either way. The internal id is derived from the external id, so the operation is idempotent: a re-run returns the same organization instead of creating a second one, and an organization that already exists -- including one provisioned on a first login -- is returned unchanged apart from acquiring a name if it had none. Platform API: requires a Kaiten platform token (`ksm_...`) with write:organizations.
 //
 // Takes any type of body and a specified content type.
 //
@@ -502,7 +623,7 @@ func (c *Client) EnsureOrganizationWithBody(ctx context.Context, contentType str
 
 // EnsureOrganization Create an organization if it does not already exist
 //
-// Converges on the organization an external identity provider describes, creating it if it is not already there and returning it either way. The internal id is derived from the external id, so the operation is idempotent: a re-run returns the same organization instead of creating a second tenant, and an organization that already exists -- including one provisioned on a first login -- is returned unchanged apart from acquiring a name if it had none. Platform API: requires a Kaiten platform token (`ksm_...`) with write:organizations.
+// Converges on the organization an external identity provider describes, creating it if it is not already there and returning it either way. The internal id is derived from the external id, so the operation is idempotent: a re-run returns the same organization instead of creating a second one, and an organization that already exists -- including one provisioned on a first login -- is returned unchanged apart from acquiring a name if it had none. Platform API: requires a Kaiten platform token (`ksm_...`) with write:organizations.
 //
 // Takes a body of the `application/json` content type.
 //
@@ -543,6 +664,44 @@ func (c *Client) DeleteOrganization(ctx context.Context, orgId openapi_types.UUI
 // Corresponds with GET /platform/organizations/{orgId} (the `GetOrganization` operationId).
 func (c *Client) GetOrganization(ctx context.Context, orgId openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetOrganizationRequest(c.Server, orgId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// PlatformCloseBillingPeriodsWithBody Close an organization's due billing periods
+//
+// Closes the subscriptions whose period has ended now, rather than at the period-close job's next pass: each one's RENEWAL invoice is composed and issued (or held, when its usage journal fails a check) and its period advances. A subscription several periods behind closes one period at a time until it is current. Only what is due closes, at most the configured batch size per call. Platform API: requires a Kaiten platform token (`ksm_...`) with write:billing; the closes are recorded under system:kaiten.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /platform/organizations/{orgId}/billing/close-periods (the `PlatformCloseBillingPeriods` operationId).
+func (c *Client) PlatformCloseBillingPeriodsWithBody(ctx context.Context, orgId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPlatformCloseBillingPeriodsRequestWithBody(c.Server, orgId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// PlatformCloseBillingPeriods Close an organization's due billing periods
+//
+// Closes the subscriptions whose period has ended now, rather than at the period-close job's next pass: each one's RENEWAL invoice is composed and issued (or held, when its usage journal fails a check) and its period advances. A subscription several periods behind closes one period at a time until it is current. Only what is due closes, at most the configured batch size per call. Platform API: requires a Kaiten platform token (`ksm_...`) with write:billing; the closes are recorded under system:kaiten.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /platform/organizations/{orgId}/billing/close-periods (the `PlatformCloseBillingPeriods` operationId).
+func (c *Client) PlatformCloseBillingPeriods(ctx context.Context, orgId openapi_types.UUID, body PlatformCloseBillingPeriodsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPlatformCloseBillingPeriodsRequest(c.Server, orgId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -834,6 +993,53 @@ func NewGetOrganizationRequest(server string, orgId openapi_types.UUID) (*http.R
 	return req, nil
 }
 
+// NewPlatformCloseBillingPeriodsRequest calls the generic PlatformCloseBillingPeriods builder with application/json body
+func NewPlatformCloseBillingPeriodsRequest(server string, orgId openapi_types.UUID, body PlatformCloseBillingPeriodsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPlatformCloseBillingPeriodsRequestWithBody(server, orgId, "application/json", bodyReader)
+}
+
+// NewPlatformCloseBillingPeriodsRequestWithBody constructs an http.Request for the PlatformCloseBillingPeriods method, with any body, and a specified content type
+func NewPlatformCloseBillingPeriodsRequestWithBody(server string, orgId openapi_types.UUID, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "orgId", orgId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "uuid"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/platform/organizations/%s/billing/close-periods", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewDeleteMembershipRequest constructs an http.Request for the DeleteMembership method
 func NewDeleteMembershipRequest(server string, orgId openapi_types.UUID, userId openapi_types.UUID) (*http.Request, error) {
 	var err error
@@ -1077,7 +1283,7 @@ type ClientWithResponsesInterface interface {
 
 	// RegisterConnectorWithBodyWithResponse Register connector manifest
 	//
-	// Registers or updates connector metadata and settings schema for this Kaiten deployment.
+	// Registers or updates connector metadata and settings schema for this Kaiten installation.
 	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -1086,7 +1292,7 @@ type ClientWithResponsesInterface interface {
 
 	// RegisterConnectorWithResponse Register connector manifest
 	//
-	// Registers or updates connector metadata and settings schema for this Kaiten deployment.
+	// Registers or updates connector metadata and settings schema for this Kaiten installation.
 	//
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -1104,7 +1310,7 @@ type ClientWithResponsesInterface interface {
 
 	// EnsureOrganizationWithBodyWithResponse Create an organization if it does not already exist
 	//
-	// Converges on the organization an external identity provider describes, creating it if it is not already there and returning it either way. The internal id is derived from the external id, so the operation is idempotent: a re-run returns the same organization instead of creating a second tenant, and an organization that already exists -- including one provisioned on a first login -- is returned unchanged apart from acquiring a name if it had none. Platform API: requires a Kaiten platform token (`ksm_...`) with write:organizations.
+	// Converges on the organization an external identity provider describes, creating it if it is not already there and returning it either way. The internal id is derived from the external id, so the operation is idempotent: a re-run returns the same organization instead of creating a second one, and an organization that already exists -- including one provisioned on a first login -- is returned unchanged apart from acquiring a name if it had none. Platform API: requires a Kaiten platform token (`ksm_...`) with write:organizations.
 	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -1113,7 +1319,7 @@ type ClientWithResponsesInterface interface {
 
 	// EnsureOrganizationWithResponse Create an organization if it does not already exist
 	//
-	// Converges on the organization an external identity provider describes, creating it if it is not already there and returning it either way. The internal id is derived from the external id, so the operation is idempotent: a re-run returns the same organization instead of creating a second tenant, and an organization that already exists -- including one provisioned on a first login -- is returned unchanged apart from acquiring a name if it had none. Platform API: requires a Kaiten platform token (`ksm_...`) with write:organizations.
+	// Converges on the organization an external identity provider describes, creating it if it is not already there and returning it either way. The internal id is derived from the external id, so the operation is idempotent: a re-run returns the same organization instead of creating a second one, and an organization that already exists -- including one provisioned on a first login -- is returned unchanged apart from acquiring a name if it had none. Platform API: requires a Kaiten platform token (`ksm_...`) with write:organizations.
 	//
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -1137,6 +1343,24 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with GET /platform/organizations/{orgId} (the `GetOrganization` operationId).
 	GetOrganizationWithResponse(ctx context.Context, orgId openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetOrganizationResponse, error)
+
+	// PlatformCloseBillingPeriodsWithBodyWithResponse Close an organization's due billing periods
+	//
+	// Closes the subscriptions whose period has ended now, rather than at the period-close job's next pass: each one's RENEWAL invoice is composed and issued (or held, when its usage journal fails a check) and its period advances. A subscription several periods behind closes one period at a time until it is current. Only what is due closes, at most the configured batch size per call. Platform API: requires a Kaiten platform token (`ksm_...`) with write:billing; the closes are recorded under system:kaiten.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /platform/organizations/{orgId}/billing/close-periods (the `PlatformCloseBillingPeriods` operationId).
+	PlatformCloseBillingPeriodsWithBodyWithResponse(ctx context.Context, orgId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PlatformCloseBillingPeriodsResponse, error)
+
+	// PlatformCloseBillingPeriodsWithResponse Close an organization's due billing periods
+	//
+	// Closes the subscriptions whose period has ended now, rather than at the period-close job's next pass: each one's RENEWAL invoice is composed and issued (or held, when its usage journal fails a check) and its period advances. A subscription several periods behind closes one period at a time until it is current. Only what is due closes, at most the configured batch size per call. Platform API: requires a Kaiten platform token (`ksm_...`) with write:billing; the closes are recorded under system:kaiten.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /platform/organizations/{orgId}/billing/close-periods (the `PlatformCloseBillingPeriods` operationId).
+	PlatformCloseBillingPeriodsWithResponse(ctx context.Context, orgId openapi_types.UUID, body PlatformCloseBillingPeriodsJSONRequestBody, reqEditors ...RequestEditorFn) (*PlatformCloseBillingPeriodsResponse, error)
 
 	// DeleteMembershipWithResponse Remove a user's membership on an organization
 	//
@@ -1552,6 +1776,103 @@ func (r GetOrganizationResponse) ContentType() string {
 	return ""
 }
 
+// PlatformCloseBillingPeriodsResponse503Headers the declared response headers of an HTTP 503 response for PlatformCloseBillingPeriods
+type PlatformCloseBillingPeriodsResponse503Headers struct {
+	RetryAfter *int
+}
+
+type PlatformCloseBillingPeriodsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *ClosePeriodsReport
+	// ApplicationproblemJSON400 the response for an HTTP 400 `application/problem+json` response
+	ApplicationproblemJSON400 *Problem
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+	// ApplicationproblemJSON503 the response for an HTTP 503 `application/problem+json` response
+	ApplicationproblemJSON503 *Problem
+	// Headers503 the parsed response headers for an HTTP 503 response
+	Headers503 *PlatformCloseBillingPeriodsResponse503Headers
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r PlatformCloseBillingPeriodsResponse) GetJSON200() *ClosePeriodsReport {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON400 returns the response for an HTTP 400 `application/problem+json` response
+func (r PlatformCloseBillingPeriodsResponse) GetApplicationproblemJSON400() *Problem {
+	return r.ApplicationproblemJSON400
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r PlatformCloseBillingPeriodsResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r PlatformCloseBillingPeriodsResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r PlatformCloseBillingPeriodsResponse) GetApplicationproblemJSON404() *Problem {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r PlatformCloseBillingPeriodsResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r PlatformCloseBillingPeriodsResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetApplicationproblemJSON503 returns the response for an HTTP 503 `application/problem+json` response
+func (r PlatformCloseBillingPeriodsResponse) GetApplicationproblemJSON503() *Problem {
+	return r.ApplicationproblemJSON503
+}
+
+// GetBody returns the raw response body bytes
+func (r PlatformCloseBillingPeriodsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r PlatformCloseBillingPeriodsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PlatformCloseBillingPeriodsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r PlatformCloseBillingPeriodsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type DeleteMembershipResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -1927,7 +2248,7 @@ func (r DeleteUserResponse) ContentType() string {
 
 // RegisterConnectorWithBodyWithResponse Register connector manifest
 //
-// Registers or updates connector metadata and settings schema for this Kaiten deployment.
+// Registers or updates connector metadata and settings schema for this Kaiten installation.
 //
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 //
@@ -1942,7 +2263,7 @@ func (c *ClientWithResponses) RegisterConnectorWithBodyWithResponse(ctx context.
 
 // RegisterConnectorWithResponse Register connector manifest
 //
-// Registers or updates connector metadata and settings schema for this Kaiten deployment.
+// Registers or updates connector metadata and settings schema for this Kaiten installation.
 //
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 //
@@ -1972,7 +2293,7 @@ func (c *ClientWithResponses) GetPlatformMeWithResponse(ctx context.Context, req
 
 // EnsureOrganizationWithBodyWithResponse Create an organization if it does not already exist
 //
-// Converges on the organization an external identity provider describes, creating it if it is not already there and returning it either way. The internal id is derived from the external id, so the operation is idempotent: a re-run returns the same organization instead of creating a second tenant, and an organization that already exists -- including one provisioned on a first login -- is returned unchanged apart from acquiring a name if it had none. Platform API: requires a Kaiten platform token (`ksm_...`) with write:organizations.
+// Converges on the organization an external identity provider describes, creating it if it is not already there and returning it either way. The internal id is derived from the external id, so the operation is idempotent: a re-run returns the same organization instead of creating a second one, and an organization that already exists -- including one provisioned on a first login -- is returned unchanged apart from acquiring a name if it had none. Platform API: requires a Kaiten platform token (`ksm_...`) with write:organizations.
 //
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 //
@@ -1987,7 +2308,7 @@ func (c *ClientWithResponses) EnsureOrganizationWithBodyWithResponse(ctx context
 
 // EnsureOrganizationWithResponse Create an organization if it does not already exist
 //
-// Converges on the organization an external identity provider describes, creating it if it is not already there and returning it either way. The internal id is derived from the external id, so the operation is idempotent: a re-run returns the same organization instead of creating a second tenant, and an organization that already exists -- including one provisioned on a first login -- is returned unchanged apart from acquiring a name if it had none. Platform API: requires a Kaiten platform token (`ksm_...`) with write:organizations.
+// Converges on the organization an external identity provider describes, creating it if it is not already there and returning it either way. The internal id is derived from the external id, so the operation is idempotent: a re-run returns the same organization instead of creating a second one, and an organization that already exists -- including one provisioned on a first login -- is returned unchanged apart from acquiring a name if it had none. Platform API: requires a Kaiten platform token (`ksm_...`) with write:organizations.
 //
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 //
@@ -2028,6 +2349,36 @@ func (c *ClientWithResponses) GetOrganizationWithResponse(ctx context.Context, o
 		return nil, err
 	}
 	return ParseGetOrganizationResponse(rsp)
+}
+
+// PlatformCloseBillingPeriodsWithBodyWithResponse Close an organization's due billing periods
+//
+// Closes the subscriptions whose period has ended now, rather than at the period-close job's next pass: each one's RENEWAL invoice is composed and issued (or held, when its usage journal fails a check) and its period advances. A subscription several periods behind closes one period at a time until it is current. Only what is due closes, at most the configured batch size per call. Platform API: requires a Kaiten platform token (`ksm_...`) with write:billing; the closes are recorded under system:kaiten.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /platform/organizations/{orgId}/billing/close-periods (the `PlatformCloseBillingPeriods` operationId).
+func (c *ClientWithResponses) PlatformCloseBillingPeriodsWithBodyWithResponse(ctx context.Context, orgId openapi_types.UUID, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PlatformCloseBillingPeriodsResponse, error) {
+	rsp, err := c.PlatformCloseBillingPeriodsWithBody(ctx, orgId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePlatformCloseBillingPeriodsResponse(rsp)
+}
+
+// PlatformCloseBillingPeriodsWithResponse Close an organization's due billing periods
+//
+// Closes the subscriptions whose period has ended now, rather than at the period-close job's next pass: each one's RENEWAL invoice is composed and issued (or held, when its usage journal fails a check) and its period advances. A subscription several periods behind closes one period at a time until it is current. Only what is due closes, at most the configured batch size per call. Platform API: requires a Kaiten platform token (`ksm_...`) with write:billing; the closes are recorded under system:kaiten.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /platform/organizations/{orgId}/billing/close-periods (the `PlatformCloseBillingPeriods` operationId).
+func (c *ClientWithResponses) PlatformCloseBillingPeriodsWithResponse(ctx context.Context, orgId openapi_types.UUID, body PlatformCloseBillingPeriodsJSONRequestBody, reqEditors ...RequestEditorFn) (*PlatformCloseBillingPeriodsResponse, error) {
+	rsp, err := c.PlatformCloseBillingPeriods(ctx, orgId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePlatformCloseBillingPeriodsResponse(rsp)
 }
 
 // DeleteMembershipWithResponse Remove a user's membership on an organization
@@ -2402,6 +2753,94 @@ func ParseGetOrganizationResponse(rsp *http.Response) (*GetOrganizationResponse,
 		}
 		response.ApplicationproblemJSON500 = &dest
 
+	}
+
+	return response, nil
+}
+
+// ParsePlatformCloseBillingPeriodsResponse parses an HTTP response from a PlatformCloseBillingPeriodsWithResponse call
+func ParsePlatformCloseBillingPeriodsResponse(rsp *http.Response) (*PlatformCloseBillingPeriodsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PlatformCloseBillingPeriodsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ClosePeriodsReport
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON503 = &dest
+
+	}
+
+	switch {
+	case rsp.StatusCode == 503:
+		var headers PlatformCloseBillingPeriodsResponse503Headers
+		if values := rsp.Header.Values("Retry-After"); len(values) > 0 {
+			var value int
+			if err := runtime.BindStyledParameterWithOptions("simple", "Retry-After", values[0], &value, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			}
+			headers.RetryAfter = &value
+		}
+		response.Headers503 = &headers
 	}
 
 	return response, nil
