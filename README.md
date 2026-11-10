@@ -344,8 +344,12 @@ namespace per resource:
 | `InstanceAddons`    | attach, set the quantity of, detach an add-on                           |
 | `Vouchers`, `InstanceVouchers` | vouchers, their redemptions, redeem and revoke on an instance |
 | `PublishableKeys`, `CustomerSessions` | the `pk_` keys and `kst_` sessions a customer's page uses |
+| `CheckoutSessions`  | the organization's view of its anonymous checkouts                      |
 | `Customers`         | a customer's billing, payment method and provider portal                |
 | `Public`, `Session` | what a `pk_` key and a `kst_` session reach: build the client with `WithPublishableKey` or `WithBearerToken` respectively |
+
+An anonymous checkout starts on `Public.CreateCheckoutSession` with a `pk_` key. The `ksc_`
+token it returns once then reads and confirms it, passed to `WithBearerToken`.
 
 ```go
 claim, err := client.Billing.Handoff.Claim(ctx, sdk.HandoffClaimSize{})

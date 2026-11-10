@@ -709,6 +709,54 @@ func billingProblemCoverage() map[string]problemCoverage[*Client] {
 			},
 		},
 
+		"BillingCheckoutSessions.ListPage": {
+			response: gen.ListCheckoutSessionsResponse{},
+			call: func(ctx context.Context, c *Client) error {
+				_, err := c.Billing.CheckoutSessions.ListPage(ctx, nil)
+				return err
+			},
+		},
+
+		"BillingCheckoutSessions.Get": {
+			response: gen.GetCheckoutSessionAdminResponse{},
+			call: func(ctx context.Context, c *Client) error {
+				_, err := c.Billing.CheckoutSessions.Get(ctx, "ses_1")
+				return err
+			},
+		},
+
+		"BillingPublic.CreateCheckoutSession": {
+			response: gen.CreateCheckoutSessionResponse{},
+			call: func(ctx context.Context, c *Client) error {
+				_, err := c.Billing.Public.CreateCheckoutSession(ctx, CheckoutSessionDraft{})
+				return err
+			},
+		},
+
+		"BillingPublic.GetCheckoutSession": {
+			response: gen.GetCheckoutSessionResponse{},
+			call: func(ctx context.Context, c *Client) error {
+				_, err := c.Billing.Public.GetCheckoutSession(ctx, "ses_1")
+				return err
+			},
+		},
+
+		"BillingPublic.ConfirmCheckoutSession": {
+			response: gen.ConfirmCheckoutSessionResponse{},
+			call: func(ctx context.Context, c *Client) error {
+				_, err := c.Billing.Public.ConfirmCheckoutSession(ctx, "ses_1")
+				return err
+			},
+		},
+
+		"BillingSession.RedeemVoucher": {
+			response: gen.RedeemSessionVoucherResponse{},
+			call: func(ctx context.Context, c *Client) error {
+				_, err := c.Billing.Session.RedeemVoucher(ctx, SessionRedeem{Code: "SUMMER"})
+				return err
+			},
+		},
+
 		"BillingSession.Checkout": {
 			response: gen.CreateSessionCheckoutResponse{},
 			call: func(ctx context.Context, c *Client) error {
@@ -837,11 +885,15 @@ func billingServiceCoverage(client *Client) map[string]serviceCoverage {
 		},
 		"BillingPublic": {
 			service: client.Billing.Public,
-			methods: []string{"Catalog"},
+			methods: []string{"Catalog", "CreateCheckoutSession", "GetCheckoutSession", "ConfirmCheckoutSession"},
+		},
+		"BillingCheckoutSessions": {
+			service: client.Billing.CheckoutSessions,
+			methods: []string{"ListPage", "List", "Get"},
 		},
 		"BillingSession": {
 			service: client.Billing.Session,
-			methods: []string{"Portal", "ListInvoicesPage", "ListInvoices", "Checkout", "Cancel", "Reactivate", "SetAddonQuantity", "CreatePaymentMethodSession", "CompletePaymentMethodSession", "CreatePortalSession", "ValidateVoucher"},
+			methods: []string{"Portal", "ListInvoicesPage", "ListInvoices", "Checkout", "Cancel", "Reactivate", "SetAddonQuantity", "RedeemVoucher", "CreatePaymentMethodSession", "CompletePaymentMethodSession", "CreatePortalSession", "ValidateVoucher"},
 		},
 	}
 }
