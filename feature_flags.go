@@ -63,5 +63,5 @@ func (s *FeatureFlags) Delete(ctx context.Context, featureFlagSlug string) error
 		return fmt.Errorf("delete feature flag: %w", err)
 	}
 
-	return expectNoContent(newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500))
+	return expectNoContent(newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON409, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500))
 }

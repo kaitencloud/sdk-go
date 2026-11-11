@@ -46,9 +46,20 @@ var (
 	// ErrAICommitFailed is returned by AI.Run when the provider call succeeded but its
 	// commit could not be confirmed, retries included. The call's result is good;
 	// settlement may already have succeeded if its response was lost. Reconcile or
-	// retry the identical commit body under the same transaction id before assuming
-	// nothing was charged. An open reservation lapses on its own.
+	// retry the identical commit body -- VendorCost byte for byte included -- under the
+	// same transaction id before assuming nothing was charged. An open reservation
+	// lapses on its own.
 	ErrAICommitFailed = errors.New("AI usage commit failed")
+
+	// ErrAIUsageDisabled is a 403 AIUsage.Disabled: AI usage is turned off for the
+	// organization. It is not a missing scope, and retrying will not help until it is
+	// turned on; AI.Capabilities says whether it is.
+	ErrAIUsageDisabled = errors.New("AI usage disabled for this organization")
+
+	// ErrInvalidVendorCost is an AICommitInput.VendorCost the API would refuse: not a
+	// decimal of at most 12 integer and 12 fractional digits, or set on a NOT_SENT
+	// commit. It is returned before any request is sent.
+	ErrInvalidVendorCost = errors.New("invalid AI vendor cost")
 )
 
 // The report's codes an AI error is told apart by.
@@ -63,6 +74,7 @@ const (
 	codeInvalidAIUsage         = "ReportEntitlementUsageMetric.InvalidAiUsage"
 	codeAIUsageRequiresAppend  = "ReportEntitlementUsageMetric.AiUsageRequiresAppend"
 	codeAICreditPoolAppendOnly = "ReportEntitlementUsageMetric.AiCreditPoolAppendOnly"
+	codeAIUsageDisabled        = "AIUsage.Disabled"
 	idempotentReplayedHeader   = "Idempotent-Replayed"
 	aiMaxRetries               = 3
 	aiRetryBase                = 250 * time.Millisecond
@@ -92,9 +104,21 @@ func (s *AI) Reserve(ctx context.Context, instanceSlug, entitlementSlug string, 
 // Commit records what a provider call consumed and charges it, closing the reservation
 // input.TransactionID names. A commit is never refused for a commercial reason: an
 // unknown model, a missing rule or an exhausted pool is recorded and answered, flagged
-// on AIReport.Outcome. It is retried like Reserve; a retry the API already recorded is
-// answered with the original, AIReport.Replayed set.
+// on AIReport.Outcome. It is retried like Reserve, every attempt sending the bytes the
+// first one sent; a retry the API already recorded is answered with the original,
+// AIReport.Replayed set.
+//
+// A commit with RequestStatus NOT_SENT is a release: nothing is charged. Released under
+// a transaction id that holds no reservation, it still answers RELEASED, with
+// AIOutcome.NoReservation true, and closes the id: a reserve that was still in flight
+// under it, or any later commit, is refused with ErrTransactionIDReused instead of
+// holding credits nobody releases. Model and RequestType are optional on such a release
+// against a current server; older servers need them on any commit without a reservation.
 func (s *AI) Commit(ctx context.Context, instanceSlug, entitlementSlug string, input AICommitInput) (AIReport, error) {
+	if err := input.validateVendorCost(); err != nil {
+		return AIReport{}, err
+	}
+
 	if input.TransactionID == "" {
 		id, err := newTransactionID()
 		if err != nil {
@@ -116,10 +140,19 @@ type AIRun struct {
 // commits what fn reports in its AICall under the same transaction id.
 //
 // When the reserve is refused, fn is not called and the typed error is returned. When
-// fn returns an error, the commit still goes out -- with the AICall's Status, or
+// the reserve's outcome is unknown -- a network error, a 5xx after the retries, or ctx
+// done while it was in flight -- fn is not called either, and Run releases the
+// transaction id (a NOT_SENT commit) so that a reservation the API did record is freed
+// at once, and one still in flight is refused when it lands. The reserve's error is
+// returned; Commit holds the release's answer when it got one.
+//
+// When fn returns an error, the commit still goes out -- with the AICall's Status, or
 // PROVIDER_ERROR when it sets none -- and fn's error is returned, joined with the
 // commit's if that failed too. Set AIRequestStatusNotSent when the provider was never
-// reached: the reservation is released and nothing is charged.
+// reached: the reservation is released and nothing is charged. When fn panics, or exits
+// its goroutine, Run commits PROVIDER_ERROR with no usage -- the call may have reached
+// the provider, and a skipped commit would leave it unbilled once the hold lapses --
+// then panics again with fn's value.
 //
 // The commit runs on a context that ctx cancelling does not stop, bounded by
 // DefaultTimeout, so a call cut short by its own deadline is still accounted for. When
@@ -138,13 +171,50 @@ func (s *AI) Run(ctx context.Context, instanceSlug, entitlementSlug string, inpu
 		input.TransactionID = id
 	}
 
+	// settle commits on a context the caller's cancellation does not reach.
+	settle := func(commit AICommitInput) (AIReport, error) {
+		commitCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), aiCommitTimeout)
+		defer cancel()
+
+		return s.Commit(commitCtx, instanceSlug, entitlementSlug, commit)
+	}
+
 	reservation, err := s.Reserve(ctx, instanceSlug, entitlementSlug, input)
 	if err != nil {
+		if reserveOutcomeUnknown(err) {
+			// Model and request type ride along for servers that predate the
+			// release tombstone and need them on a commit without a reservation.
+			release, releaseErr := settle(AICommitInput{
+				TransactionID: input.TransactionID,
+				RequestStatus: AIRequestStatusNotSent,
+				Model:         input.Model,
+				RequestType:   input.RequestType,
+			})
+			run.Commit = release
+			if releaseErr != nil {
+				return run, errors.Join(err, fmt.Errorf("release AI transaction %s: %w", input.TransactionID, releaseErr))
+			}
+		}
 		return run, err
 	}
 	run.Reservation = reservation
 
+	returned := false
+	defer func() {
+		if returned {
+			return
+		}
+		// fn panicked or called runtime.Goexit: recover is nil for the latter, and
+		// the goroutine carries on exiting once this returns.
+		recovered := recover()
+		_, _ = settle(AICommitInput{TransactionID: input.TransactionID, RequestStatus: AIRequestStatusProviderError})
+		if recovered != nil {
+			panic(recovered)
+		}
+	}()
+
 	call, callErr := fn(ctx)
+	returned = true
 
 	status := call.Status
 	if status == "" {
@@ -154,14 +224,17 @@ func (s *AI) Run(ctx context.Context, instanceSlug, entitlementSlug string, inpu
 		}
 	}
 
-	commitCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), aiCommitTimeout)
-	defer cancel()
+	vendorCost := call.VendorCost
+	if status == AIRequestStatusNotSent {
+		vendorCost = ""
+	}
 
-	run.Commit, err = s.Commit(commitCtx, instanceSlug, entitlementSlug, AICommitInput{
+	run.Commit, err = settle(AICommitInput{
 		TransactionID: input.TransactionID,
 		RequestStatus: status,
 		Model:         call.Model,
 		Usage:         call.Usage,
+		VendorCost:    vendorCost,
 	})
 	if err != nil {
 		err = fmt.Errorf("%w: %w", ErrAICommitFailed, err)
@@ -172,6 +245,21 @@ func (s *AI) Run(ctx context.Context, instanceSlug, entitlementSlug string, inpu
 	}
 
 	return run, err
+}
+
+// reserveOutcomeUnknown reports whether a failed reserve may still have been, or still
+// be, recorded: anything but the API's own 4xx answer.
+func reserveOutcomeUnknown(err error) bool {
+	if errors.Is(err, ErrInvalidVendorCost) {
+		return false
+	}
+
+	var apiErr *Error
+	if errors.As(err, &apiErr) {
+		return apiErr.StatusCode >= http.StatusInternalServerError
+	}
+
+	return true
 }
 
 // report sends one AI usage report, retrying the identical phase and transaction id.
@@ -193,7 +281,7 @@ func (s *AI) report(ctx context.Context, instanceSlug, entitlementSlug string, p
 	}
 
 	for attempt := 0; ; attempt++ {
-		httpResp, err := s.client.raw.ReportEntitlementUsageMetricWithBody(ctx, instanceSlug, entitlementSlug, contentTypeJSON, bytes.NewReader(body), withoutNumericKey)
+		httpResp, err := s.client.raw.ReportEntitlementUsageMetricWithBody(ctx, instanceSlug, entitlementSlug, nil, contentTypeJSON, bytes.NewReader(body), withoutNumericKey)
 		resp := &gen.ReportEntitlementUsageMetricResponse{HTTPResponse: httpResp}
 
 		// Decide retries from transport errors and status before decoding JSON:
@@ -217,7 +305,7 @@ func (s *AI) report(ctx context.Context, instanceSlug, entitlementSlug string, p
 			return AIReport{}, fmt.Errorf("decode AI usage report response: %w", err)
 		}
 
-		converted := newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON409, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500)
+		converted := newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON409, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500, resp.ApplicationproblemJSON503)
 		if resp.StatusCode() != http.StatusOK {
 			return AIReport{}, aiReportError(responseError(converted))
 		}
@@ -286,6 +374,10 @@ func aiReportError(err error) error {
 	var sentinel error
 
 	switch apiErr.StatusCode {
+	case http.StatusForbidden:
+		if apiErr.Code == codeAIUsageDisabled {
+			sentinel = ErrAIUsageDisabled
+		}
 	case http.StatusConflict:
 		switch apiErr.Code {
 		case codeTransactionIDReused:
@@ -303,8 +395,11 @@ func aiReportError(err error) error {
 			sentinel = ErrAIUsageUnsupported
 		case codeTransactionIDRequired, codeInvalidTransactionID, codeInvalidAIUsage, codeAIUsageRequiresAppend, codeAICreditPoolAppendOnly:
 			// A malformed body: the caller's bug, reported as the API worded it.
-		case "", "ReportEntitlementUsageMetric.InvalidValueType":
-			// Known legacy validation responses from servers predating ai_usage.
+		case "ReportEntitlementUsageMetric.InvalidValueType":
+			// A legacy validation response from servers predating ai_usage. A 422
+			// with no code is not read as one: a current server answers request
+			// validation that way too, a malformed vendorCost for one. Ask
+			// AI.Capabilities instead.
 			sentinel = ErrAIUsageUnsupported
 		default:
 			// Unknown codes retain their problem details, not a guessed capability error.

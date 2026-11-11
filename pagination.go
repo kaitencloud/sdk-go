@@ -171,12 +171,20 @@ func getJSON[T any](ctx context.Context, transport listTransport, path string, q
 	}
 
 	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusMultipleChoices {
-		return zero, responseError(apiResponse{
+		// Code and ErrorID lifted as newAPIResponse lifts them: Error.Code is the
+		// member callers are told to branch on, and a walk's refusal must carry it.
+		problem := decodeProblem(body)
+		converted := apiResponse{
 			StatusCode: resp.StatusCode,
 			Status:     resp.Status,
 			Body:       body,
-			Problem:    decodeProblem(body),
-		})
+			Problem:    problem,
+		}
+		if problem != nil {
+			converted.Code = stringValue(problem.Code)
+			converted.ErrorID = stringValue(problem.ErrorId)
+		}
+		return zero, responseError(converted)
 	}
 
 	var decoded T
