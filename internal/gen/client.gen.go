@@ -1366,6 +1366,114 @@ func (e CustomerInProviderProviderKind) Valid() bool {
 	}
 }
 
+// Defines values for DashboardInstanceReportsLicenseState.
+const (
+	DashboardInstanceReportsLicenseStateARCHIVED  DashboardInstanceReportsLicenseState = "ARCHIVED"
+	DashboardInstanceReportsLicenseStateDRAFT     DashboardInstanceReportsLicenseState = "DRAFT"
+	DashboardInstanceReportsLicenseStatePUBLISHED DashboardInstanceReportsLicenseState = "PUBLISHED"
+)
+
+// Valid indicates whether the value is a known member of the DashboardInstanceReportsLicenseState enum.
+func (e DashboardInstanceReportsLicenseState) Valid() bool {
+	switch e {
+	case DashboardInstanceReportsLicenseStateARCHIVED:
+		return true
+	case DashboardInstanceReportsLicenseStateDRAFT:
+		return true
+	case DashboardInstanceReportsLicenseStatePUBLISHED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for DashboardInstanceReportsStanding.
+const (
+	AtLimit DashboardInstanceReportsStanding = "atLimit"
+	Healthy DashboardInstanceReportsStanding = "healthy"
+	Silent  DashboardInstanceReportsStanding = "silent"
+	Watch   DashboardInstanceReportsStanding = "watch"
+)
+
+// Valid indicates whether the value is a known member of the DashboardInstanceReportsStanding enum.
+func (e DashboardInstanceReportsStanding) Valid() bool {
+	switch e {
+	case AtLimit:
+		return true
+	case Healthy:
+		return true
+	case Silent:
+		return true
+	case Watch:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for DashboardLicenseVersionMixLifecycleState.
+const (
+	DashboardLicenseVersionMixLifecycleStateARCHIVED  DashboardLicenseVersionMixLifecycleState = "ARCHIVED"
+	DashboardLicenseVersionMixLifecycleStateDRAFT     DashboardLicenseVersionMixLifecycleState = "DRAFT"
+	DashboardLicenseVersionMixLifecycleStatePUBLISHED DashboardLicenseVersionMixLifecycleState = "PUBLISHED"
+)
+
+// Valid indicates whether the value is a known member of the DashboardLicenseVersionMixLifecycleState enum.
+func (e DashboardLicenseVersionMixLifecycleState) Valid() bool {
+	switch e {
+	case DashboardLicenseVersionMixLifecycleStateARCHIVED:
+		return true
+	case DashboardLicenseVersionMixLifecycleStateDRAFT:
+		return true
+	case DashboardLicenseVersionMixLifecycleStatePUBLISHED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for DashboardMeterLicenseState.
+const (
+	DashboardMeterLicenseStateARCHIVED  DashboardMeterLicenseState = "ARCHIVED"
+	DashboardMeterLicenseStateDRAFT     DashboardMeterLicenseState = "DRAFT"
+	DashboardMeterLicenseStatePUBLISHED DashboardMeterLicenseState = "PUBLISHED"
+)
+
+// Valid indicates whether the value is a known member of the DashboardMeterLicenseState enum.
+func (e DashboardMeterLicenseState) Valid() bool {
+	switch e {
+	case DashboardMeterLicenseStateARCHIVED:
+		return true
+	case DashboardMeterLicenseStateDRAFT:
+		return true
+	case DashboardMeterLicenseStatePUBLISHED:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for DashboardRangeWindowRange.
+const (
+	DashboardRangeWindowRangeN30d DashboardRangeWindowRange = "30d"
+	DashboardRangeWindowRangeN7d  DashboardRangeWindowRange = "7d"
+	DashboardRangeWindowRangeN90d DashboardRangeWindowRange = "90d"
+)
+
+// Valid indicates whether the value is a known member of the DashboardRangeWindowRange enum.
+func (e DashboardRangeWindowRange) Valid() bool {
+	switch e {
+	case DashboardRangeWindowRangeN30d:
+		return true
+	case DashboardRangeWindowRangeN7d:
+		return true
+	case DashboardRangeWindowRangeN90d:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for DeletedAddonDeliveredVia.
 const (
 	DeletedAddonDeliveredViaCheckoutSession DeletedAddonDeliveredVia = "checkout_session"
@@ -3721,6 +3829,27 @@ func (e LicensePriceUpdatedEventDeliveredVia) Valid() bool {
 	case LicensePriceUpdatedEventDeliveredViaCheckoutSession:
 		return true
 	case LicensePriceUpdatedEventDeliveredViaCustomerSession:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for LicenseTermStatus.
+const (
+	LicenseTermStatusACTIVE     LicenseTermStatus = "ACTIVE"
+	LicenseTermStatusEXPIRED    LicenseTermStatus = "EXPIRED"
+	LicenseTermStatusNOTSTARTED LicenseTermStatus = "NOT_STARTED"
+)
+
+// Valid indicates whether the value is a known member of the LicenseTermStatus enum.
+func (e LicenseTermStatus) Valid() bool {
+	switch e {
+	case LicenseTermStatusACTIVE:
+		return true
+	case LicenseTermStatusEXPIRED:
+		return true
+	case LicenseTermStatusNOTSTARTED:
 		return true
 	default:
 		return false
@@ -8050,6 +8179,27 @@ func (e ListCheckoutSessionsParamsStatus) Valid() bool {
 	case ListCheckoutSessionsParamsStatusEXPIRED:
 		return true
 	case ListCheckoutSessionsParamsStatusOPEN:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for GetDashboardSummaryParamsRange.
+const (
+	GetDashboardSummaryParamsRangeN30d GetDashboardSummaryParamsRange = "30d"
+	GetDashboardSummaryParamsRangeN7d  GetDashboardSummaryParamsRange = "7d"
+	GetDashboardSummaryParamsRangeN90d GetDashboardSummaryParamsRange = "90d"
+)
+
+// Valid indicates whether the value is a known member of the GetDashboardSummaryParamsRange enum.
+func (e GetDashboardSummaryParamsRange) Valid() bool {
+	switch e {
+	case GetDashboardSummaryParamsRangeN30d:
+		return true
+	case GetDashboardSummaryParamsRangeN7d:
+		return true
+	case GetDashboardSummaryParamsRangeN90d:
 		return true
 	default:
 		return false
@@ -13083,6 +13233,9 @@ type CheckoutSession struct {
 	CompletedAt       *time.Time              `json:"completedAt"`
 	CreatedAt         time.Time               `json:"createdAt"`
 
+	// CustomerName As the start gave it; null when it gave none, and the completion names the customer after the e-mail
+	CustomerName *string `json:"customerName"`
+
 	// CustomerSlug Set by the completion
 	CustomerSlug *string   `json:"customerSlug"`
 	DueToday     DueToday  `json:"dueToday"`
@@ -13116,6 +13269,9 @@ type CheckoutSessionAdmin struct {
 	ClosedAt    *time.Time `json:"closedAt"`
 	CompletedAt *time.Time `json:"completedAt"`
 	CreatedAt   time.Time  `json:"createdAt"`
+
+	// CustomerName As the visitor gave it; null when they gave none. Personal data
+	CustomerName *string `json:"customerName"`
 
 	// CustomerSlug Set by the completion
 	CustomerSlug *string  `json:"customerSlug"`
@@ -13152,6 +13308,9 @@ type CheckoutSessionDraft struct {
 
 	// ClientReferenceId The vendor's opaque reference, echoed on the checkout_session events
 	ClientReferenceId *string `json:"clientReferenceId,omitempty"`
+
+	// CustomerName What the completion names the new customer and its instance: the buyer's company, typically. Leading and trailing spaces are dropped; absent or blank, both are named after the e-mail.
+	CustomerName *string `json:"customerName,omitempty"`
 
 	// DryRun Compute what would be due today, and write nothing
 	DryRun *bool `json:"dryRun,omitempty"`
@@ -13764,6 +13923,417 @@ type CustomerSessionDraft struct {
 	//
 	// Examples: 1800
 	TtlSeconds *int32 `json:"ttlSeconds,omitempty"`
+}
+
+// DashboardArchivedVersion defines model for DashboardArchivedVersion.
+type DashboardArchivedVersion struct {
+	CustomerName string `json:"customerName"`
+	CustomerSlug string `json:"customerSlug"`
+
+	// DefaultLicenseName The version the family serves instead, when it has a published default
+	DefaultLicenseName *string `json:"defaultLicenseName"`
+	FamilySlug         string  `json:"familySlug"`
+	InstanceName       string  `json:"instanceName"`
+	InstanceSlug       string  `json:"instanceSlug"`
+	LicenseName        string  `json:"licenseName"`
+	Version            int32   `json:"version"`
+}
+
+// DashboardAttention defines model for DashboardAttention.
+type DashboardAttention struct {
+	ArchivedVersions DashboardAttentionArchived `json:"archivedVersions"`
+
+	// Checked The checks that ran; one the caller's scopes exclude is absent
+	Checked             []string                    `json:"checked"`
+	InstancesNotHealthy DashboardAttentionInstances `json:"instancesNotHealthy"`
+	LicensesEnding30d   DashboardAttentionLicenses  `json:"licensesEnding30d"`
+	LimitsReached       DashboardAttentionMeters    `json:"limitsReached"`
+	NearThreshold       DashboardAttentionMeters    `json:"nearThreshold"`
+	RejectedReports24h  DashboardAttentionReports   `json:"rejectedReports24h"`
+	SilentInstances     DashboardAttentionInstances `json:"silentInstances"`
+	TokensExpiring30d   DashboardAttentionTokens    `json:"tokensExpiring30d"`
+	ZonesBehind         DashboardAttentionZones     `json:"zonesBehind"`
+}
+
+// DashboardAttentionArchived defines model for DashboardAttentionArchived.
+type DashboardAttentionArchived struct {
+	Count int64                      `json:"count"`
+	Items []DashboardArchivedVersion `json:"items"`
+}
+
+// DashboardAttentionInstances defines model for DashboardAttentionInstances.
+type DashboardAttentionInstances struct {
+	Count int64               `json:"count"`
+	Items []DashboardInstance `json:"items"`
+}
+
+// DashboardAttentionLicenses defines model for DashboardAttentionLicenses.
+type DashboardAttentionLicenses struct {
+	Count int64                    `json:"count"`
+	Items []DashboardLicenseEnding `json:"items"`
+}
+
+// DashboardAttentionMeters defines model for DashboardAttentionMeters.
+type DashboardAttentionMeters struct {
+	Count int64            `json:"count"`
+	Items []DashboardMeter `json:"items"`
+}
+
+// DashboardAttentionReports defines model for DashboardAttentionReports.
+type DashboardAttentionReports struct {
+	Count int64                      `json:"count"`
+	Items []DashboardInstanceReports `json:"items"`
+}
+
+// DashboardAttentionTokens defines model for DashboardAttentionTokens.
+type DashboardAttentionTokens struct {
+	Count int64                    `json:"count"`
+	Items []DashboardTokenExpiring `json:"items"`
+}
+
+// DashboardAttentionZones defines model for DashboardAttentionZones.
+type DashboardAttentionZones struct {
+	Count int64           `json:"count"`
+	Items []DashboardZone `json:"items"`
+}
+
+// DashboardBilling defines model for DashboardBilling.
+type DashboardBilling struct {
+	// InvoicedThisMonth Since the start of the calendar month, per currency, largest first
+	InvoicedThisMonth []DashboardInvoicedCurrency `json:"invoicedThisMonth"`
+	Subscriptions     DashboardSubscriptions      `json:"subscriptions"`
+}
+
+// DashboardConnector defines model for DashboardConnector.
+type DashboardConnector struct {
+	Activated   bool       `json:"activated"`
+	ActivatedAt *time.Time `json:"activatedAt"`
+	Name        string     `json:"name"`
+}
+
+// DashboardConnectors defines model for DashboardConnectors.
+type DashboardConnectors struct {
+	Items []DashboardConnector `json:"items"`
+}
+
+// DashboardCustomerFigures defines model for DashboardCustomerFigures.
+type DashboardCustomerFigures struct {
+	CreatedInRange int64 `json:"createdInRange"`
+	Total          int64 `json:"total"`
+}
+
+// DashboardDayReports defines model for DashboardDayReports.
+type DashboardDayReports struct {
+	Accepted int64     `json:"accepted"`
+	Day      time.Time `json:"day"`
+	Rejected int64     `json:"rejected"`
+}
+
+// DashboardFeatureFlags defines model for DashboardFeatureFlags.
+type DashboardFeatureFlags struct {
+	Enabled int64 `json:"enabled"`
+
+	// Evaluations Evaluations recorded in the range; a floor, the evaluation publisher drops under pressure
+	Evaluations int64 `json:"evaluations"`
+
+	// NotEvaluated Flags with no evaluation in the range
+	NotEvaluated int64 `json:"notEvaluated"`
+
+	// PerFlag Every flag, most evaluated first
+	PerFlag []DashboardFlagEvaluations `json:"perFlag"`
+	Total   int64                      `json:"total"`
+}
+
+// DashboardFigures defines model for DashboardFigures.
+type DashboardFigures struct {
+	Customers    DashboardCustomerFigures    `json:"customers"`
+	Instances    DashboardInstanceFigures    `json:"instances"`
+	UsageReports DashboardUsageReportFigures `json:"usageReports"`
+}
+
+// DashboardFlagEvaluations defines model for DashboardFlagEvaluations.
+type DashboardFlagEvaluations struct {
+	Enabled     bool   `json:"enabled"`
+	Evaluations int64  `json:"evaluations"`
+	Name        string `json:"name"`
+	Slug        string `json:"slug"`
+}
+
+// DashboardInstance defines model for DashboardInstance.
+type DashboardInstance struct {
+	CustomerName string `json:"customerName"`
+	CustomerSlug string `json:"customerSlug"`
+	InstanceName string `json:"instanceName"`
+	InstanceSlug string `json:"instanceSlug"`
+
+	// LastActivityAt The last accepted report or entitlement read in the range; null when silent
+	LastActivityAt *time.Time `json:"lastActivityAt"`
+
+	// Status The instance's status, on the status check
+	Status *string `json:"status,omitempty"`
+}
+
+// DashboardInstanceFigures defines model for DashboardInstanceFigures.
+type DashboardInstanceFigures struct {
+	// ActiveInRange Instances with at least one report, accepted or refused, or one entitlement read in the range
+	ActiveInRange int64                   `json:"activeInRange"`
+	ByStanding    DashboardStandingCounts `json:"byStanding"`
+
+	// ByStatus HEALTHY, DEGRADED, INCIDENT, MAINTENANCE
+	ByStatus       map[string]int64 `json:"byStatus"`
+	CreatedInRange int64            `json:"createdInRange"`
+	SilentInRange  int64            `json:"silentInRange"`
+	Total          int64            `json:"total"`
+}
+
+// DashboardInstanceReports defines model for DashboardInstanceReports.
+type DashboardInstanceReports struct {
+	Accepted     int64           `json:"accepted"`
+	CustomerName string          `json:"customerName"`
+	CustomerSlug string          `json:"customerSlug"`
+	Headline     *DashboardMeter `json:"headline,omitempty"`
+	InstanceName string          `json:"instanceName"`
+	InstanceSlug string          `json:"instanceSlug"`
+
+	// LastReadAt The last entitlement value read in the range
+	LastReadAt   *time.Time                           `json:"lastReadAt"`
+	LastReportAt *time.Time                           `json:"lastReportAt"`
+	LicenseName  string                               `json:"licenseName"`
+	LicenseState DashboardInstanceReportsLicenseState `json:"licenseState"`
+	Rejected     int64                                `json:"rejected"`
+	Rejected24h  int64                                `json:"rejected24h"`
+
+	// Silent No report, accepted or refused, and no entitlement read in the range
+	Silent bool `json:"silent"`
+
+	// Standing The one word for the instance: atLimit when a meter refuses, watch when one is above its warning threshold, silent when nothing reported or read in the range, healthy otherwise; computed over every meter of the instance
+	Standing DashboardInstanceReportsStanding `json:"standing"`
+}
+
+// DashboardInstanceReportsLicenseState defines model for DashboardInstanceReports.LicenseState.
+type DashboardInstanceReportsLicenseState string
+
+// DashboardInstanceReportsStanding The one word for the instance: atLimit when a meter refuses, watch when one is above its warning threshold, silent when nothing reported or read in the range, healthy otherwise; computed over every meter of the instance
+type DashboardInstanceReportsStanding string
+
+// DashboardIntegrations defines model for DashboardIntegrations.
+type DashboardIntegrations struct {
+	Connectors      *DashboardConnectors      `json:"connectors,omitempty"`
+	PublishableKeys *DashboardPublishableKeys `json:"publishableKeys,omitempty"`
+	Tokens          *DashboardTokens          `json:"tokens,omitempty"`
+}
+
+// DashboardInvoicedCurrency defines model for DashboardInvoicedCurrency.
+type DashboardInvoicedCurrency struct {
+	Currency   string `json:"currency"`
+	Invoices   int64  `json:"invoices"`
+	Overdue    int64  `json:"overdue"`
+	Paid       int64  `json:"paid"`
+	TotalMinor int64  `json:"totalMinor"`
+}
+
+// DashboardLicenseEnding defines model for DashboardLicenseEnding.
+type DashboardLicenseEnding struct {
+	// BillingStatus The instance's subscription status, when it has one; null too when the caller cannot read billing (the billing block says which)
+	BillingStatus *string `json:"billingStatus"`
+
+	// CancelAtPeriodEnd The subscription ends with its period rather than renewing; false without one, and when the caller cannot read billing
+	CancelAtPeriodEnd bool      `json:"cancelAtPeriodEnd"`
+	CustomerName      string    `json:"customerName"`
+	CustomerSlug      string    `json:"customerSlug"`
+	EndsAt            time.Time `json:"endsAt"`
+	InstanceName      string    `json:"instanceName"`
+	InstanceSlug      string    `json:"instanceSlug"`
+	LicenseName       string    `json:"licenseName"`
+}
+
+// DashboardLicenseFamilyMix defines model for DashboardLicenseFamilyMix.
+type DashboardLicenseFamilyMix struct {
+	FamilySlug string                       `json:"familySlug"`
+	Instances  int64                        `json:"instances"`
+	Versions   []DashboardLicenseVersionMix `json:"versions"`
+}
+
+// DashboardLicenseVersionMix defines model for DashboardLicenseVersionMix.
+type DashboardLicenseVersionMix struct {
+	Instances      int64                                    `json:"instances"`
+	IsDefault      bool                                     `json:"isDefault"`
+	LifecycleState DashboardLicenseVersionMixLifecycleState `json:"lifecycleState"`
+	Name           string                                   `json:"name"`
+	Slug           string                                   `json:"slug"`
+	Version        int32                                    `json:"version"`
+}
+
+// DashboardLicenseVersionMixLifecycleState defines model for DashboardLicenseVersionMix.LifecycleState.
+type DashboardLicenseVersionMixLifecycleState string
+
+// DashboardLicenses defines model for DashboardLicenses.
+type DashboardLicenses struct {
+	Archived []DashboardArchivedVersion  `json:"archived"`
+	Ending   DashboardLicensesEnding     `json:"ending"`
+	Mix      []DashboardLicenseFamilyMix `json:"mix"`
+}
+
+// DashboardLicensesEnding defines model for DashboardLicensesEnding.
+type DashboardLicensesEnding struct {
+	// Items The next five to end
+	Items         []DashboardLicenseEnding `json:"items"`
+	Within180Days int64                    `json:"within180Days"`
+	Within30Days  int64                    `json:"within30Days"`
+}
+
+// DashboardMeter defines model for DashboardMeter.
+type DashboardMeter struct {
+	// AboveWarning Usage is at or past the warning threshold of the grant, below the limit, as the report path warns; never without a threshold
+	AboveWarning bool `json:"aboveWarning"`
+
+	// AllowancePercent 0 is a hard limit, -1 an unlimited allowance
+	AllowancePercent int64  `json:"allowancePercent"`
+	CustomerName     string `json:"customerName"`
+	CustomerSlug     string `json:"customerSlug"`
+	EntitlementName  string `json:"entitlementName"`
+	EntitlementSlug  string `json:"entitlementSlug"`
+
+	// Granted The grant; null when it is unlimited
+	Granted *float64 `json:"granted"`
+
+	// HardLimit The grant allows nothing past itself
+	HardLimit    bool                       `json:"hardLimit"`
+	InstanceName string                     `json:"instanceName"`
+	InstanceSlug string                     `json:"instanceSlug"`
+	LicenseName  string                     `json:"licenseName"`
+	LicenseState DashboardMeterLicenseState `json:"licenseState"`
+
+	// LimitReached Usage is at or past maxAllowed: the next report is refused
+	LimitReached bool `json:"limitReached"`
+
+	// MaxAllowed The grant plus its allowance, the most a report is accepted up to; null when nothing refuses
+	MaxAllowed *float64 `json:"maxAllowed"`
+
+	// Ratio used over maxAllowed, or over the grant when nothing refuses; null when there is no grant to measure against
+	Ratio *float64 `json:"ratio"`
+	Unit  *string  `json:"unit"`
+
+	// Used Usage in the current window
+	Used float64 `json:"used"`
+
+	// WarningThresholdPercent The entitlement's early-warning threshold, a percentage of the grant; 0 when none is configured
+	WarningThresholdPercent int64 `json:"warningThresholdPercent"`
+
+	// WindowStart Start of the current window of a periodic entitlement; null for a lifetime one
+	WindowStart *time.Time `json:"windowStart"`
+}
+
+// DashboardMeterLicenseState defines model for DashboardMeter.LicenseState.
+type DashboardMeterLicenseState string
+
+// DashboardPublishableKeys defines model for DashboardPublishableKeys.
+type DashboardPublishableKeys struct {
+	// Count Keys not revoked
+	Count int64 `json:"count"`
+
+	// LastUsedAt The last use of any of them
+	LastUsedAt *time.Time `json:"lastUsedAt"`
+}
+
+// DashboardRangeWindow defines model for DashboardRangeWindow.
+type DashboardRangeWindow struct {
+	Days  int64                     `json:"days"`
+	From  time.Time                 `json:"from"`
+	Range DashboardRangeWindowRange `json:"range"`
+	To    time.Time                 `json:"to"`
+}
+
+// DashboardRangeWindowRange defines model for DashboardRangeWindow.Range.
+type DashboardRangeWindowRange string
+
+// DashboardStandingCounts defines model for DashboardStandingCounts.
+type DashboardStandingCounts struct {
+	AtLimit int64 `json:"atLimit"`
+	Healthy int64 `json:"healthy"`
+	Silent  int64 `json:"silent"`
+	Watch   int64 `json:"watch"`
+}
+
+// DashboardSubscriptions defines model for DashboardSubscriptions.
+type DashboardSubscriptions struct {
+	Active   int64 `json:"active"`
+	Canceled int64 `json:"canceled"`
+	PastDue  int64 `json:"pastDue"`
+	Trial    int64 `json:"trial"`
+}
+
+// DashboardSummary defines model for DashboardSummary.
+type DashboardSummary struct {
+	// AsOf When the figures were computed
+	AsOf         time.Time              `json:"asOf"`
+	Attention    DashboardAttention     `json:"attention"`
+	Billing      *DashboardBilling      `json:"billing,omitempty"`
+	FeatureFlags *DashboardFeatureFlags `json:"featureFlags,omitempty"`
+	Figures      DashboardFigures       `json:"figures"`
+	Integrations *DashboardIntegrations `json:"integrations,omitempty"`
+	Licenses     DashboardLicenses      `json:"licenses"`
+	Range        DashboardRangeWindow   `json:"range"`
+
+	// Saturation The meters closest to the most their grant allows, highest ratio first, at most eight
+	Saturation   []DashboardMeter      `json:"saturation"`
+	UsageReports DashboardUsageReports `json:"usageReports"`
+
+	// Zones Empty when the caller cannot read deployment zones and releases
+	Zones []DashboardZone `json:"zones"`
+}
+
+// DashboardTokenExpiring defines model for DashboardTokenExpiring.
+type DashboardTokenExpiring struct {
+	ExpiresAt          time.Time `json:"expiresAt"`
+	Name               string    `json:"name"`
+	ServiceAccountName string    `json:"serviceAccountName"`
+	ServiceAccountSlug string    `json:"serviceAccountSlug"`
+	Slug               string    `json:"slug"`
+}
+
+// DashboardTokens defines model for DashboardTokens.
+type DashboardTokens struct {
+	ActiveTokens    int64 `json:"activeTokens"`
+	ServiceAccounts int64 `json:"serviceAccounts"`
+
+	// TokensExpiring The next five to expire
+	TokensExpiring       []DashboardTokenExpiring `json:"tokensExpiring"`
+	TokensExpiring30Days int64                    `json:"tokensExpiring30Days"`
+	TokensWithoutExpiry  int64                    `json:"tokensWithoutExpiry"`
+}
+
+// DashboardUsageReportFigures defines model for DashboardUsageReportFigures.
+type DashboardUsageReportFigures struct {
+	// Accepted Reports journalled in the range
+	Accepted int64 `json:"accepted"`
+
+	// Rejected Reports refused in the range, from the audit trail
+	Rejected    int64 `json:"rejected"`
+	Rejected24h int64 `json:"rejected24h"`
+}
+
+// DashboardUsageReports defines model for DashboardUsageReports.
+type DashboardUsageReports struct {
+	// ByInstance Every instance, most reports first
+	ByInstance []DashboardInstanceReports `json:"byInstance"`
+	PerDay     []DashboardDayReports      `json:"perDay"`
+}
+
+// DashboardZone defines model for DashboardZone.
+type DashboardZone struct {
+	DeployedAt *time.Time `json:"deployedAt"`
+	DeployedBy *string    `json:"deployedBy"`
+	Instances  int64      `json:"instances"`
+	Name       string     `json:"name"`
+
+	// ReleaseVersion Null when nothing was deployed there
+	ReleaseVersion *string `json:"releaseVersion"`
+
+	// ReleasesBehind Releases created after the one the zone runs
+	ReleasesBehind int64  `json:"releasesBehind"`
+	Slug           string `json:"slug"`
+	Type           string `json:"type"`
 }
 
 // DefaultVariant defines model for DefaultVariant.
@@ -15091,7 +15661,7 @@ type Instance struct {
 	// Examples: This is a sample instance description
 	Description string `json:"description"`
 
-	// EndLicenseDate End date of the license for this instance
+	// EndLicenseDate UTC exclusive end of the assigned license term for this instance
 	//
 	// Examples: 2024-10-01T12:00:00Z
 	EndLicenseDate time.Time `json:"endLicenseDate"`
@@ -15112,7 +15682,8 @@ type Instance struct {
 	// LicenseSlug Slug of the license associated with this instance
 	//
 	// Examples: my-license
-	LicenseSlug *string `json:"licenseSlug,omitempty"`
+	LicenseSlug *string      `json:"licenseSlug,omitempty"`
+	LicenseTerm *LicenseTerm `json:"licenseTerm,omitempty"`
 
 	// LifecycleStage Commercial lifecycle stage of the instance (free-form; suggested: TRIAL, ACTIVE, AT_RISK, CHURNED)
 	//
@@ -15134,7 +15705,7 @@ type Instance struct {
 	// Examples: my-instance
 	Slug *string `json:"slug,omitempty"`
 
-	// StartLicenseDate Start date of the license for this instance
+	// StartLicenseDate UTC inclusive start of the assigned license term for this instance
 	//
 	// Examples: 2023-10-01T12:00:00Z
 	StartLicenseDate time.Time `json:"startLicenseDate"`
@@ -15401,7 +15972,7 @@ type InstanceDelivered struct {
 	// Examples: This is a sample instance description
 	Description string `json:"description"`
 
-	// EndLicenseDate End date of the license for this instance
+	// EndLicenseDate UTC exclusive end of the assigned license term for this instance
 	//
 	// Examples: 2024-10-01T12:00:00Z
 	EndLicenseDate time.Time `json:"endLicenseDate"`
@@ -15422,7 +15993,8 @@ type InstanceDelivered struct {
 	// LicenseSlug Slug of the license associated with this instance
 	//
 	// Examples: my-license
-	LicenseSlug *string `json:"licenseSlug,omitempty"`
+	LicenseSlug *string      `json:"licenseSlug,omitempty"`
+	LicenseTerm *LicenseTerm `json:"licenseTerm,omitempty"`
 
 	// LifecycleStage Commercial lifecycle stage of the instance (free-form; suggested: TRIAL, ACTIVE, AT_RISK, CHURNED)
 	//
@@ -15444,7 +16016,7 @@ type InstanceDelivered struct {
 	// Examples: my-instance
 	Slug *string `json:"slug,omitempty"`
 
-	// StartLicenseDate Start date of the license for this instance
+	// StartLicenseDate UTC inclusive start of the assigned license term for this instance
 	//
 	// Examples: 2023-10-01T12:00:00Z
 	StartLicenseDate time.Time `json:"startLicenseDate"`
@@ -15797,7 +16369,7 @@ type InstanceUpdateDelivered struct {
 	// Examples: This is a sample instance description
 	Description string `json:"description"`
 
-	// EndLicenseDate End date of the license for this instance
+	// EndLicenseDate UTC exclusive end of the assigned license term for this instance
 	//
 	// Examples: 2024-10-01T12:00:00Z
 	EndLicenseDate time.Time `json:"endLicenseDate"`
@@ -15821,7 +16393,8 @@ type InstanceUpdateDelivered struct {
 	// LicenseSlug Slug of the license associated with this instance
 	//
 	// Examples: my-license
-	LicenseSlug *string `json:"licenseSlug,omitempty"`
+	LicenseSlug *string      `json:"licenseSlug,omitempty"`
+	LicenseTerm *LicenseTerm `json:"licenseTerm,omitempty"`
 
 	// LifecycleStage Commercial lifecycle stage of the instance (free-form; suggested: TRIAL, ACTIVE, AT_RISK, CHURNED)
 	//
@@ -15843,7 +16416,7 @@ type InstanceUpdateDelivered struct {
 	// Examples: my-instance
 	Slug *string `json:"slug,omitempty"`
 
-	// StartLicenseDate Start date of the license for this instance
+	// StartLicenseDate UTC inclusive start of the assigned license term for this instance
 	//
 	// Examples: 2023-10-01T12:00:00Z
 	StartLicenseDate time.Time `json:"startLicenseDate"`
@@ -17153,6 +17726,18 @@ type LicensePriceUpdatedEventDeliveredStatus string
 
 // LicensePriceUpdatedEventDeliveredVia customer_session: written through a kst_ customer session, under the vendor principal that minted it. checkout_session: written by an anonymous checkout, under system:kaiten. Absent otherwise
 type LicensePriceUpdatedEventDeliveredVia string
+
+// LicenseTerm defines model for LicenseTerm.
+type LicenseTerm struct {
+	// EvaluatedAt UTC database instant used to determine the current term state
+	EvaluatedAt time.Time `json:"evaluatedAt"`
+
+	// Status State of the assigned license interval at evaluatedAt
+	Status LicenseTermStatus `json:"status"`
+}
+
+// LicenseTermStatus State of the assigned license interval at evaluatedAt
+type LicenseTermStatus string
 
 // LineDifference defines model for LineDifference.
 type LineDifference struct {
@@ -21824,6 +22409,15 @@ type ListCustomersParams struct {
 	// Limit Maximum number of entries to return (default 50, max 200)
 	Limit *int32 `form:"limit,omitempty" json:"limit,omitempty"`
 }
+
+// GetDashboardSummaryParams defines parameters for GetDashboardSummary.
+type GetDashboardSummaryParams struct {
+	// Range The period the rates and the lists cover
+	Range *GetDashboardSummaryParamsRange `form:"range,omitempty" json:"range,omitempty"`
+}
+
+// GetDashboardSummaryParamsRange defines parameters for GetDashboardSummary.
+type GetDashboardSummaryParamsRange string
 
 // ListDeploymentZonesParams defines parameters for ListDeploymentZones.
 type ListDeploymentZonesParams struct {
@@ -29879,6 +30473,13 @@ type ClientInterface interface {
 	// Corresponds with PUT /customers/{customerSlug}/integrations/{integrationName} (the `UpdateCustomerIntegration` operationId).
 	UpdateCustomerIntegration(ctx context.Context, customerSlug string, integrationName string, body UpdateCustomerIntegrationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetDashboardSummary Get the dashboard summary
+	//
+	// The console's home in one response, computed in the database over the whole organization: what needs attention (limits reached, refused reports, silent instances, Licenses ending, archived versions, expiring tokens, zones behind), the figures of the period, the meters closest to their limits, usage reports per day and per instance, evaluations per flag, who runs which License version, what runs where, and who talks to Kaiten. The operation needs read:customers, read:instances and read:licenses. Blocks about a module the caller cannot read are absent; billing figures say nothing about whether billing is enabled, which GET /billing/capabilities does.
+	//
+	// Corresponds with GET /dashboard/summary (the `GetDashboardSummary` operationId).
+	GetDashboardSummary(ctx context.Context, params *GetDashboardSummaryParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListDeploymentZones List deployment zones
 	//
 	// Returns a cursor-paginated page of deployment zones for the current organization. A deployment zone is one place a customer runs a release -- a target they name and classify themselves, holding the release currently on it. It is not an installation of Kaiten; that sense of the term belongs to operations and is not reachable through this API.
@@ -30216,7 +30817,7 @@ type ClientInterface interface {
 
 	// GetInstance Get an instance by slug
 	//
-	// Retrieve an instance by their unique slug.
+	// Retrieve an existing instance by its unique slug, including its assigned license term state at UTC database time. licenseTerm is always present on this detail read, with a start-inclusive, end-exclusive interval. NOT_STARTED and EXPIRED describe the retrieved resource, not a failed GET. Catalog publication, operational status and commercial lifecycle do not change the term state.
 	//
 	// Corresponds with GET /instances/{instanceSlug} (the `GetInstance` operationId).
 	GetInstance(ctx context.Context, instanceSlug string, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -33338,6 +33939,23 @@ func (c *Client) UpdateCustomerIntegration(ctx context.Context, customerSlug str
 	return c.Client.Do(req)
 }
 
+// GetDashboardSummary Get the dashboard summary
+//
+// The console's home in one response, computed in the database over the whole organization: what needs attention (limits reached, refused reports, silent instances, Licenses ending, archived versions, expiring tokens, zones behind), the figures of the period, the meters closest to their limits, usage reports per day and per instance, evaluations per flag, who runs which License version, what runs where, and who talks to Kaiten. The operation needs read:customers, read:instances and read:licenses. Blocks about a module the caller cannot read are absent; billing figures say nothing about whether billing is enabled, which GET /billing/capabilities does.
+//
+// Corresponds with GET /dashboard/summary (the `GetDashboardSummary` operationId).
+func (c *Client) GetDashboardSummary(ctx context.Context, params *GetDashboardSummaryParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetDashboardSummaryRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 // ListDeploymentZones List deployment zones
 //
 // Returns a cursor-paginated page of deployment zones for the current organization. A deployment zone is one place a customer runs a release -- a target they name and classify themselves, holding the release currently on it. It is not an installation of Kaiten; that sense of the term belongs to operations and is not reachable through this API.
@@ -34085,7 +34703,7 @@ func (c *Client) DeleteInstance(ctx context.Context, instanceSlug string, reqEdi
 
 // GetInstance Get an instance by slug
 //
-// Retrieve an instance by their unique slug.
+// Retrieve an existing instance by its unique slug, including its assigned license term state at UTC database time. licenseTerm is always present on this detail read, with a start-inclusive, end-exclusive interval. NOT_STARTED and EXPIRED describe the retrieved resource, not a failed GET. Catalog publication, operational status and commercial lifecycle do not change the term state.
 //
 // Corresponds with GET /instances/{instanceSlug} (the `GetInstance` operationId).
 func (c *Client) GetInstance(ctx context.Context, instanceSlug string, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -40318,6 +40936,60 @@ func NewUpdateCustomerIntegrationRequestWithBody(server string, customerSlug str
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetDashboardSummaryRequest constructs an http.Request for the GetDashboardSummary method
+func NewGetDashboardSummaryRequest(server string, params *GetDashboardSummaryParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/dashboard/summary")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Range != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", false, "range", *params.Range, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -49431,6 +50103,15 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with PUT /customers/{customerSlug}/integrations/{integrationName} (the `UpdateCustomerIntegration` operationId).
 	UpdateCustomerIntegrationWithResponse(ctx context.Context, customerSlug string, integrationName string, body UpdateCustomerIntegrationJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateCustomerIntegrationResponse, error)
 
+	// GetDashboardSummaryWithResponse Get the dashboard summary
+	//
+	// The console's home in one response, computed in the database over the whole organization: what needs attention (limits reached, refused reports, silent instances, Licenses ending, archived versions, expiring tokens, zones behind), the figures of the period, the meters closest to their limits, usage reports per day and per instance, evaluations per flag, who runs which License version, what runs where, and who talks to Kaiten. The operation needs read:customers, read:instances and read:licenses. Blocks about a module the caller cannot read are absent; billing figures say nothing about whether billing is enabled, which GET /billing/capabilities does.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /dashboard/summary (the `GetDashboardSummary` operationId).
+	GetDashboardSummaryWithResponse(ctx context.Context, params *GetDashboardSummaryParams, reqEditors ...RequestEditorFn) (*GetDashboardSummaryResponse, error)
+
 	// ListDeploymentZonesWithResponse List deployment zones
 	//
 	// Returns a cursor-paginated page of deployment zones for the current organization. A deployment zone is one place a customer runs a release -- a target they name and classify themselves, holding the release currently on it. It is not an installation of Kaiten; that sense of the term belongs to operations and is not reachable through this API.
@@ -49802,7 +50483,7 @@ type ClientWithResponsesInterface interface {
 
 	// GetInstanceWithResponse Get an instance by slug
 	//
-	// Retrieve an instance by their unique slug.
+	// Retrieve an existing instance by its unique slug, including its assigned license term state at UTC database time. licenseTerm is always present on this detail read, with a start-inclusive, end-exclusive interval. NOT_STARTED and EXPIRED describe the retrieved resource, not a failed GET. Catalog publication, operational status and commercial lifecycle do not change the term state.
 	//
 	// Returns a wrapper object for the known response body format(s).
 	//
@@ -57410,6 +58091,82 @@ func (r UpdateCustomerIntegrationResponse) ContentType() string {
 	return ""
 }
 
+type GetDashboardSummaryResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *DashboardSummary
+	// ApplicationproblemJSON400 the response for an HTTP 400 `application/problem+json` response
+	ApplicationproblemJSON400 *Problem
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetDashboardSummaryResponse) GetJSON200() *DashboardSummary {
+	return r.JSON200
+}
+
+// GetApplicationproblemJSON400 returns the response for an HTTP 400 `application/problem+json` response
+func (r GetDashboardSummaryResponse) GetApplicationproblemJSON400() *Problem {
+	return r.ApplicationproblemJSON400
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r GetDashboardSummaryResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r GetDashboardSummaryResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r GetDashboardSummaryResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r GetDashboardSummaryResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r GetDashboardSummaryResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetDashboardSummaryResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetDashboardSummaryResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetDashboardSummaryResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type ListDeploymentZonesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -59761,6 +60518,11 @@ func (r DeleteInstanceResponse) ContentType() string {
 	return ""
 }
 
+// GetInstanceResponse200Headers the declared response headers of an HTTP 200 response for GetInstance
+type GetInstanceResponse200Headers struct {
+	CacheControl *string
+}
+
 type GetInstanceResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -59776,6 +60538,8 @@ type GetInstanceResponse struct {
 	ApplicationproblemJSON422 *Problem
 	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
 	ApplicationproblemJSON500 *Problem
+	// Headers200 the parsed response headers for an HTTP 200 response
+	Headers200 *GetInstanceResponse200Headers
 }
 
 // GetJSON200 returns the response for an HTTP 200 `application/json` response
@@ -73631,6 +74395,21 @@ func (c *ClientWithResponses) UpdateCustomerIntegrationWithResponse(ctx context.
 	return ParseUpdateCustomerIntegrationResponse(rsp)
 }
 
+// GetDashboardSummaryWithResponse Get the dashboard summary
+//
+// The console's home in one response, computed in the database over the whole organization: what needs attention (limits reached, refused reports, silent instances, Licenses ending, archived versions, expiring tokens, zones behind), the figures of the period, the meters closest to their limits, usage reports per day and per instance, evaluations per flag, who runs which License version, what runs where, and who talks to Kaiten. The operation needs read:customers, read:instances and read:licenses. Blocks about a module the caller cannot read are absent; billing figures say nothing about whether billing is enabled, which GET /billing/capabilities does.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /dashboard/summary (the `GetDashboardSummary` operationId).
+func (c *ClientWithResponses) GetDashboardSummaryWithResponse(ctx context.Context, params *GetDashboardSummaryParams, reqEditors ...RequestEditorFn) (*GetDashboardSummaryResponse, error) {
+	rsp, err := c.GetDashboardSummary(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetDashboardSummaryResponse(rsp)
+}
+
 // ListDeploymentZonesWithResponse List deployment zones
 //
 // Returns a cursor-paginated page of deployment zones for the current organization. A deployment zone is one place a customer runs a release -- a target they name and classify themselves, holding the release currently on it. It is not an installation of Kaiten; that sense of the term belongs to operations and is not reachable through this API.
@@ -74248,7 +75027,7 @@ func (c *ClientWithResponses) DeleteInstanceWithResponse(ctx context.Context, in
 
 // GetInstanceWithResponse Get an instance by slug
 //
-// Retrieve an instance by their unique slug.
+// Retrieve an existing instance by its unique slug, including its assigned license term state at UTC database time. licenseTerm is always present on this detail read, with a start-inclusive, end-exclusive interval. NOT_STARTED and EXPIRED describe the retrieved resource, not a failed GET. Catalog publication, operational status and commercial lifecycle do not change the term state.
 //
 // Returns a wrapper object for the known response body format(s).
 //
@@ -82374,6 +83153,67 @@ func ParseUpdateCustomerIntegrationResponse(rsp *http.Response) (*UpdateCustomer
 	return response, nil
 }
 
+// ParseGetDashboardSummaryResponse parses an HTTP response from a GetDashboardSummaryWithResponse call
+func ParseGetDashboardSummaryResponse(rsp *http.Response) (*GetDashboardSummaryResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetDashboardSummaryResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DashboardSummary
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseListDeploymentZonesResponse parses an HTTP response from a ListDeploymentZonesWithResponse call
 func ParseListDeploymentZonesResponse(rsp *http.Response) (*ListDeploymentZonesResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -84409,6 +85249,19 @@ func ParseGetInstanceResponse(rsp *http.Response) (*GetInstanceResponse, error) 
 		}
 		response.ApplicationproblemJSON500 = &dest
 
+	}
+
+	switch {
+	case rsp.StatusCode == 200:
+		var headers GetInstanceResponse200Headers
+		if values := rsp.Header.Values("Cache-Control"); len(values) > 0 {
+			var value string
+			if err := runtime.BindStyledParameterWithOptions("simple", "Cache-Control", values[0], &value, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			}
+			headers.CacheControl = &value
+		}
+		response.Headers200 = &headers
 	}
 
 	return response, nil

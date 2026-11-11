@@ -324,6 +324,10 @@ func TestClientWrappersReportEveryDeclaredProblem(t *testing.T) {
 			response: gen.GetFeatureFlagResponse{},
 			call:     func(ctx context.Context, c *Client) error { _, err := c.FeatureFlags.Get(ctx, "dark-mode"); return err },
 		},
+		"Dashboard.Summary": {
+			response: gen.GetDashboardSummaryResponse{},
+			call:     func(ctx context.Context, c *Client) error { _, err := c.Dashboard.Summary(ctx, nil); return err },
+		},
 		"FeatureFlags.Create": {
 			response: gen.CreateFeatureFlagResponse{},
 			call: func(ctx context.Context, c *Client) error {

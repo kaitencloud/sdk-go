@@ -9,6 +9,9 @@ type Components struct{ client *Client }
 // Customers provides access to the customers API.
 type Customers struct{ client *Client }
 
+// Dashboard provides access to the console's dashboard summary.
+type Dashboard struct{ client *Client }
+
 // DeploymentZones provides access to the deployment zones API.
 type DeploymentZones struct{ client *Client }
 
@@ -43,6 +46,10 @@ type ServiceAccounts struct{ client *Client }
 // Platform API listener and reject an organization-scoped token. Organizations and users
 // live there because they are the objects a platform credential administers -- a tenant's
 // own token has no business enumerating or deleting them.
+
+// PlatformBilling provides access to the billing operations an operator runs on an
+// organization's behalf.
+type PlatformBilling struct{ client *PlatformClient }
 
 // PlatformConnectors provides access to the platform connector registry: the manifests
 // of the connectors a deployment can offer its organizations. Registration is the

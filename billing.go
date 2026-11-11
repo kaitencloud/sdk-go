@@ -5,7 +5,9 @@ package sdk
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"net/http"
 )
 
 // Billing groups the billing API: the organization's settings and provider, and a namespace per resource.
@@ -23,6 +25,7 @@ type Billing struct {
 	PublishableKeys  *BillingPublishableKeys
 	CustomerSessions *BillingCustomerSessions
 	Customers        *BillingCustomers
+	CheckoutSessions *BillingCheckoutSessions
 	Public           *BillingPublic
 	Session          *BillingSession
 }
@@ -106,6 +109,7 @@ func newBilling(c *Client) *Billing {
 		Vouchers:         &BillingVouchers{client: c},
 		PublishableKeys:  &BillingPublishableKeys{client: c},
 		CustomerSessions: &BillingCustomerSessions{client: c},
+		CheckoutSessions: &BillingCheckoutSessions{client: c},
 		Customers:        &BillingCustomers{client: c},
 		Public:           &BillingPublic{client: c},
 		Session:          &BillingSession{client: c},
@@ -1744,6 +1748,36 @@ func (s *BillingSession) ValidateVoucher(ctx context.Context, input SessionVouch
 
 	apiResp := withRetryAfter(newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON429, resp.ApplicationproblemJSON500, resp.ApplicationproblemJSON503), resp.HTTPResponse)
 	return expectJSON(apiResp, resp.JSON200)
+}
+
+// RedeemVoucher redeems a code on the session's instance and returns the redemption, never
+// the code. With input.DryRun it answers the redemption it would make and writes nothing.
+func (s *BillingSession) RedeemVoucher(ctx context.Context, input SessionRedeem) (SessionRedemption, error) {
+	body, err := jsonBody(input)
+	if err != nil {
+		var zero SessionRedemption
+		return zero, fmt.Errorf("encode redeem session voucher request: %w", err)
+	}
+
+	resp, err := s.client.raw.RedeemSessionVoucherWithBodyWithResponse(ctx, contentTypeJSON, body)
+	if err != nil {
+		var zero SessionRedemption
+		return zero, fmt.Errorf("redeem session voucher: %w", err)
+	}
+
+	// A dry run answers 200, which the spec does not declare, so the generated client
+	// leaves that body undecoded.
+	if resp.StatusCode() == http.StatusOK {
+		var redemption SessionRedemption
+		if err := json.Unmarshal(resp.Body, &redemption); err != nil {
+			var zero SessionRedemption
+			return zero, fmt.Errorf("decode session voucher redemption: %w", err)
+		}
+		return redemption, nil
+	}
+
+	apiResp := withRetryAfter(newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON409, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON429, resp.ApplicationproblemJSON500, resp.ApplicationproblemJSON503), resp.HTTPResponse)
+	return expectJSON(apiResp, resp.JSON201)
 }
 
 // Update changes a licence family.

@@ -88,6 +88,39 @@ type CanceledSubscriptionProviderKind = gen.CanceledSubscriptionProviderKind
 // CanceledSubscriptionStatus is the Core API's CanceledSubscriptionStatus.
 type CanceledSubscriptionStatus = gen.CanceledSubscriptionStatus
 
+// CheckoutConfirmation is the Core API's CheckoutConfirmation.
+type CheckoutConfirmation = gen.CheckoutConfirmation
+
+// CheckoutConfirmationStatus is the Core API's CheckoutConfirmationStatus.
+type CheckoutConfirmationStatus = gen.CheckoutConfirmationStatus
+
+// CheckoutPayment is the Core API's CheckoutPayment.
+type CheckoutPayment = gen.CheckoutPayment
+
+// CheckoutPaymentStatus is the Core API's CheckoutPaymentStatus.
+type CheckoutPaymentStatus = gen.CheckoutPaymentStatus
+
+// CheckoutSession is the Core API's CheckoutSession.
+type CheckoutSession = gen.CheckoutSession
+
+// CheckoutSessionAdmin is the Core API's CheckoutSessionAdmin.
+type CheckoutSessionAdmin = gen.CheckoutSessionAdmin
+
+// CheckoutSessionAdminStatus is the Core API's CheckoutSessionAdminStatus.
+type CheckoutSessionAdminStatus = gen.CheckoutSessionAdminStatus
+
+// CheckoutSessionDraft is the Core API's CheckoutSessionDraft.
+type CheckoutSessionDraft = gen.CheckoutSessionDraft
+
+// CheckoutSessionStart is the Core API's CheckoutSessionStart.
+type CheckoutSessionStart = gen.CheckoutSessionStart
+
+// CheckoutSessionStartStatus is the Core API's CheckoutSessionStartStatus.
+type CheckoutSessionStartStatus = gen.CheckoutSessionStartStatus
+
+// CheckoutSessionStatus is the Core API's CheckoutSessionStatus.
+type CheckoutSessionStatus = gen.CheckoutSessionStatus
+
 // CloseBacklog is the Core API's CloseBacklog.
 type CloseBacklog = gen.CloseBacklog
 
@@ -363,6 +396,12 @@ type ListAddonsParams = gen.ListAddonsParams
 // ListAddonsParamsLifecycleState defines parameters for ListAddons.
 type ListAddonsParamsLifecycleState = gen.ListAddonsParamsLifecycleState
 
+// ListCheckoutSessionsParams is the Core API's ListCheckoutSessionsParams.
+type ListCheckoutSessionsParams = gen.ListCheckoutSessionsParams
+
+// ListCheckoutSessionsParamsStatus is the Core API's ListCheckoutSessionsParamsStatus.
+type ListCheckoutSessionsParamsStatus = gen.ListCheckoutSessionsParamsStatus
+
 // ListHandoffParams defines parameters for ListHandoff.
 type ListHandoffParams = gen.ListHandoffParams
 
@@ -521,6 +560,9 @@ type OverageLimit = gen.OverageLimit
 
 // PageAddon is the Core API's PageAddon.
 type PageAddon = gen.PageAddon
+
+// PageCheckoutSessionAdmin is the Core API's PageCheckoutSessionAdmin.
+type PageCheckoutSessionAdmin = gen.PageCheckoutSessionAdmin
 
 // PageInvoiceSummary is the Core API's PageInvoiceSummary.
 type PageInvoiceSummary = gen.PageInvoiceSummary
@@ -786,6 +828,9 @@ type SessionAddon = gen.SessionAddon
 // SessionAddonQuantity is the Core API's SessionAddonQuantity.
 type SessionAddonQuantity = gen.SessionAddonQuantity
 
+// SessionAddonSelection is the Core API's SessionAddonSelection.
+type SessionAddonSelection = gen.SessionAddonSelection
+
 // SessionBoost is the Core API's SessionBoost.
 type SessionBoost = gen.SessionBoost
 
@@ -830,6 +875,21 @@ type SessionLineType = gen.SessionLineType
 
 // SessionPortal is the Core API's SessionPortal.
 type SessionPortal = gen.SessionPortal
+
+// SessionRedeem is the Core API's SessionRedeem.
+type SessionRedeem = gen.SessionRedeem
+
+// SessionRedemption is the Core API's SessionRedemption.
+type SessionRedemption = gen.SessionRedemption
+
+// SessionRedemptionAppliesFromInvoice is the Core API's SessionRedemptionAppliesFromInvoice.
+type SessionRedemptionAppliesFromInvoice = gen.SessionRedemptionAppliesFromInvoice
+
+// SessionRedemptionStatus is the Core API's SessionRedemptionStatus.
+type SessionRedemptionStatus = gen.SessionRedemptionStatus
+
+// SessionRedemptionVoucherType is the Core API's SessionRedemptionVoucherType.
+type SessionRedemptionVoucherType = gen.SessionRedemptionVoucherType
 
 // SessionScheduledChange is the Core API's SessionScheduledChange.
 type SessionScheduledChange = gen.SessionScheduledChange
@@ -990,6 +1050,26 @@ const (
 	CanceledSubscriptionStatusCANCELED                        = gen.CanceledSubscriptionStatusCANCELED
 	CanceledSubscriptionStatusPASTDUE                         = gen.CanceledSubscriptionStatusPASTDUE
 	CanceledSubscriptionStatusTRIAL                           = gen.CanceledSubscriptionStatusTRIAL
+	CheckoutConfirmationStatusAwaitingPayment                 = gen.CheckoutConfirmationStatusAwaitingPayment
+	CheckoutConfirmationStatusCompleted                       = gen.CheckoutConfirmationStatusCompleted
+	CheckoutConfirmationStatusRequiresPaymentMethod           = gen.CheckoutConfirmationStatusRequiresPaymentMethod
+	CheckoutPaymentStatusFailed                               = gen.CheckoutPaymentStatusFailed
+	CheckoutPaymentStatusNotRequired                          = gen.CheckoutPaymentStatusNotRequired
+	CheckoutPaymentStatusPaid                                 = gen.CheckoutPaymentStatusPaid
+	CheckoutPaymentStatusProcessing                           = gen.CheckoutPaymentStatusProcessing
+	CheckoutPaymentStatusRequiresAction                       = gen.CheckoutPaymentStatusRequiresAction
+	CheckoutSessionAdminStatusABANDONED                       = gen.CheckoutSessionAdminStatusABANDONED
+	CheckoutSessionAdminStatusAWAITINGPAYMENT                 = gen.CheckoutSessionAdminStatusAWAITINGPAYMENT
+	CheckoutSessionAdminStatusCOMPLETED                       = gen.CheckoutSessionAdminStatusCOMPLETED
+	CheckoutSessionAdminStatusEXPIRED                         = gen.CheckoutSessionAdminStatusEXPIRED
+	CheckoutSessionAdminStatusOPEN                            = gen.CheckoutSessionAdminStatusOPEN
+	CheckoutSessionStartStatusOpen                            = gen.CheckoutSessionStartStatusOpen
+	CheckoutSessionStartStatusPreview                         = gen.CheckoutSessionStartStatusPreview
+	CheckoutSessionStatusABANDONED                            = gen.CheckoutSessionStatusABANDONED
+	CheckoutSessionStatusAWAITINGPAYMENT                      = gen.CheckoutSessionStatusAWAITINGPAYMENT
+	CheckoutSessionStatusCOMPLETED                            = gen.CheckoutSessionStatusCOMPLETED
+	CheckoutSessionStatusEXPIRED                              = gen.CheckoutSessionStatusEXPIRED
+	CheckoutSessionStatusOPEN                                 = gen.CheckoutSessionStatusOPEN
 	ClosedInvoiceKindACTIVATION                               = gen.ClosedInvoiceKindACTIVATION
 	ClosedInvoiceKindFINAL                                    = gen.ClosedInvoiceKindFINAL
 	ClosedInvoiceKindRENEWAL                                  = gen.ClosedInvoiceKindRENEWAL
@@ -1023,6 +1103,11 @@ const (
 	ExportInvoicesParamsStatusUNCOLLECTIBLE                   = gen.ExportInvoicesParamsStatusUNCOLLECTIBLE
 	ExportInvoicesParamsStatusVOID                            = gen.ExportInvoicesParamsStatusVOID
 	Addons                                                    = gen.Addons
+	ListCheckoutSessionsParamsStatusABANDONED                 = gen.ListCheckoutSessionsParamsStatusABANDONED
+	ListCheckoutSessionsParamsStatusAWAITINGPAYMENT           = gen.ListCheckoutSessionsParamsStatusAWAITINGPAYMENT
+	ListCheckoutSessionsParamsStatusCOMPLETED                 = gen.ListCheckoutSessionsParamsStatusCOMPLETED
+	ListCheckoutSessionsParamsStatusEXPIRED                   = gen.ListCheckoutSessionsParamsStatusEXPIRED
+	ListCheckoutSessionsParamsStatusOPEN                      = gen.ListCheckoutSessionsParamsStatusOPEN
 	None                                                      = gen.None
 	GrantModifierTypeADD                                      = gen.GrantModifierTypeADD
 	GrantModifierTypeMULTIPLY                                 = gen.GrantModifierTypeMULTIPLY
@@ -1350,6 +1435,15 @@ const (
 	SessionLineTypeDISCOUNT                                   = gen.SessionLineTypeDISCOUNT
 	SessionLineTypeOVERAGE                                    = gen.SessionLineTypeOVERAGE
 	SessionLineTypeUSAGE                                      = gen.SessionLineTypeUSAGE
+	SessionRedemptionAppliesFromInvoiceLessThannil            = gen.SessionRedemptionAppliesFromInvoiceLessThannil
+	SessionRedemptionAppliesFromInvoiceNext                   = gen.SessionRedemptionAppliesFromInvoiceNext
+	SessionRedemptionStatusACTIVE                             = gen.SessionRedemptionStatusACTIVE
+	SessionRedemptionStatusEXPIRED                            = gen.SessionRedemptionStatusEXPIRED
+	SessionRedemptionStatusREVOKED                            = gen.SessionRedemptionStatusREVOKED
+	SessionRedemptionVoucherTypeCOMPOSITE                     = gen.SessionRedemptionVoucherTypeCOMPOSITE
+	SessionRedemptionVoucherTypeENTITLEMENTBOOST              = gen.SessionRedemptionVoucherTypeENTITLEMENTBOOST
+	SessionRedemptionVoucherTypeFLAGGRANT                     = gen.SessionRedemptionVoucherTypeFLAGGRANT
+	SessionRedemptionVoucherTypePRICE                         = gen.SessionRedemptionVoucherTypePRICE
 	SessionSubscriptionBillingPeriodANNUAL                    = gen.SessionSubscriptionBillingPeriodANNUAL
 	SessionSubscriptionBillingPeriodMONTHLY                   = gen.SessionSubscriptionBillingPeriodMONTHLY
 	SessionSubscriptionBillingPeriodQUARTERLY                 = gen.SessionSubscriptionBillingPeriodQUARTERLY

@@ -59,6 +59,7 @@ type Client struct {
 	Billing           *Billing
 	Components        *Components
 	Customers         *Customers
+	Dashboard         *Dashboard
 	DeploymentZones   *DeploymentZones
 	EntitlementGroups *EntitlementGroups
 	Entitlements      *Entitlements
@@ -97,6 +98,7 @@ func newClient(raw *gen.ClientWithResponses, list listTransport) *Client {
 
 	client.Components = &Components{client: client}
 	client.Customers = &Customers{client: client}
+	client.Dashboard = &Dashboard{client: client}
 	client.DeploymentZones = &DeploymentZones{client: client}
 	client.EntitlementGroups = &EntitlementGroups{client: client}
 	client.Entitlements = &Entitlements{client: client}
