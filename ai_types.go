@@ -4,6 +4,7 @@
 package sdk
 
 import (
+	"slices"
 	"time"
 
 	"github.com/kaitencloud/sdk-go/internal/gen"
@@ -85,7 +86,43 @@ const (
 	AIWarningOverdrawn              AIWarning = "OVERDRAWN"
 	AIWarningModelNotAuthorized     AIWarning = "MODEL_NOT_AUTHORIZED"
 	AIWarningUnknownModel           AIWarning = "UNKNOWN_MODEL"
+
+	// AIWarningNoReservation is a release (a NOT_SENT commit) whose transaction id held
+	// no reservation. Nothing was charged; the id is closed, so a reserve or a commit
+	// sent under it later is refused with ErrTransactionIDReused.
+	AIWarningNoReservation AIWarning = "NO_RESERVATION"
+
+	// AIWarningCounterPrecisionDegraded is a commit the pool's counter could not hold
+	// to the credit's exact decimals. The commit was accepted and its exact charge is
+	// in AICredits.Charged; the counter carries the nearest value it can represent.
+	AIWarningCounterPrecisionDegraded AIWarning = "COUNTER_PRECISION_DEGRADED"
+
+	// AIWarningPricingSnapshotUnreadable is read side only: an inference listed without
+	// its pricing snapshot, because the stored snapshot could not be decoded.
+	AIWarningPricingSnapshotUnreadable AIWarning = "PRICING_SNAPSHOT_UNREADABLE"
 )
+
+// AIRuleSpecificity is how the conversion rule that priced a phase matched it. The set
+// is the contract's; a value this SDK does not know is passed through unchanged.
+type AIRuleSpecificity string
+
+// AI rule specificities, most specific first.
+const (
+	// AIRuleSpecificityExactTyped is a rule for the call's model and request type.
+	AIRuleSpecificityExactTyped AIRuleSpecificity = "EXACT_TYPED"
+	// AIRuleSpecificityExactAll is a rule for the call's model, every request type.
+	AIRuleSpecificityExactAll AIRuleSpecificity = "EXACT_ALL"
+	// AIRuleSpecificityAnyTyped is a rule for any model, the call's request type.
+	AIRuleSpecificityAnyTyped AIRuleSpecificity = "ANY_TYPED"
+	// AIRuleSpecificityAnyAll is a rule for any model and any request type.
+	AIRuleSpecificityAnyAll AIRuleSpecificity = "ANY_ALL"
+)
+
+// AIRule names the conversion rule that priced a phase.
+type AIRule struct {
+	ID          string            `json:"id"`
+	Specificity AIRuleSpecificity `json:"specificity"`
+}
 
 // AIReport is the API's answer to a reserve or a commit.
 type AIReport struct {
@@ -123,7 +160,26 @@ type AIOutcome struct {
 	// model, or no rule for it. Nil on a reserve, which is refused instead.
 	Authorized *bool `json:"authorized,omitempty"`
 
+	// Rule is the conversion rule that priced this phase. Nil when no rule applied, on
+	// a server that predates the member, and on the replay of a phase answered before
+	// it existed.
+	Rule *AIRule `json:"rule,omitempty"`
+
+	// Warnings is an open set: compare against the AIWarning constants and tolerate
+	// values this SDK does not know.
 	Warnings []AIWarning `json:"warnings"`
+}
+
+// HasWarning reports whether the report carried warning.
+func (o AIOutcome) HasWarning(warning AIWarning) bool {
+	return slices.Contains(o.Warnings, warning)
+}
+
+// NoReservation reports whether the report was a release that closed no reservation:
+// RELEASED with AIWarningNoReservation. Nothing was charged, and the transaction id is
+// now closed: a reserve still in flight under it will be refused, not held.
+func (o AIOutcome) NoReservation() bool {
+	return o.Status == AIOperationStatusReleased && o.HasWarning(AIWarningNoReservation)
 }
 
 // AICredits are the credits an AI report moved, as decimal strings with at most six

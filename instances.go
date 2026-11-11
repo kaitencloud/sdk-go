@@ -5,6 +5,7 @@ package sdk
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -101,7 +102,7 @@ func (s *Instances) Delete(ctx context.Context, instanceSlug string) error {
 		return fmt.Errorf("delete instance: %w", err)
 	}
 
-	return expectNoContent(newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500))
+	return expectNoContent(newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON409, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500))
 }
 
 // ListAuditTrails returns the audit trail entries for the instance identified by instanceSlug.
@@ -174,13 +175,27 @@ func (s *Instances) ReportEntitlementUsageMetric(ctx context.Context, instanceSl
 		return zero, fmt.Errorf("encode usage report request: %w", err)
 	}
 
-	resp, err := s.client.raw.ReportEntitlementUsageMetricWithBodyWithResponse(ctx, instanceSlug, entitlementSlug, contentTypeJSON, body)
+	// No params: this method sends no Idempotency-Key, as before the contract declared one.
+	resp, err := s.client.raw.ReportEntitlementUsageMetricWithBodyWithResponse(ctx, instanceSlug, entitlementSlug, nil, contentTypeJSON, body)
 	if err != nil {
 		var zero EntitlementUsage
 		return zero, fmt.Errorf("report entitlement usage metric: %w", err)
 	}
 
-	return expectJSON(newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON409, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500), resp.JSON200)
+	converted := newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON409, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500, resp.ApplicationproblemJSON503)
+	if resp.JSON200 == nil {
+		var zero EntitlementUsage
+		return zero, responseError(converted)
+	}
+
+	// The answer is ReportedEntitlementUsage, of which EntitlementUsage is a subset:
+	// decode the body again rather than copy field by field.
+	var usage EntitlementUsage
+	if err := json.Unmarshal(resp.Body, &usage); err != nil {
+		return usage, fmt.Errorf("decode usage report response: %w", err)
+	}
+
+	return usage, nil
 }
 
 // ReportUsage reports an incremental usage delta for the entitlement identified by entitlementSlug

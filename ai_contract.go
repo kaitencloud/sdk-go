@@ -40,6 +40,8 @@ type ConversionRates = gen.ConversionRates
 
 // ConversionRule belongs to one license version and entitlement, never the family.
 // A nil model or request type is a wildcard; unknown models are never authorized.
+// CreatedBy and UpdatedBy name who wrote it; GrantedByAddons says whether an add-on
+// compatible with the licence's family grants its pool, beside GrantedByLicense.
 type ConversionRule = gen.ConversionRule
 
 // ConversionRuleChargeOnError selects the server's error charging policy.
@@ -79,6 +81,54 @@ type AIInference = gen.AiInference
 // AIInferencePage is a page of operations, with its opaque next cursor.
 type AIInferencePage = gen.AiInferencePage
 
+// AIInferencePricing is the snapshot of the conversion rule that priced an operation:
+// its id, how it matched, its rates, bounds and error policy as they were when the
+// operation was priced. Nil on AIInference.Pricing when no rule applied, and on
+// operations recorded before snapshots existed.
+type AIInferencePricing = gen.AiInferencePricing
+
+// AIInferencePricingSpecificity is how the snapshot's rule matched; its values are the
+// AIRuleSpecificity constants.
+type AIInferencePricingSpecificity = gen.AiInferencePricingSpecificity
+
+// AIInferencePricingChargeOnError is the snapshot's error charging policy.
+type AIInferencePricingChargeOnError = gen.AiInferencePricingChargeOnError
+
+// AIInferenceRates are a snapshot's rates, decimal strings; nil is unpriced.
+type AIInferenceRates = gen.AiInferenceRates
+
+// AIInferenceRefund is one refund of an operation's charge, as AI.RefundInference
+// answers it and AIInference.Refunds lists it, oldest first.
+type AIInferenceRefund = gen.AiInferenceRefund
+
+// AIVendorCost is an operation's vendor cost in USD: Reported as the commit sent it,
+// Computed from the model catalogue's costs. It never changes the credits charged.
+type AIVendorCost = gen.AiVendorCost
+
+// AIVendorCostCurrency is the vendor cost's currency (USD).
+type AIVendorCostCurrency = gen.AiVendorCostCurrency
+
+// AICreditAmounts are an operation's credits as decimal strings: Reserved, Computed,
+// Charged and, once refunded, Refunded. What is left to refund is Charged less Refunded.
+type AICreditAmounts = gen.AiCredits
+
+// OrganizationAIInference is an AIInference read across the organization, naming its
+// instance and credit pool (absent once deleted).
+type OrganizationAIInference = gen.OrganizationAiInference
+
+// OrganizationAIInferencePage is a page of the organization's operations.
+type OrganizationAIInferencePage = gen.OrganizationAiInferencePage
+
+// ListOrganizationAIInferencesParams filters and paginates
+// Client.Raw().ListOrganizationAiInferencesWithResponse.
+type ListOrganizationAIInferencesParams = gen.ListOrganizationAiInferencesParams
+
+// NewAIInferenceRefund is the body of Client.Raw().RefundAiInferenceWithResponse.
+type NewAIInferenceRefund = gen.NewAiInferenceRefund
+
+// RefundAIInferenceParams carries the refund's required Idempotency-Key on the raw call.
+type RefundAIInferenceParams = gen.RefundAiInferenceParams
+
 // AIReservations lists open, unexpired operations, not the numeric usage counter.
 type AIReservations = gen.AiReservations
 
@@ -94,16 +144,24 @@ type ListAIInferencesParams = gen.ListAiInferencesParams
 // ListAIInferencesParamsStatus filters an operation's lifecycle state.
 type ListAIInferencesParamsStatus = gen.ListAiInferencesParamsStatus
 
+// ListAIInferencesParamsAuthorized filters on whether the commit was authorized.
+type ListAIInferencesParamsAuthorized = gen.ListAiInferencesParamsAuthorized
+
+// ListAIInferencesParamsRequestType filters on the operation's request type.
+type ListAIInferencesParamsRequestType = gen.ListAiInferencesParamsRequestType
+
 // AIUsageQuantities is the generated usage shape for raw reports and inference reads.
 // Unlike the convenience AIUsage, pointers preserve explicit zero versus unknown.
 // Token dimensions are disjoint; Units is an exact decimal string.
 type AIUsageQuantities = gen.AiUsage
 
-// ModelUpdated is the before/after catalogue snapshot used by update hooks.
-type ModelUpdated = gen.ModelUpdated
+// ModelUpdated is the before/after catalogue snapshot used by update hooks, with the
+// delivery envelope's provenance members.
+type ModelUpdated = gen.ModelUpdatedDelivered
 
-// ConversionRuleUpdated is the before/after rule snapshot used by update hooks.
-type ConversionRuleUpdated = gen.ConversionRuleUpdated
+// ConversionRuleUpdated is the before/after rule snapshot used by update hooks, with
+// the delivery envelope's provenance members.
+type ConversionRuleUpdated = gen.ConversionRuleUpdatedDelivered
 
 // OnModelCreatedJSONBody is the model-created webhook payload.
 type OnModelCreatedJSONBody = gen.OnModelCreatedJSONBody

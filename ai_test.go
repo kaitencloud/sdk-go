@@ -201,7 +201,9 @@ func TestAIReportRefusalsCarryTheirTypedError(t *testing.T) {
 		{"model not authorized", http.StatusUnprocessableEntity, "ReportEntitlementUsageMetric.ModelNotAuthorized", ErrModelNotAuthorized},
 		{"unknown model", http.StatusUnprocessableEntity, "ReportEntitlementUsageMetric.UnknownModel", ErrUnknownModel},
 		{"not a credit pool", http.StatusUnprocessableEntity, "ReportEntitlementUsageMetric.AiUsageUnsupportedEntitlement", ErrAIUsageUnsupported},
-		{"server predating ai_usage, generic validation", http.StatusUnprocessableEntity, "", ErrAIUsageUnsupported},
+		// A current server answers request validation -- a malformed vendorCost -- with
+		// no code too: support is read from AI.Capabilities, not guessed from this.
+		{"validation without a code", http.StatusUnprocessableEntity, "", nil},
 		{"server predating ai_usage, value type", http.StatusUnprocessableEntity, "ReportEntitlementUsageMetric.InvalidValueType", ErrAIUsageUnsupported},
 		{"malformed AI body", http.StatusUnprocessableEntity, "ReportEntitlementUsageMetric.InvalidAiUsage", nil},
 		{"malformed transaction id", http.StatusUnprocessableEntity, "ReportEntitlementUsageMetric.InvalidTransactionId", nil},

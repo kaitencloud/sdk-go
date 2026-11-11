@@ -267,8 +267,8 @@ case errors.Is(err, sdk.ErrAICommitFailed):
 ```
 
 A refused reserve is one of `sdk.ErrInsufficientCredits`, `sdk.ErrModelNotAuthorized`,
-`sdk.ErrUnknownModel`, `sdk.ErrTransactionIDReused` or `sdk.ErrAIUsageUnsupported` (the
-pool is not an AI credit pool, or the server predates AI reports). The transaction id
+`sdk.ErrUnknownModel`, `sdk.ErrTransactionIDReused`, `sdk.ErrAIUsageDisabled` or
+`sdk.ErrAIUsageUnsupported` (the pool is not an AI credit pool). The transaction id
 defaults to a UUIDv7. Both phases retry a network error or a 500, 502, 503 or 504 up to
 three times under the identical phase/body and transaction id; a 4xx is never retried.
 AI helpers remove even inherited `Idempotency-Key` headers: that header is for numeric
@@ -278,6 +278,41 @@ guessed unsupported-capability error.
 charged: a lost response may hide a successful commit. Reconcile inference history
 or retry the identical commit body under the same transaction id.
 
+`AI.Run` never leaves a reservation behind it cannot account for. When `fn` panics, it
+commits `PROVIDER_ERROR` with no usage and panics again: the call may have reached the
+provider. When the reserve's outcome is unknown (a network error or a 5xx after the
+retries), it does not call `fn` and releases the transaction id instead: a NOT_SENT
+commit, which on a current server closes the id even when nothing was reserved
+(`report.Outcome.NoReservation()`), so a reserve still in flight is refused with
+`ErrTransactionIDReused` rather than holding credits until its TTL.
+
+The features below are a preview: they require a Kaiten release that serves them (to
+be set), where AI usage is behind a platform flag that is off by default.
+
+`AI.Capabilities` is how to detect AI usage: `Supported` is false on a server that
+predates it, `Enabled` false while it is off for the organization, when every AI call
+answers `sdk.ErrAIUsageDisabled` (a 403 `AIUsage.Disabled`, distinct from a missing
+scope). A 422 without a problem code is no longer read as `ErrAIUsageUnsupported`.
+
+A commit can carry what the provider charged, as evidence beside the cost the server
+computes from the catalogue; it never changes the credits charged:
+
+```go
+cost, err := sdk.VendorCostFromRat(big.NewRat(4125, 1_000_000)) // your figure, in USD: "0.004125"
+report, err := client.AI.Commit(ctx, "sakura-tokyo-prod", "chat-credits", sdk.AICommitInput{
+	TransactionID: id,
+	Usage:         usage,
+	VendorCost:    cost,
+})
+// report.Outcome.Rule names the conversion rule that priced it, and how it matched.
+```
+
+`VendorCost` is part of the commit's identity: a retry must send the byte-identical
+string (`"0.01"` and `"0.010"` differ, and the second is answered `ErrTransactionIDReused`).
+The SDK's own retries resend the same bytes; format a computed cost once and keep it.
+It is commit only: the SDK refuses it on a `NOT_SENT` commit (a release) before
+sending (`sdk.ErrInvalidVendorCost`), and `AI.Run` takes it from `AICall.VendorCost`.
+
 The provider SDKs count tokens their own way. The `ai/openai` and `ai/anthropic`
 modules convert their usage structs into an `sdk.AIUsage`, and are separate modules so
 this one never depends on a provider SDK:
@@ -286,6 +321,46 @@ this one never depends on a provider SDK:
 go get github.com/kaitencloud/sdk-go/ai/openai
 go get github.com/kaitencloud/sdk-go/ai/anthropic
 ```
+
+### Explaining and refunding an AI charge
+
+Each inference read carries what priced it: the conversion rule snapshot (`Pricing`,
+with its `Specificity`), the licence whose rules were considered (`LicenseId`,
+`LicenseSlug`), its `Warnings`, the usage journal link (`ReportSeq`), its `VendorCost`
+(reported and computed), and its `Refunds`, summed in `Credits.Refunded`. These are
+absent on a server that predates them.
+
+```go
+authorized := false
+refused, err := client.AI.ListInferences(ctx, "sakura-tokyo-prod", "chat-credits", &sdk.AIInferencesOptions{
+	Authorized: &authorized, // commits no rule priced
+	ModelSlug:  "gpt-4o",
+})
+
+// Every instance and pool of the organization (read:instances).
+released, err := client.AI.ListOrganizationInferences(ctx, &sdk.OrganizationAIInferencesOptions{
+	AIInferencesOptions: sdk.AIInferencesOptions{Status: "RELEASED"},
+	InstanceSlug:        "sakura-tokyo-prod",
+})
+
+// Give back credits of one COMMITTED inference (write:instances). Empty Credits
+// refunds everything left. Keep refund.IdempotencyKey to retry: it is generated when
+// none is given, and every retry of the SDK's own reuses it.
+refund, err := client.AI.RefundInference(ctx, "sakura-tokyo-prod", "chat-credits", "req-42", sdk.AIRefundInput{
+	Credits: "3.5",
+	Reason:  "duplicate call",
+})
+if left, ok := sdk.RefundableCredits(err); ok {
+	// sdk.ErrRefundExceedsRefundable: only left credits remain to refund.
+}
+```
+
+A release that closed no reservation (RELEASED with `NO_RESERVATION`) is listed only
+when filtering on `Status: "RELEASED"` or a `TransactionID`. A refund is refused with
+`ErrRefundNotCommitted`, `ErrRefundNothingToRefund`, `ErrRefundExceedsRefundable`,
+`ErrRefundIdempotencyKeyReused`, `ErrRefundPoolNotGranted`, `ErrRefundContextNotFound`,
+`ErrRefundInferenceNotFound` or one of the `ErrRefundInvalid*` errors, each wrapping the
+`*sdk.Error`.
 
 ### Generated AI management and history
 
@@ -322,7 +397,8 @@ normalizer subtracts them; Anthropic's input/cache dimensions are already disjoi
 An entitlement of type `NUMBER_AI_CREDIT` uses `SUM` aggregation and numeric allowances
 and read counters (`type: "number"`). `ai_usage` is only a calculation input: read the
 counter through `Instances.GetEntitlementUsageMetric`, not from reservation/history totals.
-Numeric adjustments/refunds use the ordinary number report with append behavior.
+Numeric adjustments use the ordinary number report with append behavior; refund an
+AI inference's charge with `AI.RefundInference`, which links the refund to it.
 
 Model and conversion-rule webhook payload aliases are also exported, together with
 `OnInstanceAIModelUsageUnauthorizedJSONBody` and

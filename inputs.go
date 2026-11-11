@@ -1009,6 +1009,18 @@ type AICommitInput struct {
 	// charged and the answer carries CONVERSION_INPUT_MISSING.
 	Usage AIUsage
 
+	// VendorCost is what the provider charged for the call, in USD, as an exact
+	// decimal string of at most 12 integer and 12 fractional digits: "0.0123". It is
+	// recorded as evidence beside the cost the API computes from the model catalogue
+	// and never changes the credits charged. Empty sends none.
+	//
+	// It is part of the commit's identity, sent as written: a retried commit must
+	// carry the byte-identical string, and "0.01" is not "0.010" -- the API answers
+	// another string under the same transaction id with 409 TransactionIdReused. Format
+	// a computed cost once, with VendorCostFromRat, and keep the string. Commit only: it
+	// is refused before any request on a NOT_SENT commit, which charges nothing.
+	VendorCost string
+
 	// Metadata is accepted and not stored.
 	Metadata map[string]any
 }
@@ -1025,6 +1037,10 @@ type AICall struct {
 
 	// Model is the model the call actually used, when it differs from the reserved one.
 	Model string
+
+	// VendorCost is what the provider charged, as AICommitInput.VendorCost says. Run
+	// leaves it out of a NOT_SENT commit, which charges nothing and would refuse it.
+	VendorCost string
 }
 
 // aiReportPayload is ReportEntitlementUsageBody with an AiUsageValue. behavior is left
@@ -1043,6 +1059,7 @@ type aiUsageValuePayload struct {
 	RequestStatus AIRequestStatus `json:"requestStatus,omitempty"`
 	Usage         *aiUsagePayload `json:"usage,omitempty"`
 	TTLSeconds    *int64          `json:"ttlSeconds,omitempty"`
+	VendorCost    string          `json:"vendorCost,omitempty"`
 }
 
 type aiUsagePayload struct {
@@ -1108,6 +1125,7 @@ func (in AICommitInput) payload() aiReportPayload {
 			RequestType:   in.RequestType,
 			RequestStatus: status,
 			Usage:         in.Usage.payload(),
+			VendorCost:    in.VendorCost,
 		},
 	}
 }

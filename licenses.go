@@ -208,7 +208,7 @@ func (s *Licenses) UpdateEntitlement(ctx context.Context, licenseSlug, entitleme
 		return fmt.Errorf("update license entitlement: %w", err)
 	}
 
-	return expectNoContent(newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500))
+	return expectNoContent(newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON409, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500))
 }
 
 // DeleteEntitlement removes the entitlement identified by entitlementSlug from the license identified by licenseSlug.
@@ -218,5 +218,5 @@ func (s *Licenses) DeleteEntitlement(ctx context.Context, licenseSlug, entitleme
 		return fmt.Errorf("delete license entitlement: %w", err)
 	}
 
-	return expectNoContent(newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500))
+	return expectNoContent(newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON409, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500))
 }

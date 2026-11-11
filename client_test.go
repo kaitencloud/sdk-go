@@ -93,7 +93,7 @@ func TestClientExposesOnlyTheReviewedPublicSurface(t *testing.T) {
 	assertServiceCoverage(t, map[string]serviceCoverage{
 		"AI": {
 			service: client.AI,
-			methods: []string{"Reserve", "Commit", "Run"},
+			methods: []string{"Reserve", "Commit", "Run", "Capabilities", "ListInferences", "ListOrganizationInferences", "RefundInference"},
 		},
 		"Components": {
 			service: client.Components,
@@ -198,6 +198,19 @@ func TestClientWrappersReportEveryDeclaredProblem(t *testing.T) {
 			call: func(ctx context.Context, c *Client) error {
 				c.AI.retryBase = time.Microsecond
 				_, err := c.AI.Commit(ctx, "acme-prod", "chat-credits", AICommitInput{TransactionID: "tx-1"})
+				return err
+			},
+		},
+		"AI.Capabilities": {
+			response: gen.GetAiUsageCapabilitiesResponse{},
+			call:     func(ctx context.Context, c *Client) error { _, err := c.AI.Capabilities(ctx); return err },
+		},
+		// Its 500 and 503 are retried under the same key, as the report's are.
+		"AI.RefundInference": {
+			response: gen.RefundAiInferenceResponse{},
+			call: func(ctx context.Context, c *Client) error {
+				c.AI.retryBase = time.Microsecond
+				_, err := c.AI.RefundInference(ctx, "acme-prod", "chat-credits", "tx-1", AIRefundInput{})
 				return err
 			},
 		},
