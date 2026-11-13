@@ -1,0 +1,51 @@
+openapi: 3.0.3
+info:
+  title: SDK generation policy fixture
+  version: 1.0.0
+paths:
+  /feature-flags:
+    get:
+      operationId: get-feature-flags
+      tags: [Feature Flags]
+      responses:
+        "200":
+          description: Management still available
+  /ofrep/v1/evaluate/flags:
+    post:
+      operationId: evaluateFlagsBulk
+      tags: [OFREP Core]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Bulk evaluation
+  /ofrep/v1/evaluate/flags/{key}:
+    post:
+      operationId: evaluateFlag
+      tags: [OFREP Core]
+      parameters:
+        - in: path
+          name: key
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Single evaluation
+components:
+  schemas:
+    # The production overlay is strict: keep its existing target in this fixture.
+    InvoiceHandoff:
+      type: object
+      properties:
+        status:
+          type: string

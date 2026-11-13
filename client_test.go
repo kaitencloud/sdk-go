@@ -144,6 +144,29 @@ func TestClientExposesOnlyTheReviewedPublicSurface(t *testing.T) {
 	assertServiceCoverage(t, services)
 }
 
+func TestClientRawPreservesFlagManagementAndAuthentication(t *testing.T) {
+	t.Parallel()
+
+	client, rec := givenClient(t, respondJSON(http.StatusOK, `{"items":[]}`), WithBearerToken("fixture-pat"))
+	response, err := client.Raw().GetFeatureFlagsWithResponse(t.Context(), nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if response.StatusCode() != http.StatusOK || response.JSON200 == nil {
+		t.Fatal("raw flag management did not decode its response")
+	}
+	if len(rec.requests) != 1 {
+		t.Fatalf("requests = %d, want 1", len(rec.requests))
+	}
+	request := rec.requests[0]
+	if request.method != http.MethodGet || request.path != "/api/feature-flags" {
+		t.Errorf("request = %s %s, want GET /api/feature-flags", request.method, request.path)
+	}
+	if request.header.Get("Authorization") != "Bearer fixture-pat" {
+		t.Error("raw management lost the caller's bearer-token policy")
+	}
+}
+
 func httpClientTimeout(t *testing.T, client *Client) time.Duration {
 	t.Helper()
 
