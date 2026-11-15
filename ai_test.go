@@ -37,21 +37,8 @@ const (
 			"remaining":"8.8","authorized":true,"warnings":["MODEL_DEPRECATED"]}}`
 )
 
-// respondInTurn answers the nth request with the nth responder, and every later one
-// with the last.
-func respondInTurn(responders ...responder) responder {
-	var mu sync.Mutex
-	next := 0
-
-	return func(req *http.Request) (*http.Response, error) {
-		mu.Lock()
-		respond := responders[min(next, len(responders)-1)]
-		next++
-		mu.Unlock()
-
-		return respond(req)
-	}
-}
+// respondInTurn lives in usage_test.go: the usage reports brought the same helper,
+// and one copy serves both.
 
 // respondProblem answers with an RFC 9457 document carrying code.
 func respondProblem(status int, code string) responder {

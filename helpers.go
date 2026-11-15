@@ -6,9 +6,11 @@ package sdk
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -17,6 +19,18 @@ import (
 
 // ErrThresholdExceeded is returned when reporting usage would exceed the configured entitlement limit.
 var ErrThresholdExceeded = fmt.Errorf("usage threshold exceeded")
+
+// ErrTransactionIDReused is returned when a usage report's TransactionID was
+// already used, within Kaiten's idempotency window, for a report with another
+// behavior or value. It is a bug in how the caller makes keys, not a transient
+// failure: retrying the same report under the same key fails the same way. A
+// correction is a new report under a new key.
+var ErrTransactionIDReused = errors.New("usage report transaction ID already used for a different report")
+
+// ErrInvalidTransactionID is returned, before any request, for a TransactionID
+// Kaiten would refuse: it must be 1 to 128 characters of letters, digits, '.',
+// '_', ':' and '-'.
+var ErrInvalidTransactionID = errors.New("invalid usage report transaction ID")
 
 // contentTypeJSON is the only media type this SDK sends or accepts. Every generated
 // write wrapper takes it as a plain string argument, so naming it once keeps a typo
@@ -41,6 +55,11 @@ type Error struct {
 	// cause that was deliberately withheld from the client. Quote it in a bug report;
 	// it is the only handle on the real error. Empty when none was supplied.
 	ErrorID string
+
+	// RetryAfter is how long the API asked the caller to wait before trying
+	// again (a 429, or a 503 while the billing provider is unavailable); zero
+	// when it did not say.
+	RetryAfter time.Duration
 }
 
 func (e *Error) Error() string {
@@ -101,6 +120,7 @@ type apiResponse struct {
 	Problem    *ErrorModel
 	Code       string
 	ErrorID    string
+	RetryAfter time.Duration
 }
 
 func jsonBody(v any) (io.Reader, error) {
@@ -244,6 +264,7 @@ func responseError(resp apiResponse) error {
 		Body:       resp.Body,
 		Code:       resp.Code,
 		ErrorID:    resp.ErrorID,
+		RetryAfter: resp.RetryAfter,
 	}
 
 	return err
@@ -295,4 +316,41 @@ func stringValue(value *string) string {
 	}
 
 	return *value
+}
+
+// withRetryAfter adds the response's Retry-After to converted. The contract
+// declares it in delay-seconds, the only form Kaiten sends.
+func withRetryAfter(converted apiResponse, resp *http.Response) apiResponse {
+	if resp == nil {
+		return converted
+	}
+	value := strings.TrimSpace(resp.Header.Get("Retry-After"))
+	if value == "" {
+		return converted
+	}
+	if seconds, err := strconv.Atoi(value); err == nil && seconds >= 0 {
+		converted.RetryAfter = time.Duration(seconds) * time.Second
+	}
+
+	return converted
+}
+
+// expectBody returns a 2xx response's body as it came: for the documents the API
+// answers in another format than JSON.
+func expectBody(resp apiResponse) ([]byte, error) {
+	if code := resp.StatusCode; code >= http.StatusOK && code < http.StatusMultipleChoices {
+		return resp.Body, nil
+	}
+
+	return nil, responseError(resp)
+}
+
+// expectEither is expectJSON for an operation that answers one schema under two
+// statuses (200 for an existing resource, 201 for a new one).
+func expectEither[T any](resp apiResponse, first, second *T) (T, error) {
+	if first != nil {
+		return *first, nil
+	}
+
+	return expectJSON(resp, second)
 }

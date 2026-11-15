@@ -34,10 +34,10 @@ var (
 	// by provider id.
 	ErrUnknownModel = errors.New("unknown AI model")
 
-	// ErrTransactionIDReused is a transaction id already used for a different report:
-	// the same phase with another body, or a reserve after its commit. It is a bug in
-	// the caller and never retried.
-	ErrTransactionIDReused = errors.New("AI transaction id reused")
+	// A transaction id already used for a different report -- the same phase with
+	// another body, or a reserve after its commit -- answers the generic
+	// ErrTransactionIDReused of the usage reports, declared in helpers.go. It is a
+	// bug in the caller and never retried.
 
 	// ErrAIUsageUnsupported is an AI report the API cannot take: the pool is not an AI
 	// credit pool, or the server predates AI usage reports.
@@ -64,8 +64,8 @@ var (
 
 // The report's codes an AI error is told apart by.
 const (
-	codeThresholdExceeded      = "ReportEntitlementUsageMetric.ThresholdExceeded"
-	codeTransactionIDReused    = "ReportEntitlementUsageMetric.TransactionIdReused"
+	// codeThresholdExceeded and codeTransactionIDReused are the usage report's own,
+	// declared in usage.go: an AI report answers them with the same meaning.
 	codeModelNotAuthorized     = "ReportEntitlementUsageMetric.ModelNotAuthorized"
 	codeUnknownModel           = "ReportEntitlementUsageMetric.UnknownModel"
 	codeAIUsageUnsupportedPool = "ReportEntitlementUsageMetric.AiUsageUnsupportedEntitlement"
@@ -281,6 +281,9 @@ func (s *AI) report(ctx context.Context, instanceSlug, entitlementSlug string, p
 	}
 
 	for attempt := 0; ; attempt++ {
+		// No params on purpose: the contract rejects Idempotency-Key for an AI
+		// report, which replays on value.transactionId instead. withoutNumericKey
+		// also strips the header off an inherited request editor.
 		httpResp, err := s.client.raw.ReportEntitlementUsageMetricWithBody(ctx, instanceSlug, entitlementSlug, nil, contentTypeJSON, bytes.NewReader(body), withoutNumericKey)
 		resp := &gen.ReportEntitlementUsageMetricResponse{HTTPResponse: httpResp}
 

@@ -25,6 +25,7 @@ import (
 type PlatformClient struct {
 	raw *genplatform.ClientWithResponses
 
+	Billing       *PlatformBilling
 	Connectors    *PlatformConnectors
 	Organizations *PlatformOrganizations
 	Tokens        *PlatformTokens
@@ -54,6 +55,7 @@ func newPlatformClient(raw *genplatform.ClientWithResponses) *PlatformClient {
 		raw: raw,
 	}
 
+	client.Billing = &PlatformBilling{client: client}
 	client.Connectors = &PlatformConnectors{client: client}
 	client.Organizations = &PlatformOrganizations{client: client}
 	client.Tokens = &PlatformTokens{client: client}

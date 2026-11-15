@@ -63,6 +63,9 @@ func (s *Licenses) Create(ctx context.Context, input LicenseInput) (License, err
 // UpdateLicense.DefaultMustBePublished: publish or unarchive it first. IsDefault
 // false on the family's default unsets it, which is also the way to archive the
 // version afterwards.
+//
+// A commercial term left nil keeps its stored value. TrialPeriodDays 0 removes the
+// trial, and an empty SelfServeCtaURL the URL.
 func (s *Licenses) Update(ctx context.Context, licenseSlug string, input LicenseInput) error {
 	body, err := jsonBody(input.updatePayload())
 	if err != nil {

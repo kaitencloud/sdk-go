@@ -317,6 +317,13 @@ func TestPlatformClientWrappersReportEveryDeclaredProblem(t *testing.T) {
 				return c.Organizations.DeleteMembership(ctx, organizationID, userID)
 			},
 		},
+		"PlatformBilling.ClosePeriods": {
+			response: genplatform.PlatformCloseBillingPeriodsResponse{},
+			call: func(ctx context.Context, c *PlatformClient) error {
+				_, err := c.Billing.ClosePeriods(ctx, organizationID, PlatformClosePeriodsScope{})
+				return err
+			},
+		},
 		"PlatformTokens.Mint": {
 			response: genplatform.MintOrganizationTokenResponse{},
 			call: func(ctx context.Context, c *PlatformClient) error {
