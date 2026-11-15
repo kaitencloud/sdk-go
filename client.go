@@ -55,6 +55,8 @@ type Client struct {
 	// to two Kaitens.
 	keysHonoured atomic.Bool
 
+	AI *AI
+
 	// Billing is the billing API, a namespace per resource below it.
 	Billing           *Billing
 	Components        *Components
@@ -96,6 +98,7 @@ func newClient(raw *gen.ClientWithResponses, list listTransport) *Client {
 		list: list,
 	}
 
+	client.AI = &AI{client: client}
 	client.Components = &Components{client: client}
 	client.Customers = &Customers{client: client}
 	client.Dashboard = &Dashboard{client: client}

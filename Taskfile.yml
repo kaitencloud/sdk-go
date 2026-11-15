@@ -13,6 +13,10 @@ vars:
   # generator versions again.
   OAPI_CODEGEN_VERSION: v2.8.0
   OAPI_CODEGEN_PLATFORM_VERSION: v2.8.0
+  # The AI usage normalisers are modules of their own, so the root module never
+  # depends on a provider SDK. ./... stops at a nested module, so the tasks that
+  # cover the whole repository name each one.
+  AI_MODULES: ai/openai ai/anthropic
 
 tasks:
   default:
@@ -25,6 +29,8 @@ tasks:
     desc: Lint the SDK
     cmds:
       - go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@{{.GOLANGCI_LINT_VERSION}} run ./...
+      - for: { var: AI_MODULES }
+        cmd: cd {{.ITEM}} && go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@{{.GOLANGCI_LINT_VERSION}} run ./...
 
   fix:
     desc: Lint and fix the SDK
@@ -35,11 +41,15 @@ tasks:
     desc: Format the SDK (gofumpt + gci, the formatters .golangci.yml declares)
     cmds:
       - go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@{{.GOLANGCI_LINT_VERSION}} fmt ./...
+      - for: { var: AI_MODULES }
+        cmd: cd {{.ITEM}} && go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@{{.GOLANGCI_LINT_VERSION}} fmt ./...
 
   test:
     desc: Run SDK tests
     cmds:
       - go test -race -shuffle=on -cover ./...
+      - for: { var: AI_MODULES }
+        cmd: cd {{.ITEM}} && go test -race -shuffle=on -cover ./...
 
   deadcode:
     desc: Report functions no test or entry point can reach
