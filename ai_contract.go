@@ -100,10 +100,12 @@ type ListAIInferencesParamsStatus = gen.ListAiInferencesParamsStatus
 type AIUsageQuantities = gen.AiUsage
 
 // ModelUpdated is the before/after catalogue snapshot used by update hooks.
-type ModelUpdated = gen.ModelUpdated
+// The generator names the delivered shape, so the alias follows it.
+type ModelUpdated = gen.ModelUpdatedDelivered
 
 // ConversionRuleUpdated is the before/after rule snapshot used by update hooks.
-type ConversionRuleUpdated = gen.ConversionRuleUpdated
+// The generator names the delivered shape, so the alias follows it.
+type ConversionRuleUpdated = gen.ConversionRuleUpdatedDelivered
 
 // OnModelCreatedJSONBody is the model-created webhook payload.
 type OnModelCreatedJSONBody = gen.OnModelCreatedJSONBody

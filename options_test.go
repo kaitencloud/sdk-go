@@ -123,3 +123,23 @@ func TestWithBearerTokenSendsNoHeaderForABlankToken(t *testing.T) {
 		t.Fatalf("Authorization = %q, want the header absent", got)
 	}
 }
+
+// The public catalogue refuses any Authorization header, so the key must reach it in its own
+// header and nowhere else: a pk_ sent as a bearer token is answered 403 by every deployment.
+func TestWithPublishableKeySendsTheKeyOutsideAuthorization(t *testing.T) {
+	t.Parallel()
+
+	client, sent := givenClient(t, respondJSON(http.StatusOK, `{}`), WithPublishableKey("pk_public"))
+
+	if _, err := client.Billing.Public.Catalog(t.Context(), nil); err != nil {
+		t.Fatalf("Catalog() error = %v", err)
+	}
+
+	got := sent.only(t)
+	if key := got.header.Get("X-Kaiten-Publishable-Key"); key != "pk_public" {
+		t.Fatalf("X-Kaiten-Publishable-Key = %q, want %q", key, "pk_public")
+	}
+	if auth, ok := got.header["Authorization"]; ok {
+		t.Fatalf("Authorization = %q, want the header absent", auth)
+	}
+}

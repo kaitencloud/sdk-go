@@ -70,6 +70,18 @@ func WithBearerToken(token string) Option {
 	})
 }
 
+// WithPublishableKey sends a publishable key (pk_) in the X-Kaiten-Publishable-Key header on
+// every request. It is the credential of Billing.Public: those routes refuse any Authorization
+// header, a pk_ sent as a bearer token included, so the client takes no WithBearerToken.
+func WithPublishableKey(key string) Option {
+	return WithRequestEditorFn(func(_ context.Context, req *http.Request) error {
+		if strings.TrimSpace(key) != "" {
+			req.Header.Set("X-Kaiten-Publishable-Key", key)
+		}
+		return nil
+	})
+}
+
 // resolveOptions applies opts over the defaults every client shares.
 func resolveOptions(baseURL string, opts []Option) clientOptions {
 	resolved := clientOptions{

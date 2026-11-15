@@ -63,6 +63,9 @@ func (s *Licenses) Create(ctx context.Context, input LicenseInput) (License, err
 // UpdateLicense.DefaultMustBePublished: publish or unarchive it first. IsDefault
 // false on the family's default unsets it, which is also the way to archive the
 // version afterwards.
+//
+// A commercial term left nil keeps its stored value. TrialPeriodDays 0 removes the
+// trial, and an empty SelfServeCtaURL the URL.
 func (s *Licenses) Update(ctx context.Context, licenseSlug string, input LicenseInput) error {
 	body, err := jsonBody(input.updatePayload())
 	if err != nil {
@@ -208,7 +211,7 @@ func (s *Licenses) UpdateEntitlement(ctx context.Context, licenseSlug, entitleme
 		return fmt.Errorf("update license entitlement: %w", err)
 	}
 
-	return expectNoContent(newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500))
+	return expectNoContent(newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON409, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500))
 }
 
 // DeleteEntitlement removes the entitlement identified by entitlementSlug from the license identified by licenseSlug.
@@ -218,5 +221,5 @@ func (s *Licenses) DeleteEntitlement(ctx context.Context, licenseSlug, entitleme
 		return fmt.Errorf("delete license entitlement: %w", err)
 	}
 
-	return expectNoContent(newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500))
+	return expectNoContent(newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON409, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500))
 }
