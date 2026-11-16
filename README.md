@@ -363,8 +363,8 @@ commit, which on a current server closes the id even when nothing was reserved
 (`report.Outcome.NoReservation()`), so a reserve still in flight is refused with
 `ErrTransactionIDReused` rather than holding credits until its TTL.
 
-The features below are a preview: they require a Kaiten release that serves them (to
-be set), where AI usage is behind a platform flag that is off by default.
+The features below are a preview: they require Kaiten 26.11.3 or later, where AI usage
+is behind a platform flag that is off by default.
 
 `AI.Capabilities` is how to detect AI usage: `Supported` is false on a server that
 predates it, `Enabled` false while it is off for the organization, when every AI call
