@@ -15592,10 +15592,10 @@ type DashboardDayReports struct {
 type DashboardFeatureFlags struct {
 	Enabled int64 `json:"enabled"`
 
-	// Evaluations Evaluations recorded in the range; a floor, the evaluation publisher drops under pressure
+	// Evaluations Evaluations recorded since range.auditTrailFrom; a floor, the evaluation publisher drops under pressure
 	Evaluations int64 `json:"evaluations"`
 
-	// NotEvaluated Flags with no evaluation in the range
+	// NotEvaluated Flags with no evaluation since range.auditTrailFrom
 	NotEvaluated int64 `json:"notEvaluated"`
 
 	// PerFlag Every flag, most evaluated first
@@ -15634,7 +15634,7 @@ type DashboardInstance struct {
 
 // DashboardInstanceFigures defines model for DashboardInstanceFigures.
 type DashboardInstanceFigures struct {
-	// ActiveInRange Instances with at least one report, accepted or refused, or one entitlement read in the range
+	// ActiveInRange Instances with an accepted report since range.usageHistoryFrom, or a refused report or an entitlement read since range.auditTrailFrom
 	ActiveInRange int64                   `json:"activeInRange"`
 	ByStanding    DashboardStandingCounts `json:"byStanding"`
 
@@ -15654,7 +15654,7 @@ type DashboardInstanceReports struct {
 	InstanceName string          `json:"instanceName"`
 	InstanceSlug string          `json:"instanceSlug"`
 
-	// LastReadAt The last entitlement value read in the range
+	// LastReadAt The last entitlement value read since range.auditTrailFrom
 	LastReadAt   *time.Time                           `json:"lastReadAt"`
 	LastReportAt *time.Time                           `json:"lastReportAt"`
 	LicenseName  string                               `json:"licenseName"`
@@ -15662,17 +15662,17 @@ type DashboardInstanceReports struct {
 	Rejected     int64                                `json:"rejected"`
 	Rejected24h  int64                                `json:"rejected24h"`
 
-	// Silent No report, accepted or refused, and no entitlement read in the range
+	// Silent No accepted report since range.usageHistoryFrom, and no refused report nor entitlement read since range.auditTrailFrom
 	Silent bool `json:"silent"`
 
-	// Standing The one word for the instance: atLimit when a meter refuses, watch when one is above its warning threshold, silent when nothing reported or read in the range, healthy otherwise; computed over every meter of the instance
+	// Standing The one word for the instance: atLimit when a meter refuses, watch when one is above its warning threshold, silent when nothing was reported or read in either window, healthy otherwise; computed over every meter of the instance
 	Standing DashboardInstanceReportsStanding `json:"standing"`
 }
 
 // DashboardInstanceReportsLicenseState defines model for DashboardInstanceReports.LicenseState.
 type DashboardInstanceReportsLicenseState string
 
-// DashboardInstanceReportsStanding The one word for the instance: atLimit when a meter refuses, watch when one is above its warning threshold, silent when nothing reported or read in the range, healthy otherwise; computed over every meter of the instance
+// DashboardInstanceReportsStanding The one word for the instance: atLimit when a meter refuses, watch when one is above its warning threshold, silent when nothing was reported or read in either window, healthy otherwise; computed over every meter of the instance
 type DashboardInstanceReportsStanding string
 
 // DashboardIntegrations defines model for DashboardIntegrations.
@@ -15797,10 +15797,21 @@ type DashboardPublishableKeys struct {
 
 // DashboardRangeWindow defines model for DashboardRangeWindow.
 type DashboardRangeWindow struct {
-	Days  int64                     `json:"days"`
-	From  time.Time                 `json:"from"`
-	Range DashboardRangeWindowRange `json:"range"`
-	To    time.Time                 `json:"to"`
+	// AuditTrailDays The calendar days from auditTrailFrom to To, today included; days when the audit trail covers the whole period
+	AuditTrailDays int64 `json:"auditTrailDays"`
+
+	// AuditTrailFrom Where refused reports, entitlement reads and flag evaluations are read from: the start of the period's first whole day, or later when the organization keeps its audit trail for less
+	AuditTrailFrom time.Time                 `json:"auditTrailFrom"`
+	Days           int64                     `json:"days"`
+	From           time.Time                 `json:"from"`
+	Range          DashboardRangeWindowRange `json:"range"`
+	To             time.Time                 `json:"to"`
+
+	// UsageHistoryDays The calendar days from usageHistoryFrom to To, today included; days when the usage history covers the whole period
+	UsageHistoryDays int64 `json:"usageHistoryDays"`
+
+	// UsageHistoryFrom Where the accepted usage reports are read from: the start of the period's first whole day, or later when the organization keeps its usage history for less
+	UsageHistoryFrom time.Time `json:"usageHistoryFrom"`
 }
 
 // DashboardRangeWindowRange defines model for DashboardRangeWindow.Range.
@@ -15864,10 +15875,10 @@ type DashboardTokens struct {
 
 // DashboardUsageReportFigures defines model for DashboardUsageReportFigures.
 type DashboardUsageReportFigures struct {
-	// Accepted Reports journalled in the range
+	// Accepted Reports accepted on the days usageReports.perDay covers: from the later of range.usageHistoryFrom and range.auditTrailFrom
 	Accepted int64 `json:"accepted"`
 
-	// Rejected Reports refused in the range, from the audit trail
+	// Rejected Reports refused on the same days, from the audit trail
 	Rejected    int64 `json:"rejected"`
 	Rejected24h int64 `json:"rejected24h"`
 }
@@ -15876,7 +15887,9 @@ type DashboardUsageReportFigures struct {
 type DashboardUsageReports struct {
 	// ByInstance Every instance, most reports first
 	ByInstance []DashboardInstanceReports `json:"byInstance"`
-	PerDay     []DashboardDayReports      `json:"perDay"`
+
+	// PerDay One entry a calendar day, today last, from the later of range.usageHistoryFrom and range.auditTrailFrom: the days both the accepted and the refused reports are kept
+	PerDay []DashboardDayReports `json:"perDay"`
 }
 
 // DashboardZone defines model for DashboardZone.

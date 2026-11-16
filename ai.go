@@ -281,10 +281,10 @@ func (s *AI) report(ctx context.Context, instanceSlug, entitlementSlug string, p
 	}
 
 	for attempt := 0; ; attempt++ {
-		// No params on purpose: the contract rejects Idempotency-Key for an AI
+		// Empty params on purpose: the contract rejects Idempotency-Key for an AI
 		// report, which replays on value.transactionId instead. withoutNumericKey
 		// also strips the header off an inherited request editor.
-		httpResp, err := s.client.raw.ReportEntitlementUsageMetricWithBody(ctx, instanceSlug, entitlementSlug, nil, contentTypeJSON, bytes.NewReader(body), withoutNumericKey)
+		httpResp, err := s.client.raw.ReportEntitlementUsageMetricWithBody(ctx, instanceSlug, entitlementSlug, &gen.ReportEntitlementUsageMetricParams{}, contentTypeJSON, bytes.NewReader(body), withoutNumericKey)
 		resp := &gen.ReportEntitlementUsageMetricResponse{HTTPResponse: httpResp}
 
 		// Decide retries from transport errors and status before decoding JSON:
