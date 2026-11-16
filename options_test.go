@@ -136,8 +136,11 @@ func TestWithPublishableKeySendsTheKeyOutsideAuthorization(t *testing.T) {
 	}
 
 	got := sent.only(t)
-	if key := got.header.Get("X-Kaiten-Publishable-Key"); key != "pk_public" {
-		t.Fatalf("X-Kaiten-Publishable-Key = %q, want %q", key, "pk_public")
+	if key := got.header.Get("Kaiten-Publishable-Key"); key != "pk_public" {
+		t.Fatalf("Kaiten-Publishable-Key = %q, want %q", key, "pk_public")
+	}
+	if legacy, ok := got.header["X-Kaiten-Publishable-Key"]; ok {
+		t.Fatalf("X-Kaiten-Publishable-Key = %q, want the deprecated name absent", legacy)
 	}
 	if auth, ok := got.header["Authorization"]; ok {
 		t.Fatalf("Authorization = %q, want the header absent", auth)
