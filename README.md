@@ -112,7 +112,7 @@ client, err := sdk.NewClient("https://kaiten.example.com/api",
 | Option                     | Purpose                                                          |
 | -------------------------- | ---------------------------------------------------------------- |
 | `WithBearerToken(token)`   | Set the bearer token sent with every request.                    |
-| `WithPublishableKey(key)`  | Send a `pk_` key in `X-Kaiten-Publishable-Key`, for `Billing.Public`. |
+| `WithPublishableKey(key)`  | Send a `pk_` key in `Kaiten-Publishable-Key`, for `Billing.Public`. |
 | `WithHTTPClient(client)`   | Use a custom `*http.Client`; replaces `DefaultTimeout` (30s).    |
 | `WithRequestEditorFn(fn)`  | Run a function on each request before it is sent. Repeatable.    |
 | `WithBaseURL(url)`         | Override the base URL given to the constructor.                  |
