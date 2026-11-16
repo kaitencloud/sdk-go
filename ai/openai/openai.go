@@ -14,6 +14,10 @@
 // OpenAI counts cached input tokens inside its prompt tokens, where Kaiten counts them
 // apart: every function here subtracts the cached tokens from the input ones. Reasoning
 // tokens are already inside OpenAI's output tokens and stay there.
+//
+// OpenAI's usage reports no cost, so nothing here sets sdk.AICall.VendorCost or holds a
+// price. A caller that knows what a call cost -- its provider bill, or its own price
+// list -- formats it once with sdk.VendorCostFromRat and sets it beside the usage.
 package openai
 
 import (

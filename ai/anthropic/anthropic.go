@@ -13,6 +13,10 @@
 //
 // Anthropic already counts input tokens apart from the cache, as Kaiten does, so the
 // counts carry over one for one.
+//
+// Anthropic's usage reports no cost, so nothing here sets sdk.AICall.VendorCost or holds a
+// price. A caller that knows what a call cost -- its provider bill, or its own price
+// list -- formats it once with sdk.VendorCostFromRat and sets it beside the usage.
 package anthropic
 
 import (
