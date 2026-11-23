@@ -765,15 +765,19 @@ func (in InstanceInput) updatePayload() instanceUpdatePayload {
 // generated field renders `lifecycle_stage` where the spec names the key
 // `lifecycleStage`. Every Core request body is additionalProperties:false, so a
 // key the spec does not declare is a 422 rather than a field the API ignores,
-// and no type error catches it -- which is why both PATCH writes render this
-// type and are pinned by TestRequestBodiesMatchTheirSpecBodies.
+// and no type error catches it -- which is why every PATCH write renders this
+// type and is pinned by TestRequestBodiesMatchTheirSpecBodies.
 //
-// Both fields are omitempty because absence is the only "leave this alone"
-// signal the endpoint has -- sending a null clears nothing and fails
-// validation, so a nil pointer must render no key at all.
+// Every field is omitempty because absence is the only "leave this alone"
+// signal the endpoint has -- sending a null status or lifecycleStage clears
+// nothing and fails validation, so a nil pointer must render no key at all.
+// Metadata is omitted when nil or empty, either of which the endpoint reads as
+// no change; inside it, a nil value renders as JSON null, which removes that
+// key.
 type instancePatchPayload struct {
 	Status         *InstanceStatus `json:"status,omitempty"`
 	LifecycleStage *string         `json:"lifecycleStage,omitempty"`
+	Metadata       map[string]any  `json:"metadata,omitempty"`
 }
 
 // The three family-era fields are omitempty because absence is what each one's nil

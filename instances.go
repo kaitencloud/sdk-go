@@ -94,6 +94,32 @@ func (s *Instances) UpdateLifecycleStage(ctx context.Context, instanceSlug strin
 	return expectNoContent(newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500))
 }
 
+// PatchMetadata changes individual metadata keys of the instance identified by
+// instanceSlug, without reading the instance first. Each key in metadata is set, its
+// value replacing the stored one whole (lists and objects included); a key whose value
+// is nil is removed; keys metadata does not name are kept. Update, by contrast, replaces
+// the whole metadata object, so changing one key through it means a Get first, and a
+// concurrent change to another key is lost. A nil or empty metadata sends no metadata
+// key and changes nothing.
+//
+// The merged result is validated as Update validates it: a declared metadata field that
+// refuses it is a 422 whose *Error carries the code MetadataValidation.Failed, and
+// nothing of the patch is written. It needs a Kaiten recent enough to accept metadata
+// on this operation; an older one refuses the key with a 422 of its own.
+func (s *Instances) PatchMetadata(ctx context.Context, instanceSlug string, metadata map[string]any) error {
+	body, err := jsonBody(instancePatchPayload{Metadata: cloneMap(metadata)})
+	if err != nil {
+		return fmt.Errorf("encode instance patch request: %w", err)
+	}
+
+	resp, err := s.client.raw.PatchInstanceWithBodyWithResponse(ctx, instanceSlug, contentTypeJSON, body)
+	if err != nil {
+		return fmt.Errorf("patch instance metadata: %w", err)
+	}
+
+	return expectNoContent(newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500))
+}
+
 // Delete deletes the instance identified by instanceSlug.
 func (s *Instances) Delete(ctx context.Context, instanceSlug string) error {
 	resp, err := s.client.raw.DeleteInstanceWithResponse(ctx, instanceSlug)

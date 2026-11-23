@@ -122,7 +122,7 @@ func TestClientExposesOnlyTheReviewedPublicSurface(t *testing.T) {
 		},
 		"Instances": {
 			service: client.Instances,
-			methods: []string{"List", "Get", "Create", "Update", "UpdateStatus", "UpdateLifecycleStage", "Delete", "ListAuditTrails", "ListEntitlementUsageMetrics", "GetEntitlementUsageMetric", "ReportEntitlementUsage", "ReportEntitlementUsageMetric", "ReportUsage", "ListUsageReports", "ExportUsageReports", "ExportOrganizationUsageReports"},
+			methods: []string{"List", "Get", "Create", "Update", "UpdateStatus", "UpdateLifecycleStage", "PatchMetadata", "Delete", "ListAuditTrails", "ListEntitlementUsageMetrics", "GetEntitlementUsageMetric", "ReportEntitlementUsage", "ReportEntitlementUsageMetric", "ReportUsage", "ListUsageReports", "ExportUsageReports", "ExportOrganizationUsageReports"},
 		},
 		"LicenseFamilies": {
 			service: client.LicenseFamilies,
@@ -395,6 +395,12 @@ func TestClientWrappersReportEveryDeclaredProblem(t *testing.T) {
 			response: gen.PatchInstanceResponse{},
 			call: func(ctx context.Context, c *Client) error {
 				return c.Instances.UpdateLifecycleStage(ctx, "acme-prod", "production")
+			},
+		},
+		"Instances.PatchMetadata": {
+			response: gen.PatchInstanceResponse{},
+			call: func(ctx context.Context, c *Client) error {
+				return c.Instances.PatchMetadata(ctx, "acme-prod", map[string]any{"region": "eu"})
 			},
 		},
 		"Instances.Delete": {

@@ -157,6 +157,25 @@ err = client.Instances.UpdateStatus(ctx, *instance.Slug, sdk.InstanceStatusHealt
 `InstanceInput.Slug` is generated when nil on create and renames the instance on
 update; a slug another instance holds is a 409.
 
+`Instances.Update` replaces the whole instance, metadata included. To change some
+metadata keys without reading the instance first, and without overwriting a key
+someone else changed in the meantime, patch them:
+
+```go
+// Set "region", remove "legacy-plan", keep every other key as it is.
+err = client.Instances.PatchMetadata(ctx, "sakura-tokyo-prod", map[string]any{
+	"region":      "eu-west",
+	"legacy-plan": nil,
+})
+```
+
+Each key sent replaces the stored value whole, lists and objects included; a `nil`
+value removes the key; a nil or empty map changes nothing. The merged metadata is
+validated as on `Update`, so a declared metadata field can refuse it with a 422 whose
+`*sdk.Error` carries the code `MetadataValidation.Failed`. `PatchMetadata` needs a
+Kaiten recent enough to accept `metadata` on `PATCH /instances/{instanceSlug}`; an
+older one answers 422.
+
 Customers, deployment zones, entitlements, entitlement groups, licenses and service
 accounts are never renamed. Their `Update` sends `Slug` for the API to check: the
 current slug is accepted, and any other is a 422 whose `*sdk.Error` carries the code

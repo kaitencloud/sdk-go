@@ -20529,6 +20529,9 @@ type PatchInstanceBody struct {
 	// Examples: AT_RISK
 	LifecycleStage *string `json:"lifecycleStage,omitempty"`
 
+	// Metadata Metadata keys to change, merged into the stored metadata at the first level: each key present is set, its value replacing the stored one whole (lists and objects included); a key whose value is null is removed; keys absent from the object are kept. The merged result is validated against the organization's declared instance metadata fields, as on PUT. When omitted, metadata is unchanged.
+	Metadata *map[string]interface{} `json:"metadata,omitempty"`
+
 	// Status Operational status of the instance
 	//
 	// Examples: INCIDENT
@@ -32945,7 +32948,7 @@ type ClientInterface interface {
 
 	// PatchInstanceWithBody Patch an instance
 	//
-	// Partially update an instance. Currently supports the operational status and the commercial lifecycle stage.
+	// Partially update an instance: its operational status, its commercial lifecycle stage, and individual metadata keys. Unlike PUT, a metadata change needs no read of the instance first, and does not overwrite keys it does not name.
 	//
 	// Takes any type of body and a specified content type.
 	//
@@ -32954,7 +32957,7 @@ type ClientInterface interface {
 
 	// PatchInstance Patch an instance
 	//
-	// Partially update an instance. Currently supports the operational status and the commercial lifecycle stage.
+	// Partially update an instance: its operational status, its commercial lifecycle stage, and individual metadata keys. Unlike PUT, a metadata change needs no read of the instance first, and does not overwrite keys it does not name.
 	//
 	// Takes a body of the `application/json` content type.
 	//
@@ -33996,7 +33999,7 @@ type ClientInterface interface {
 
 	// GetPublicCatalog Get the public catalogue
 	//
-	// What a pricing page shows: for each licence family the organization made public, its default version with its ACTIVE prices and user-facing entitlements, and the same for public add-on families. Read with a publishable key (X-Kaiten-Publishable-Key); the organization is the key's. Amounts are in minor units; never sum metered prices into a headline. Cacheable for 60 seconds.
+	// What a pricing page shows: for each licence family the organization made public, its default version with its ACTIVE prices and user-facing entitlements, and the same for public add-on families. Read with a publishable key (Kaiten-Publishable-Key); the organization is the key's. Amounts are in minor units; never sum metered prices into a headline. Cacheable for 60 seconds.
 	//
 	// Corresponds with GET /public/catalog (the `GetPublicCatalog` operationId).
 	GetPublicCatalog(ctx context.Context, params *GetPublicCatalogParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -36979,7 +36982,7 @@ func (c *Client) GetInstance(ctx context.Context, instanceSlug string, reqEditor
 
 // PatchInstanceWithBody Patch an instance
 //
-// Partially update an instance. Currently supports the operational status and the commercial lifecycle stage.
+// Partially update an instance: its operational status, its commercial lifecycle stage, and individual metadata keys. Unlike PUT, a metadata change needs no read of the instance first, and does not overwrite keys it does not name.
 //
 // Takes any type of body and a specified content type.
 //
@@ -36998,7 +37001,7 @@ func (c *Client) PatchInstanceWithBody(ctx context.Context, instanceSlug string,
 
 // PatchInstance Patch an instance
 //
-// Partially update an instance. Currently supports the operational status and the commercial lifecycle stage.
+// Partially update an instance: its operational status, its commercial lifecycle stage, and individual metadata keys. Unlike PUT, a metadata change needs no read of the instance first, and does not overwrite keys it does not name.
 //
 // Takes a body of the `application/json` content type.
 //
@@ -39340,7 +39343,7 @@ func (c *Client) GetOpenfeatureManifest(ctx context.Context, reqEditors ...Reque
 
 // GetPublicCatalog Get the public catalogue
 //
-// What a pricing page shows: for each licence family the organization made public, its default version with its ACTIVE prices and user-facing entitlements, and the same for public add-on families. Read with a publishable key (X-Kaiten-Publishable-Key); the organization is the key's. Amounts are in minor units; never sum metered prices into a headline. Cacheable for 60 seconds.
+// What a pricing page shows: for each licence family the organization made public, its default version with its ACTIVE prices and user-facing entitlements, and the same for public add-on families. Read with a publishable key (Kaiten-Publishable-Key); the organization is the key's. Amounts are in minor units; never sum metered prices into a headline. Cacheable for 60 seconds.
 //
 // Corresponds with GET /public/catalog (the `GetPublicCatalog` operationId).
 func (c *Client) GetPublicCatalog(ctx context.Context, params *GetPublicCatalogParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -54102,7 +54105,7 @@ type ClientWithResponsesInterface interface {
 
 	// PatchInstanceWithBodyWithResponse Patch an instance
 	//
-	// Partially update an instance. Currently supports the operational status and the commercial lifecycle stage.
+	// Partially update an instance: its operational status, its commercial lifecycle stage, and individual metadata keys. Unlike PUT, a metadata change needs no read of the instance first, and does not overwrite keys it does not name.
 	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -54111,7 +54114,7 @@ type ClientWithResponsesInterface interface {
 
 	// PatchInstanceWithResponse Patch an instance
 	//
-	// Partially update an instance. Currently supports the operational status and the commercial lifecycle stage.
+	// Partially update an instance: its operational status, its commercial lifecycle stage, and individual metadata keys. Unlike PUT, a metadata change needs no read of the instance first, and does not overwrite keys it does not name.
 	//
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -55259,7 +55262,7 @@ type ClientWithResponsesInterface interface {
 
 	// GetPublicCatalogWithResponse Get the public catalogue
 	//
-	// What a pricing page shows: for each licence family the organization made public, its default version with its ACTIVE prices and user-facing entitlements, and the same for public add-on families. Read with a publishable key (X-Kaiten-Publishable-Key); the organization is the key's. Amounts are in minor units; never sum metered prices into a headline. Cacheable for 60 seconds.
+	// What a pricing page shows: for each licence family the organization made public, its default version with its ACTIVE prices and user-facing entitlements, and the same for public add-on families. Read with a publishable key (Kaiten-Publishable-Key); the organization is the key's. Amounts are in minor units; never sum metered prices into a headline. Cacheable for 60 seconds.
 	//
 	// Returns a wrapper object for the known response body format(s).
 	//
@@ -80051,7 +80054,7 @@ func (c *ClientWithResponses) GetInstanceWithResponse(ctx context.Context, insta
 
 // PatchInstanceWithBodyWithResponse Patch an instance
 //
-// Partially update an instance. Currently supports the operational status and the commercial lifecycle stage.
+// Partially update an instance: its operational status, its commercial lifecycle stage, and individual metadata keys. Unlike PUT, a metadata change needs no read of the instance first, and does not overwrite keys it does not name.
 //
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 //
@@ -80066,7 +80069,7 @@ func (c *ClientWithResponses) PatchInstanceWithBodyWithResponse(ctx context.Cont
 
 // PatchInstanceWithResponse Patch an instance
 //
-// Partially update an instance. Currently supports the operational status and the commercial lifecycle stage.
+// Partially update an instance: its operational status, its commercial lifecycle stage, and individual metadata keys. Unlike PUT, a metadata change needs no read of the instance first, and does not overwrite keys it does not name.
 //
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 //
@@ -81994,7 +81997,7 @@ func (c *ClientWithResponses) GetOpenfeatureManifestWithResponse(ctx context.Con
 
 // GetPublicCatalogWithResponse Get the public catalogue
 //
-// What a pricing page shows: for each licence family the organization made public, its default version with its ACTIVE prices and user-facing entitlements, and the same for public add-on families. Read with a publishable key (X-Kaiten-Publishable-Key); the organization is the key's. Amounts are in minor units; never sum metered prices into a headline. Cacheable for 60 seconds.
+// What a pricing page shows: for each licence family the organization made public, its default version with its ACTIVE prices and user-facing entitlements, and the same for public add-on families. Read with a publishable key (Kaiten-Publishable-Key); the organization is the key's. Amounts are in minor units; never sum metered prices into a headline. Cacheable for 60 seconds.
 //
 // Returns a wrapper object for the known response body format(s).
 //
