@@ -193,11 +193,11 @@ func TestRequestBodiesMatchTheirSpecBodies(t *testing.T) {
 			// create; TestUpdateRendersTheSlugOnlyWhenSet pins the omitted half.
 			expected: []string{"customerId", "deploymentZoneId", "description", "endLicenseDate", "licenseId", "metadata", "name", "slug", "startLicenseDate"},
 		},
-		// The two PATCH writes were the only Core writes this test did not cover,
+		// The PATCH writes were once the only Core writes this test did not cover,
 		// which is exactly why UpdateLifecycleStage shipped rendering the stale
 		// generated `lifecycle_stage` key and 422'd on every call. One key each is
 		// the whole assertion: PatchInstanceBody is additionalProperties:false and
-		// absence is how it spells "leave the other field alone", so a second key
+		// absence is how it spells "leave the other fields alone", so a second key
 		// here would be as wrong as a misspelled first one.
 		{
 			name: "patch instance status",
@@ -212,6 +212,13 @@ func TestRequestBodiesMatchTheirSpecBodies(t *testing.T) {
 				return c.Instances.UpdateLifecycleStage(ctx, name, "ACTIVE")
 			},
 			expected: []string{"lifecycleStage"},
+		},
+		{
+			name: "patch instance metadata",
+			call: func(ctx context.Context, c *Client) error {
+				return c.Instances.PatchMetadata(ctx, name, map[string]any{name: "v"})
+			},
+			expected: []string{"metadata"},
 		},
 		{
 			name: "create license",

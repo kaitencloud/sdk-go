@@ -127,3 +127,117 @@ func TestReportUsageLeavesNonConflictFailuresUntagged(t *testing.T) {
 		t.Errorf("StatusCode = %d, want %d", apiErr.StatusCode, http.StatusInternalServerError)
 	}
 }
+
+// TestPatchMetadataSendsOnlyTheKeysItNames pins the bytes PATCH /instances/{instanceSlug}
+// receives. The endpoint merges at the first level, so the body is the whole contract:
+// a key sent is set, a key sent as null is removed, and a key not sent is kept. A nil
+// value dropped on the way would turn a removal into nothing, and a status or
+// lifecycleStage rendered from their zero values would overwrite what the instance has.
+func TestPatchMetadataSendsOnlyTheKeysItNames(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name     string
+		metadata map[string]any
+		expected string
+	}{
+		{
+			name:     "a key set",
+			metadata: map[string]any{"region": "eu"},
+			expected: `{"metadata":{"region":"eu"}}`,
+		},
+		{
+			name:     "a list replaced whole",
+			metadata: map[string]any{"tags": []string{"a", "b"}},
+			expected: `{"metadata":{"tags":["a","b"]}}`,
+		},
+		{
+			name:     "a key removed is sent as null",
+			metadata: map[string]any{"region": nil},
+			expected: `{"metadata":{"region":null}}`,
+		},
+		{
+			name:     "a key set and another removed",
+			metadata: map[string]any{"region": "eu", "legacy": nil},
+			expected: `{"metadata":{"legacy":null,"region":"eu"}}`,
+		},
+		{
+			name:     "a nil map sends no metadata",
+			metadata: nil,
+			expected: `{}`,
+		},
+		{
+			name:     "an empty map sends no metadata",
+			metadata: map[string]any{},
+			expected: `{}`,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+
+			client, sent := givenClient(t, respondNoContent())
+
+			if err := client.Instances.PatchMetadata(t.Context(), "instance-slug", test.metadata); err != nil {
+				t.Fatalf("PatchMetadata() error = %v", err)
+			}
+
+			req := sent.only(t)
+			if req.method != http.MethodPatch || req.path != "/api/instances/instance-slug" {
+				t.Errorf("request = %s %s, want PATCH /api/instances/instance-slug", req.method, req.path)
+			}
+
+			if got := string(req.body); got != test.expected {
+				t.Errorf("request body = %s, want %s", got, test.expected)
+			}
+		})
+	}
+}
+
+// The SDK encodes a copy of the patch, as it does for every metadata it sends: the
+// caller's map, its nil values included, is the same after the call.
+func TestPatchMetadataLeavesTheCallersMapAlone(t *testing.T) {
+	t.Parallel()
+
+	client, _ := givenClient(t, respondNoContent())
+	metadata := map[string]any{"region": "eu", "legacy": nil}
+
+	if err := client.Instances.PatchMetadata(t.Context(), "instance-slug", metadata); err != nil {
+		t.Fatalf("PatchMetadata() error = %v", err)
+	}
+
+	if len(metadata) != 2 || metadata["region"] != "eu" {
+		t.Errorf("metadata = %v, want it unchanged", metadata)
+	}
+	if value, ok := metadata["legacy"]; !ok || value != nil {
+		t.Errorf("metadata[legacy] = %v, %t, want nil, true", value, ok)
+	}
+}
+
+// A declared metadata field validates the merged result, as on Update, and its refusal
+// reaches the caller as every other refusal does: an *Error with the code to branch on.
+func TestPatchMetadataRefusedByADeclaredFieldReturnsItsCode(t *testing.T) {
+	t.Parallel()
+
+	client, _ := givenClient(t, respondJSON(http.StatusUnprocessableEntity,
+		`{"title":"Unprocessable Entity","status":422,"code":"MetadataValidation.Failed","detail":"metadata.regions: items must be unique"}`))
+
+	err := client.Instances.PatchMetadata(t.Context(), "instance-slug", map[string]any{"regions": []string{"eu", "eu"}})
+	if err == nil {
+		t.Fatal("PatchMetadata() error = nil, want an error")
+	}
+
+	var apiErr *Error
+	if !errors.As(err, &apiErr) {
+		t.Fatalf("errors.As(err, *Error) = false for %T: %v", err, err)
+	}
+
+	if apiErr.StatusCode != http.StatusUnprocessableEntity || apiErr.Code != "MetadataValidation.Failed" {
+		t.Errorf("StatusCode, Code = %d, %q, want %d, %q", apiErr.StatusCode, apiErr.Code, http.StatusUnprocessableEntity, "MetadataValidation.Failed")
+	}
+
+	if apiErr.Problem == nil || stringValue(apiErr.Problem.Detail) != "metadata.regions: items must be unique" {
+		t.Errorf("problem details lost: %+v", apiErr.Problem)
+	}
+}
