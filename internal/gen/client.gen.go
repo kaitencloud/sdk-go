@@ -22225,6 +22225,11 @@ type Release struct {
 	// Examples: 123e4567-e89b-12d3-a456-426614174000
 	Id *string `json:"id,omitempty"`
 
+	// ReleaseNote Release notes for the release, in markdown. Set on create only. Returned when a single release is read; omitted from list responses.
+	//
+	// Examples: Faster start-up. See the [changelog](https://example.com/changelog).
+	ReleaseNote *string `json:"releaseNote,omitempty"`
+
 	// Slug Optional URL-friendly identifier, unique per organization. Auto-generated if not provided.
 	//
 	// Examples: v1-0-0
@@ -22267,6 +22272,11 @@ type ReleaseDelivered struct {
 	//
 	// Examples: 123e4567-e89b-12d3-a456-426614174000
 	Id *string `json:"id,omitempty"`
+
+	// ReleaseNote Release notes for the release, in markdown. Set on create only. Returned when a single release is read; omitted from list responses.
+	//
+	// Examples: Faster start-up. See the [changelog](https://example.com/changelog).
+	ReleaseNote *string `json:"releaseNote,omitempty"`
 
 	// Slug Optional URL-friendly identifier, unique per organization. Auto-generated if not provided.
 	//
@@ -32357,7 +32367,7 @@ type ClientInterface interface {
 
 	// ActivateConnector Activate connector
 	//
-	// Activates a registered connector for the authenticated organization. Idempotent: activating an already-active connector succeeds without changing when it was first activated. Refused when the organization's license does not include the connector.
+	// Activates a registered connector for the authenticated organization. Idempotent: activating an already-active connector succeeds without changing when it was first activated. Refused when the organization's license does not include the connector (403), or when it already has as many active connectors as its license allows (409 ActivateConnector.LimitReached).
 	//
 	// Corresponds with PUT /connectors/{connectorName}/activation (the `ActivateConnector` operationId).
 	ActivateConnector(ctx context.Context, connectorName string, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -32378,7 +32388,7 @@ type ClientInterface interface {
 
 	// UpdateConnectorSettingsWithBody Upsert connector settings
 	//
-	// Create or update connector settings for the authenticated organization. Write-only fields (flagged `writeOnly` in the connector settings schema) may be omitted or sent as `***` to keep the stored value; they are returned redacted.
+	// Create or update connector settings for the authenticated organization. Write-only fields (flagged `writeOnly` in the connector settings schema) may be omitted or sent as `***` to keep the stored value; they are returned redacted. Saving settings activates the connector, so it is refused as an activation is: 409 ActivateConnector.LimitReached when the organization already has as many active connectors as its license allows.
 	//
 	// Takes any type of body and a specified content type.
 	//
@@ -32387,7 +32397,7 @@ type ClientInterface interface {
 
 	// UpdateConnectorSettings Upsert connector settings
 	//
-	// Create or update connector settings for the authenticated organization. Write-only fields (flagged `writeOnly` in the connector settings schema) may be omitted or sent as `***` to keep the stored value; they are returned redacted.
+	// Create or update connector settings for the authenticated organization. Write-only fields (flagged `writeOnly` in the connector settings schema) may be omitted or sent as `***` to keep the stored value; they are returned redacted. Saving settings activates the connector, so it is refused as an activation is: 409 ActivateConnector.LimitReached when the organization already has as many active connectors as its license allows.
 	//
 	// Takes a body of the `application/json` content type.
 	//
@@ -34338,7 +34348,7 @@ type ClientInterface interface {
 
 	// CreateServiceAccountWithBody Create a new service account
 	//
-	// Create a new service account (machine user) with the provided name. Service accounts can be used to generate API tokens for programmatic access.
+	// Create a new service account (machine user) with the provided name. Service accounts can be used to generate API tokens for programmatic access. Refused when the organization already holds as many service accounts as its license allows (409 CreateServiceAccount.EntitlementLimitReached).
 	//
 	// Takes any type of body and a specified content type.
 	//
@@ -34347,12 +34357,19 @@ type ClientInterface interface {
 
 	// CreateServiceAccount Create a new service account
 	//
-	// Create a new service account (machine user) with the provided name. Service accounts can be used to generate API tokens for programmatic access.
+	// Create a new service account (machine user) with the provided name. Service accounts can be used to generate API tokens for programmatic access. Refused when the organization already holds as many service accounts as its license allows (409 CreateServiceAccount.EntitlementLimitReached).
 	//
 	// Takes a body of the `application/json` content type.
 	//
 	// Corresponds with POST /service-accounts (the `CreateServiceAccount` operationId).
 	CreateServiceAccount(ctx context.Context, body CreateServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteServiceAccount Delete a service account
+	//
+	// Delete a service account of the organization and revoke every token it still holds: they stop authenticating at once. The rows the account wrote keep it as their author, and its slug can be given to a new account. On Kaiten Cloud, the account no longer counts against the service-accounts allowance of the organization's License. The organization context is derived from the authenticated user's JWT token.
+	//
+	// Corresponds with DELETE /service-accounts/{serviceAccountSlug} (the `DeleteServiceAccount` operationId).
+	DeleteServiceAccount(ctx context.Context, serviceAccountSlug string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetServiceAccount Get a service account by slug
 	//
@@ -35661,7 +35678,7 @@ func (c *Client) DeactivateConnector(ctx context.Context, connectorName string, 
 
 // ActivateConnector Activate connector
 //
-// Activates a registered connector for the authenticated organization. Idempotent: activating an already-active connector succeeds without changing when it was first activated. Refused when the organization's license does not include the connector.
+// Activates a registered connector for the authenticated organization. Idempotent: activating an already-active connector succeeds without changing when it was first activated. Refused when the organization's license does not include the connector (403), or when it already has as many active connectors as its license allows (409 ActivateConnector.LimitReached).
 //
 // Corresponds with PUT /connectors/{connectorName}/activation (the `ActivateConnector` operationId).
 func (c *Client) ActivateConnector(ctx context.Context, connectorName string, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -35712,7 +35729,7 @@ func (c *Client) GetConnectorSettings(ctx context.Context, connectorName string,
 
 // UpdateConnectorSettingsWithBody Upsert connector settings
 //
-// Create or update connector settings for the authenticated organization. Write-only fields (flagged `writeOnly` in the connector settings schema) may be omitted or sent as `***` to keep the stored value; they are returned redacted.
+// Create or update connector settings for the authenticated organization. Write-only fields (flagged `writeOnly` in the connector settings schema) may be omitted or sent as `***` to keep the stored value; they are returned redacted. Saving settings activates the connector, so it is refused as an activation is: 409 ActivateConnector.LimitReached when the organization already has as many active connectors as its license allows.
 //
 // Takes any type of body and a specified content type.
 //
@@ -35731,7 +35748,7 @@ func (c *Client) UpdateConnectorSettingsWithBody(ctx context.Context, connectorN
 
 // UpdateConnectorSettings Upsert connector settings
 //
-// Create or update connector settings for the authenticated organization. Write-only fields (flagged `writeOnly` in the connector settings schema) may be omitted or sent as `***` to keep the stored value; they are returned redacted.
+// Create or update connector settings for the authenticated organization. Write-only fields (flagged `writeOnly` in the connector settings schema) may be omitted or sent as `***` to keep the stored value; they are returned redacted. Saving settings activates the connector, so it is refused as an activation is: 409 ActivateConnector.LimitReached when the organization already has as many active connectors as its license allows.
 //
 // Takes a body of the `application/json` content type.
 //
@@ -40092,7 +40109,7 @@ func (c *Client) GetServiceAccounts(ctx context.Context, params *GetServiceAccou
 
 // CreateServiceAccountWithBody Create a new service account
 //
-// Create a new service account (machine user) with the provided name. Service accounts can be used to generate API tokens for programmatic access.
+// Create a new service account (machine user) with the provided name. Service accounts can be used to generate API tokens for programmatic access. Refused when the organization already holds as many service accounts as its license allows (409 CreateServiceAccount.EntitlementLimitReached).
 //
 // Takes any type of body and a specified content type.
 //
@@ -40111,13 +40128,30 @@ func (c *Client) CreateServiceAccountWithBody(ctx context.Context, contentType s
 
 // CreateServiceAccount Create a new service account
 //
-// Create a new service account (machine user) with the provided name. Service accounts can be used to generate API tokens for programmatic access.
+// Create a new service account (machine user) with the provided name. Service accounts can be used to generate API tokens for programmatic access. Refused when the organization already holds as many service accounts as its license allows (409 CreateServiceAccount.EntitlementLimitReached).
 //
 // Takes a body of the `application/json` content type.
 //
 // Corresponds with POST /service-accounts (the `CreateServiceAccount` operationId).
 func (c *Client) CreateServiceAccount(ctx context.Context, body CreateServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCreateServiceAccountRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DeleteServiceAccount Delete a service account
+//
+// Delete a service account of the organization and revoke every token it still holds: they stop authenticating at once. The rows the account wrote keep it as their author, and its slug can be given to a new account. On Kaiten Cloud, the account no longer counts against the service-accounts allowance of the organization's License. The organization context is derived from the authenticated user's JWT token.
+//
+// Corresponds with DELETE /service-accounts/{serviceAccountSlug} (the `DeleteServiceAccount` operationId).
+func (c *Client) DeleteServiceAccount(ctx context.Context, serviceAccountSlug string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteServiceAccountRequest(c.Server, serviceAccountSlug)
 	if err != nil {
 		return nil, err
 	}
@@ -51390,6 +51424,40 @@ func NewCreateServiceAccountRequestWithBody(server string, contentType string, b
 	return req, nil
 }
 
+// NewDeleteServiceAccountRequest constructs an http.Request for the DeleteServiceAccount method
+func NewDeleteServiceAccountRequest(server string, serviceAccountSlug string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "serviceAccountSlug", serviceAccountSlug, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: "text"})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/service-accounts/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetServiceAccountRequest constructs an http.Request for the GetServiceAccount method
 func NewGetServiceAccountRequest(server string, serviceAccountSlug string) (*http.Request, error) {
 	var err error
@@ -53448,7 +53516,7 @@ type ClientWithResponsesInterface interface {
 
 	// ActivateConnectorWithResponse Activate connector
 	//
-	// Activates a registered connector for the authenticated organization. Idempotent: activating an already-active connector succeeds without changing when it was first activated. Refused when the organization's license does not include the connector.
+	// Activates a registered connector for the authenticated organization. Idempotent: activating an already-active connector succeeds without changing when it was first activated. Refused when the organization's license does not include the connector (403), or when it already has as many active connectors as its license allows (409 ActivateConnector.LimitReached).
 	//
 	// Returns a wrapper object for the known response body format(s).
 	//
@@ -53475,7 +53543,7 @@ type ClientWithResponsesInterface interface {
 
 	// UpdateConnectorSettingsWithBodyWithResponse Upsert connector settings
 	//
-	// Create or update connector settings for the authenticated organization. Write-only fields (flagged `writeOnly` in the connector settings schema) may be omitted or sent as `***` to keep the stored value; they are returned redacted.
+	// Create or update connector settings for the authenticated organization. Write-only fields (flagged `writeOnly` in the connector settings schema) may be omitted or sent as `***` to keep the stored value; they are returned redacted. Saving settings activates the connector, so it is refused as an activation is: 409 ActivateConnector.LimitReached when the organization already has as many active connectors as its license allows.
 	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -53484,7 +53552,7 @@ type ClientWithResponsesInterface interface {
 
 	// UpdateConnectorSettingsWithResponse Upsert connector settings
 	//
-	// Create or update connector settings for the authenticated organization. Write-only fields (flagged `writeOnly` in the connector settings schema) may be omitted or sent as `***` to keep the stored value; they are returned redacted.
+	// Create or update connector settings for the authenticated organization. Write-only fields (flagged `writeOnly` in the connector settings schema) may be omitted or sent as `***` to keep the stored value; they are returned redacted. Saving settings activates the connector, so it is refused as an activation is: 409 ActivateConnector.LimitReached when the organization already has as many active connectors as its license allows.
 	//
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -55631,7 +55699,7 @@ type ClientWithResponsesInterface interface {
 
 	// CreateServiceAccountWithBodyWithResponse Create a new service account
 	//
-	// Create a new service account (machine user) with the provided name. Service accounts can be used to generate API tokens for programmatic access.
+	// Create a new service account (machine user) with the provided name. Service accounts can be used to generate API tokens for programmatic access. Refused when the organization already holds as many service accounts as its license allows (409 CreateServiceAccount.EntitlementLimitReached).
 	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -55640,12 +55708,21 @@ type ClientWithResponsesInterface interface {
 
 	// CreateServiceAccountWithResponse Create a new service account
 	//
-	// Create a new service account (machine user) with the provided name. Service accounts can be used to generate API tokens for programmatic access.
+	// Create a new service account (machine user) with the provided name. Service accounts can be used to generate API tokens for programmatic access. Refused when the organization already holds as many service accounts as its license allows (409 CreateServiceAccount.EntitlementLimitReached).
 	//
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	//
 	// Corresponds with POST /service-accounts (the `CreateServiceAccount` operationId).
 	CreateServiceAccountWithResponse(ctx context.Context, body CreateServiceAccountJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateServiceAccountResponse, error)
+
+	// DeleteServiceAccountWithResponse Delete a service account
+	//
+	// Delete a service account of the organization and revoke every token it still holds: they stop authenticating at once. The rows the account wrote keep it as their author, and its slug can be given to a new account. On Kaiten Cloud, the account no longer counts against the service-accounts allowance of the organization's License. The organization context is derived from the authenticated user's JWT token.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with DELETE /service-accounts/{serviceAccountSlug} (the `DeleteServiceAccount` operationId).
+	DeleteServiceAccountWithResponse(ctx context.Context, serviceAccountSlug string, reqEditors ...RequestEditorFn) (*DeleteServiceAccountResponse, error)
 
 	// GetServiceAccountWithResponse Get a service account by slug
 	//
@@ -59964,6 +60041,8 @@ type ActivateConnectorResponse struct {
 	ApplicationproblemJSON403 *Problem
 	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
 	ApplicationproblemJSON404 *Problem
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Problem
 	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
 	ApplicationproblemJSON422 *Problem
 	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
@@ -59997,6 +60076,11 @@ func (r ActivateConnectorResponse) GetApplicationproblemJSON403() *Problem {
 // GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
 func (r ActivateConnectorResponse) GetApplicationproblemJSON404() *Problem {
 	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r ActivateConnectorResponse) GetApplicationproblemJSON409() *Problem {
+	return r.ApplicationproblemJSON409
 }
 
 // GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
@@ -60195,6 +60279,11 @@ func (r GetConnectorSettingsResponse) ContentType() string {
 	return ""
 }
 
+// UpdateConnectorSettingsResponse503Headers the declared response headers of an HTTP 503 response for UpdateConnectorSettings
+type UpdateConnectorSettingsResponse503Headers struct {
+	RetryAfter *int
+}
+
 type UpdateConnectorSettingsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -60208,10 +60297,16 @@ type UpdateConnectorSettingsResponse struct {
 	ApplicationproblemJSON403 *Problem
 	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
 	ApplicationproblemJSON404 *Problem
+	// ApplicationproblemJSON409 the response for an HTTP 409 `application/problem+json` response
+	ApplicationproblemJSON409 *Problem
 	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
 	ApplicationproblemJSON422 *Problem
 	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
 	ApplicationproblemJSON500 *Problem
+	// ApplicationproblemJSON503 the response for an HTTP 503 `application/problem+json` response
+	ApplicationproblemJSON503 *Problem
+	// Headers503 the parsed response headers for an HTTP 503 response
+	Headers503 *UpdateConnectorSettingsResponse503Headers
 }
 
 // GetJSON200 returns the response for an HTTP 200 `application/json` response
@@ -60239,6 +60334,11 @@ func (r UpdateConnectorSettingsResponse) GetApplicationproblemJSON404() *Problem
 	return r.ApplicationproblemJSON404
 }
 
+// GetApplicationproblemJSON409 returns the response for an HTTP 409 `application/problem+json` response
+func (r UpdateConnectorSettingsResponse) GetApplicationproblemJSON409() *Problem {
+	return r.ApplicationproblemJSON409
+}
+
 // GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
 func (r UpdateConnectorSettingsResponse) GetApplicationproblemJSON422() *Problem {
 	return r.ApplicationproblemJSON422
@@ -60247,6 +60347,11 @@ func (r UpdateConnectorSettingsResponse) GetApplicationproblemJSON422() *Problem
 // GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
 func (r UpdateConnectorSettingsResponse) GetApplicationproblemJSON500() *Problem {
 	return r.ApplicationproblemJSON500
+}
+
+// GetApplicationproblemJSON503 returns the response for an HTTP 503 `application/problem+json` response
+func (r UpdateConnectorSettingsResponse) GetApplicationproblemJSON503() *Problem {
+	return r.ApplicationproblemJSON503
 }
 
 // GetBody returns the raw response body bytes
@@ -75716,6 +75821,82 @@ func (r CreateServiceAccountResponse) ContentType() string {
 	return ""
 }
 
+type DeleteServiceAccountResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// ApplicationproblemJSON400 the response for an HTTP 400 `application/problem+json` response
+	ApplicationproblemJSON400 *Problem
+	// ApplicationproblemJSON401 the response for an HTTP 401 `application/problem+json` response
+	ApplicationproblemJSON401 *Problem
+	// ApplicationproblemJSON403 the response for an HTTP 403 `application/problem+json` response
+	ApplicationproblemJSON403 *Problem
+	// ApplicationproblemJSON404 the response for an HTTP 404 `application/problem+json` response
+	ApplicationproblemJSON404 *Problem
+	// ApplicationproblemJSON422 the response for an HTTP 422 `application/problem+json` response
+	ApplicationproblemJSON422 *Problem
+	// ApplicationproblemJSON500 the response for an HTTP 500 `application/problem+json` response
+	ApplicationproblemJSON500 *Problem
+}
+
+// GetApplicationproblemJSON400 returns the response for an HTTP 400 `application/problem+json` response
+func (r DeleteServiceAccountResponse) GetApplicationproblemJSON400() *Problem {
+	return r.ApplicationproblemJSON400
+}
+
+// GetApplicationproblemJSON401 returns the response for an HTTP 401 `application/problem+json` response
+func (r DeleteServiceAccountResponse) GetApplicationproblemJSON401() *Problem {
+	return r.ApplicationproblemJSON401
+}
+
+// GetApplicationproblemJSON403 returns the response for an HTTP 403 `application/problem+json` response
+func (r DeleteServiceAccountResponse) GetApplicationproblemJSON403() *Problem {
+	return r.ApplicationproblemJSON403
+}
+
+// GetApplicationproblemJSON404 returns the response for an HTTP 404 `application/problem+json` response
+func (r DeleteServiceAccountResponse) GetApplicationproblemJSON404() *Problem {
+	return r.ApplicationproblemJSON404
+}
+
+// GetApplicationproblemJSON422 returns the response for an HTTP 422 `application/problem+json` response
+func (r DeleteServiceAccountResponse) GetApplicationproblemJSON422() *Problem {
+	return r.ApplicationproblemJSON422
+}
+
+// GetApplicationproblemJSON500 returns the response for an HTTP 500 `application/problem+json` response
+func (r DeleteServiceAccountResponse) GetApplicationproblemJSON500() *Problem {
+	return r.ApplicationproblemJSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r DeleteServiceAccountResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteServiceAccountResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteServiceAccountResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DeleteServiceAccountResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type GetServiceAccountResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -78959,7 +79140,7 @@ func (c *ClientWithResponses) DeactivateConnectorWithResponse(ctx context.Contex
 
 // ActivateConnectorWithResponse Activate connector
 //
-// Activates a registered connector for the authenticated organization. Idempotent: activating an already-active connector succeeds without changing when it was first activated. Refused when the organization's license does not include the connector.
+// Activates a registered connector for the authenticated organization. Idempotent: activating an already-active connector succeeds without changing when it was first activated. Refused when the organization's license does not include the connector (403), or when it already has as many active connectors as its license allows (409 ActivateConnector.LimitReached).
 //
 // Returns a wrapper object for the known response body format(s).
 //
@@ -79004,7 +79185,7 @@ func (c *ClientWithResponses) GetConnectorSettingsWithResponse(ctx context.Conte
 
 // UpdateConnectorSettingsWithBodyWithResponse Upsert connector settings
 //
-// Create or update connector settings for the authenticated organization. Write-only fields (flagged `writeOnly` in the connector settings schema) may be omitted or sent as `***` to keep the stored value; they are returned redacted.
+// Create or update connector settings for the authenticated organization. Write-only fields (flagged `writeOnly` in the connector settings schema) may be omitted or sent as `***` to keep the stored value; they are returned redacted. Saving settings activates the connector, so it is refused as an activation is: 409 ActivateConnector.LimitReached when the organization already has as many active connectors as its license allows.
 //
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 //
@@ -79019,7 +79200,7 @@ func (c *ClientWithResponses) UpdateConnectorSettingsWithBodyWithResponse(ctx co
 
 // UpdateConnectorSettingsWithResponse Upsert connector settings
 //
-// Create or update connector settings for the authenticated organization. Write-only fields (flagged `writeOnly` in the connector settings schema) may be omitted or sent as `***` to keep the stored value; they are returned redacted.
+// Create or update connector settings for the authenticated organization. Write-only fields (flagged `writeOnly` in the connector settings schema) may be omitted or sent as `***` to keep the stored value; they are returned redacted. Saving settings activates the connector, so it is refused as an activation is: 409 ActivateConnector.LimitReached when the organization already has as many active connectors as its license allows.
 //
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 //
@@ -82612,7 +82793,7 @@ func (c *ClientWithResponses) GetServiceAccountsWithResponse(ctx context.Context
 
 // CreateServiceAccountWithBodyWithResponse Create a new service account
 //
-// Create a new service account (machine user) with the provided name. Service accounts can be used to generate API tokens for programmatic access.
+// Create a new service account (machine user) with the provided name. Service accounts can be used to generate API tokens for programmatic access. Refused when the organization already holds as many service accounts as its license allows (409 CreateServiceAccount.EntitlementLimitReached).
 //
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 //
@@ -82627,7 +82808,7 @@ func (c *ClientWithResponses) CreateServiceAccountWithBodyWithResponse(ctx conte
 
 // CreateServiceAccountWithResponse Create a new service account
 //
-// Create a new service account (machine user) with the provided name. Service accounts can be used to generate API tokens for programmatic access.
+// Create a new service account (machine user) with the provided name. Service accounts can be used to generate API tokens for programmatic access. Refused when the organization already holds as many service accounts as its license allows (409 CreateServiceAccount.EntitlementLimitReached).
 //
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 //
@@ -82638,6 +82819,21 @@ func (c *ClientWithResponses) CreateServiceAccountWithResponse(ctx context.Conte
 		return nil, err
 	}
 	return ParseCreateServiceAccountResponse(rsp)
+}
+
+// DeleteServiceAccountWithResponse Delete a service account
+//
+// Delete a service account of the organization and revoke every token it still holds: they stop authenticating at once. The rows the account wrote keep it as their author, and its slug can be given to a new account. On Kaiten Cloud, the account no longer counts against the service-accounts allowance of the organization's License. The organization context is derived from the authenticated user's JWT token.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with DELETE /service-accounts/{serviceAccountSlug} (the `DeleteServiceAccount` operationId).
+func (c *ClientWithResponses) DeleteServiceAccountWithResponse(ctx context.Context, serviceAccountSlug string, reqEditors ...RequestEditorFn) (*DeleteServiceAccountResponse, error) {
+	rsp, err := c.DeleteServiceAccount(ctx, serviceAccountSlug, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteServiceAccountResponse(rsp)
 }
 
 // GetServiceAccountWithResponse Get a service account by slug
@@ -86810,6 +87006,13 @@ func ParseActivateConnectorResponse(rsp *http.Response) (*ActivateConnectorRespo
 		}
 		response.ApplicationproblemJSON404 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
 		var dest Problem
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -87023,6 +87226,13 @@ func ParseUpdateConnectorSettingsResponse(rsp *http.Response) (*UpdateConnectorS
 		}
 		response.ApplicationproblemJSON404 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON409 = &dest
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
 		var dest Problem
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -87037,6 +87247,26 @@ func ParseUpdateConnectorSettingsResponse(rsp *http.Response) (*UpdateConnectorS
 		}
 		response.ApplicationproblemJSON500 = &dest
 
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON503 = &dest
+
+	}
+
+	switch {
+	case rsp.StatusCode == 503:
+		var headers UpdateConnectorSettingsResponse503Headers
+		if values := rsp.Header.Values("Retry-After"); len(values) > 0 {
+			var value int
+			if err := runtime.BindStyledParameterWithOptions("simple", "Retry-After", values[0], &value, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationHeader, Explode: false, Required: false, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			}
+			headers.RetryAfter = &value
+		}
+		response.Headers503 = &headers
 	}
 
 	return response, nil
@@ -100660,6 +100890,70 @@ func ParseCreateServiceAccountResponse(rsp *http.Response) (*CreateServiceAccoun
 			headers.RetryAfter = &value
 		}
 		response.Headers503 = &headers
+	}
+
+	return response, nil
+}
+
+// ParseDeleteServiceAccountResponse parses an HTTP response from a DeleteServiceAccountWithResponse call
+func ParseDeleteServiceAccountResponse(rsp *http.Response) (*DeleteServiceAccountResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteServiceAccountResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case rsp.StatusCode == 204:
+		break // No content-type
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 422:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON422 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest Problem
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.ApplicationproblemJSON500 = &dest
+
 	}
 
 	return response, nil

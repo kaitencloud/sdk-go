@@ -142,7 +142,7 @@ func TestClientExposesOnlyTheReviewedPublicSurface(t *testing.T) {
 		},
 		"ServiceAccounts": {
 			service: client.ServiceAccounts,
-			methods: []string{"List", "Get", "Create", "Update", "ListTokens", "CreateToken", "DeleteToken"},
+			methods: []string{"List", "Get", "Create", "Update", "Delete", "ListTokens", "CreateToken", "DeleteToken"},
 		},
 	}
 	maps.Copy(services, billingServiceCoverage(client))
@@ -574,6 +574,10 @@ func TestClientWrappersReportEveryDeclaredProblem(t *testing.T) {
 			call: func(ctx context.Context, c *Client) error {
 				return c.ServiceAccounts.Update(ctx, "ci", ServiceAccountInput{Name: "CI"})
 			},
+		},
+		"ServiceAccounts.Delete": {
+			response: gen.DeleteServiceAccountResponse{},
+			call:     func(ctx context.Context, c *Client) error { return c.ServiceAccounts.Delete(ctx, "ci") },
 		},
 		"ServiceAccounts.CreateToken": {
 			response: gen.CreateServiceAccountTokenResponse{},

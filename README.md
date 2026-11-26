@@ -514,6 +514,23 @@ for _, flag := range flags {
 `sdk.BasicDefaultVariant` and `sdk.BasicVariantTargeting` build the default variant
 and the targeting rules a `FeatureFlag` carries on create and update.
 
+### Service accounts
+
+```go
+// Revokes every token the account still holds.
+err = client.ServiceAccounts.Delete(ctx, "ci-deploy")
+```
+
+What a deleted account wrote keeps it as its author, and its slug can be given to a
+new account. `Delete` needs a Kaiten recent enough to serve
+`DELETE /service-accounts/{serviceAccountSlug}`; an unknown slug is a 404 whose
+`*sdk.Error` carries the code `ServiceAccount.NotFound`.
+
+On Kaiten Cloud, `ServiceAccounts.Create` is refused with a 409 whose `*sdk.Error`
+carries the code `CreateServiceAccount.EntitlementLimitReached` when the organization
+already holds as many service accounts as its license allows, and a deleted account no
+longer counts against that allowance.
+
 ### Billing
 
 `client.Billing` holds the billing settings and provider (`Settings`,
