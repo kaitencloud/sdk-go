@@ -56,6 +56,19 @@ func (s *ServiceAccounts) Update(ctx context.Context, serviceAccountSlug string,
 	return expectNoContent(newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500))
 }
 
+// Delete deletes the service account identified by serviceAccountSlug and revokes every
+// token it still holds. What the account wrote keeps it as its author, and its slug can
+// be given to a new account. It needs a Kaiten recent enough to serve
+// DELETE /service-accounts/{serviceAccountSlug}.
+func (s *ServiceAccounts) Delete(ctx context.Context, serviceAccountSlug string) error {
+	resp, err := s.client.raw.DeleteServiceAccountWithResponse(ctx, serviceAccountSlug)
+	if err != nil {
+		return fmt.Errorf("delete service account: %w", err)
+	}
+
+	return expectNoContent(newAPIResponse(resp, resp.Body, resp.ApplicationproblemJSON400, resp.ApplicationproblemJSON401, resp.ApplicationproblemJSON403, resp.ApplicationproblemJSON404, resp.ApplicationproblemJSON422, resp.ApplicationproblemJSON500))
+}
+
 // ListTokens returns the tokens belonging to the service account identified by serviceAccountSlug.
 func (s *ServiceAccounts) ListTokens(ctx context.Context, serviceAccountSlug string) ([]Token, error) {
 	return listAll[Token](ctx, s.client.list, listPath("service-accounts", serviceAccountSlug, "tokens"), nil)
